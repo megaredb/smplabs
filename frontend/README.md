@@ -1,42 +1,59 @@
-# sv
+# Frontend - Local Development Guide
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Welcome to the frontend part of our project! This beginner-friendly guide will help you set up and run the project in development mode on your local machine. We are not using Docker at this stage.
 
-## Creating a project
+## Prerequisites
 
-If you're seeing this, you've probably already done this step. Congrats!
+Before you begin, ensure you have the following installed:
+- **Node.js** (version 18 or higher is recommended)
+- **pnpm** (a fast package manager, installable via `npm install -g pnpm` if you have Node.js)
+- **Git** (for cloning repositories)
 
-```sh
-# create a new project
-npx sv create my-app
+---
+
+## Step 1. Clone and Compile Orval (Important!)
+
+Our project uses **Orval** to generate the API client code. Currently, you need to clone it directly from GitHub and compile it locally.
+
+Open your terminal and run the following commands in a directory of your choice (it can be next to our project folder):
+
+```bash
+# 1. Clone the Orval repository
+git clone https://github.com/anymaniax/orval.git
+
+# 2. Go to the downloaded folder
+cd orval
+
+# 3. Install dependencies for Orval itself
+bun install
+
+# 4. Compile the project
+bun run build
 ```
 
-To recreate this project with the same configuration:
+> **Note:** After successfully building `orval`, you can use it in the project. If you have any trouble linking the locally built `orval` to our frontend (e.g., using `pnpm link`), please ask the team for help!
 
-```sh
-# recreate this project
-pnpm dlx sv@0.15.2 create --template minimal --types ts --add eslint prettier tailwindcss="plugins:none" sveltekit-adapter="adapter:node" mcp="ide:cursor,vscode,other+setup:local" --install pnpm .
+---
+
+## Step 2. Install Frontend Dependencies
+
+Now, go back to the `frontend` folder of our project in your terminal and download all the necessary packages:
+
+```bash
+pnpm install
 ```
 
-## Developing
+---
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Step 3. Start the Development Server
 
-```sh
-npm run dev
+Once all packages are installed, you can start the project:
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```bash
+pnpm dev
 ```
 
-## Building
+Your terminal will display a local address (usually `http://localhost:5173`). Open this link in your browser.
+Now, whenever you modify files in the `src` folder, the page in the browser will update automatically.
 
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Happy coding! If something isn't working, don't hesitate to ask questions!
