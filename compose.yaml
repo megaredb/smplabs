@@ -1,0 +1,233 @@
+services:
+
+  db:
+    image: postgres:18
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - app-db-data:/var/lib/postgresql/data/pgdata
+      - ./init-zitadel-db.sh:/docker-entrypoint-initdb.d/init-zitadel-db.sh:ro
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+
+  backend:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    restart: always
+    networks:
+      - traefik-public
+      - default
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+      - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check/" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+
+      - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=8000
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`api.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.entrypoints=http
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.rule=Host(`api.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-https.tls=true
+
+      # Enable redirection for HTTP and HTTPS
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.middlewares=https-redirect
+
+  # frontend:
+  #   image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
+  #   restart: always
+  #   networks:
+  #     - traefik-public
+  #     - default
+  #   build:
+  #     context: .
+  #     dockerfile: frontend/Dockerfile
+  #     args:
+  #       - VITE_API_URL=https://api.${DOMAIN?Variable not set}
+  #       - NODE_ENV=production
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.docker.network=traefik-public
+  #     - traefik.constraint-label=traefik-public
+
+  #     - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
+
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=Host(`dashboard.${DOMAIN?Variable not set}`)
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.entrypoints=http
+
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.rule=Host(`dashboard.${DOMAIN?Variable not set}`)
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.entrypoints=https
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls=true
+
+  #     # Enable redirection for HTTP and HTTPS
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=https-redirect
+
+  zitadel-api:
+    image: ghcr.io/zitadel/zitadel:${ZITADEL_VERSION}
+    restart: unless-stopped
+    user: "0"
+    command: start-from-init --masterkey "${ZITADEL_MASTERKEY}"
+    environment:
+      ZITADEL_PORT: 8080
+      ZITADEL_EXTERNALDOMAIN: ${ZITADEL_DOMAIN}
+      ZITADEL_EXTERNALPORT: ${ZITADEL_EXTERNALPORT:-443}
+      ZITADEL_EXTERNALSECURE: ${ZITADEL_EXTERNALSECURE:-true}
+      ZITADEL_TLS_ENABLED: false
+      ZITADEL_DATABASE_POSTGRES_DSN: ${ZITADEL_DATABASE_POSTGRES_DSN}
+      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORDCHANGEREQUIRED: false
+      ZITADEL_FIRSTINSTANCE_LOGINCLIENTPATPATH: /zitadel/bootstrap/login-client.pat
+      ZITADEL_FIRSTINSTANCE_ORG_LOGINCLIENT_MACHINE_USERNAME: login-client
+      ZITADEL_FIRSTINSTANCE_ORG_LOGINCLIENT_MACHINE_NAME: Automatically Initialized IAM_LOGIN_CLIENT
+      ZITADEL_FIRSTINSTANCE_ORG_LOGINCLIENT_PAT_EXPIRATIONDATE: ${LOGIN_CLIENT_PAT_EXPIRATION}
+      ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_REQUIRED: true
+      ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_BASEURI: ${ZITADEL_PUBLIC_SCHEME:-https}://${ZITADEL_DOMAIN}:${ZITADEL_EXTERNALPORT:-443}/ui/v2/login/
+      ZITADEL_OIDC_DEFAULTLOGINURLV2: ${ZITADEL_PUBLIC_SCHEME:-https}://${ZITADEL_DOMAIN}:${ZITADEL_EXTERNALPORT:-443}/ui/v2/login/login?authRequest=
+      ZITADEL_OIDC_DEFAULTLOGOUTURLV2: ${ZITADEL_PUBLIC_SCHEME:-https}://${ZITADEL_DOMAIN}:${ZITADEL_EXTERNALPORT:-443}/ui/v2/login/logout?post_logout_redirect=
+      ZITADEL_SAML_DEFAULTLOGINURLV2: ${ZITADEL_PUBLIC_SCHEME:-https}://${ZITADEL_DOMAIN}:${ZITADEL_EXTERNALPORT:-443}/ui/v2/login/login?samlRequest=
+      ZITADEL_LOGSTORE_ACCESS_STDOUT_ENABLED: ${ZITADEL_ACCESS_LOG_STDOUT_ENABLED:-false}
+      ZITADEL_CACHES_CONNECTORS_REDIS_ENABLED: ${ZITADEL_CACHES_CONNECTORS_REDIS_ENABLED:-false}
+      ZITADEL_CACHES_CONNECTORS_REDIS_URL: ${ZITADEL_CACHES_CONNECTORS_REDIS_URL}
+    healthcheck:
+      test: [ "CMD", "/app/zitadel", "ready" ]
+      interval: 10s
+      timeout: 30s
+      retries: 12
+      start_period: 20s
+    volumes:
+      - zitadel-bootstrap:/zitadel/bootstrap:rw
+    networks:
+      - traefik-public
+      - default
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label=traefik-public
+      - traefik.docker.network=traefik-public
+      - traefik.http.services.zitadel-api.loadbalancer.server.port=8080
+      - traefik.http.services.zitadel-api.loadbalancer.server.scheme=h2c
+
+      - traefik.http.middlewares.zitadel-strip-api.stripprefix.prefixes=/api
+      - traefik.http.middlewares.zitadel-strip-api.stripprefix.forceSlash=false
+
+      # API HTTP -> HTTPS Redirect
+      - traefik.http.routers.zitadel-api-alias-http.rule=Host(`${ZITADEL_DOMAIN}`) && PathPrefix(`/api`)
+      - traefik.http.routers.zitadel-api-alias-http.entrypoints=http
+      - traefik.http.routers.zitadel-api-alias-http.middlewares=https-redirect,zitadel-strip-api
+
+      # API HTTPS
+      - traefik.http.routers.zitadel-api-alias-https.rule=Host(`${ZITADEL_DOMAIN}`) && PathPrefix(`/api`)
+      - traefik.http.routers.zitadel-api-alias-https.entrypoints=https
+      - traefik.http.routers.zitadel-api-alias-https.tls=true
+      - traefik.http.routers.zitadel-api-alias-https.middlewares=zitadel-strip-api
+      - traefik.http.routers.zitadel-api-alias-https.service=zitadel-api
+
+      # Canonical HTTP -> HTTPS Redirect
+      - traefik.http.routers.zitadel-canonical-http.rule=Host(`${ZITADEL_DOMAIN}`) && !PathPrefix(`/ui/v2/login`) && !PathPrefix(`/api`) && !Path(`/`)
+      - traefik.http.routers.zitadel-canonical-http.entrypoints=http
+      - traefik.http.routers.zitadel-canonical-http.middlewares=https-redirect
+
+      # Canonical HTTPS
+      - traefik.http.routers.zitadel-canonical-https.rule=Host(`${ZITADEL_DOMAIN}`) && !PathPrefix(`/ui/v2/login`) && !PathPrefix(`/api`) && !Path(`/`)
+      - traefik.http.routers.zitadel-canonical-https.entrypoints=https
+      - traefik.http.routers.zitadel-canonical-https.tls=true
+      - traefik.http.routers.zitadel-canonical-https.service=zitadel-api
+
+  zitadel-login:
+    image: ghcr.io/zitadel/zitadel-login:${ZITADEL_VERSION}
+    restart: unless-stopped
+    user: "0"
+    environment:
+      ZITADEL_API_URL: http://zitadel-api:8080
+      NEXT_PUBLIC_BASE_PATH: /ui/v2/login
+      ZITADEL_SERVICE_USER_TOKEN_FILE: /zitadel/bootstrap/login-client.pat
+      CUSTOM_REQUEST_HEADERS: Host:${ZITADEL_DOMAIN},X-Forwarded-Proto:${ZITADEL_PUBLIC_SCHEME:-https}
+    healthcheck:
+      test: [ "CMD", "/bin/sh", "-c", "node /app/healthcheck.mjs http://localhost:3000/ui/v2/login/healthy" ]
+      interval: 10s
+      timeout: 30s
+      retries: 12
+      start_period: 20s
+    volumes:
+      - zitadel-bootstrap:/zitadel/bootstrap:ro
+    networks:
+      - traefik-public
+      - default
+    depends_on:
+      zitadel-api:
+        condition: service_healthy
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label=traefik-public
+      - traefik.docker.network=traefik-public
+      - traefik.http.services.zitadel-login.loadbalancer.server.port=3000
+
+      - traefik.http.middlewares.zitadel-root-rewrite.replacepath.path=/ui/v2/login/
+
+      # Root HTTP -> HTTPS Redirect
+      - traefik.http.routers.zitadel-root-http.rule=Host(`${ZITADEL_DOMAIN}`) && Path(`/`)
+      - traefik.http.routers.zitadel-root-http.entrypoints=http
+      - traefik.http.routers.zitadel-root-http.middlewares=https-redirect,zitadel-root-rewrite
+
+      # Root HTTPS
+      - traefik.http.routers.zitadel-root-https.rule=Host(`${ZITADEL_DOMAIN}`) && Path(`/`)
+      - traefik.http.routers.zitadel-root-https.entrypoints=https
+      - traefik.http.routers.zitadel-root-https.tls=true
+      - traefik.http.routers.zitadel-root-https.middlewares=zitadel-root-rewrite
+      - traefik.http.routers.zitadel-root-https.service=zitadel-login
+
+      # Login HTTP -> HTTPS Redirect
+      - traefik.http.routers.zitadel-login-http.rule=Host(`${ZITADEL_DOMAIN}`) && PathPrefix(`/ui/v2/login`)
+      - traefik.http.routers.zitadel-login-http.entrypoints=http
+      - traefik.http.routers.zitadel-login-http.middlewares=https-redirect
+
+      # Login HTTPS
+      - traefik.http.routers.zitadel-login-https.rule=Host(`${ZITADEL_DOMAIN}`) && PathPrefix(`/ui/v2/login`)
+      - traefik.http.routers.zitadel-login-https.entrypoints=https
+      - traefik.http.routers.zitadel-login-https.tls=true
+      - traefik.http.routers.zitadel-login-https.service=zitadel-login
+volumes:
+  app-db-data:
+  zitadel-bootstrap:
+
+networks:
+  traefik-public:
+    # Allow setting it to false for testing
+    external: true
