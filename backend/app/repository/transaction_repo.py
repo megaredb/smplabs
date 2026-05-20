@@ -53,3 +53,28 @@ class TransactionRepository(ITransactionRepository):
         WHERE id = ?
         """
         await self.connection.execute(query, (transaction_id,))
+
+    async def get_by_donor_id(
+        self, donor_id: int, limit: int, offset: int
+    ) -> list[TransactionSchema]:
+        query = """
+        SELECT id, campaign_id, donor_id, amount, comment, created_at
+        FROM transactions
+        WHERE donor_id = ?
+        ORDER BY created_at DESC
+        LIMIT ? OFFSET ?
+        """
+        async with self.connection.execute(query, (donor_id, limit, offset)) as cursor:
+            rows = await cursor.fetchall()
+
+        return [
+            TransactionSchema(
+                id=row[0],
+                campaign_id=row[1],
+                donor_id=row[2],
+                amount=row[3],
+                comment=row[4],
+                created_at=row[5],
+            )
+            for row in rows
+        ]

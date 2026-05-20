@@ -13,6 +13,9 @@ class TransactionService:
 
     async def add_transaction(self, transaction: TransactionCreate) -> None:
         await self.uow.transactions.add_one(transaction)
+        await self.uow.campaigns.update_current_amount(
+            transaction.campaign_id, transaction.amount
+        )
 
     async def get_transaction(
         self, transaction_id: TransactionId
@@ -21,3 +24,8 @@ class TransactionService:
 
     async def remove_transaction(self, transaction_id: TransactionId) -> None:
         await self.uow.transactions.remove_by_id(transaction_id)
+
+    async def get_transactions_by_donor(
+        self, donor_id: int, offset: int = 0, limit: int = 50
+    ) -> list[Transaction]:
+        return await self.uow.transactions.get_by_donor_id(donor_id, limit, offset)

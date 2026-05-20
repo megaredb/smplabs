@@ -16,7 +16,7 @@ class UserRepository(IUserRepository):
 
     async def add_one(self, data: UserCreate) -> None:
         query = """
-            INSERT INTO users (name, email, password_hash, role)
+            INSERT INTO users (name, email, hashed_password, role)
             VALUES (?, ?, ?, ?)
         """
         try:
@@ -29,7 +29,7 @@ class UserRepository(IUserRepository):
 
     async def get_by_id(self, user_id: UserId) -> UserSchema | None:
         query = """
-            SELECT id, name, email, password_hash, role, created_at
+            SELECT id, name, email, hashed_password, role, created_at
             FROM users
             WHERE id = ?
         """
@@ -50,18 +50,19 @@ class UserRepository(IUserRepository):
 
     async def get_many(self, limit: int, offset: int) -> list[UserSchema]:
         query = """
-            SELECT id, name, email, password_hash, role, created_at
+            SELECT id, name, email, hashed_password, role, is_active,
+                   is_superuser, is_verified, created_at
             FROM users
             LIMIT ? OFFSET ?
         """
 
         async with self.connection.execute(query, (limit, offset)) as cursor:
-            row = await cursor.fetchmany()
+            rows = await cursor.fetchall()
 
-        if not row:
+        if not rows:
             return []
 
-        return list(map(UserSchema.model_validate, row))
+        return [UserSchema(**row) for row in rows]
 
     async def remove_by_id(self, user_id: UserId) -> None:
         query = "DELETE FROM users WHERE id = ?"

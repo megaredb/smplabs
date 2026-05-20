@@ -1,122 +1,234 @@
 <script lang="ts">
-    import type { PageData } from './$types';
-    import { onMount } from 'svelte';
+	import {
+		createGetTopCampaignsApiV1CampaignsTopGet,
+		createDeleteCampaignApiV1CampaignsCampaignIdDelete
+	} from '$lib/api/generated/endpoints';
+	import type { CampaignResponse } from '$lib/api/generated/model';
+	import { Button } from '$lib/components/ui/button';
+	import {
+		Card,
+		CardContent,
+		CardDescription,
+		CardHeader,
+		CardTitle
+	} from '$lib/components/ui/card';
+	import { Progress } from '$lib/components/ui/progress';
+	import { Input } from '$lib/components/ui/input';
+	import { Plus, Search, Trash2, Clock, Calendar, Filter } from '@lucide/svelte';
+	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
 
-    let { data }: { data: PageData } = $props();
+	let searchQuery = $state('');
+	let currentUserId = $state<number | null>(null);
 
-    let campaigns = $state(data.campaigns);
-    
-    let searchQuery = $state('');
-    let currentUserId = $state<number | null>(null);
+	// Orval v8: params are getter functions
+	const campaignsQuery = createGetTopCampaignsApiV1CampaignsTopGet(() => ({ limit: 50 }));
+	const deleteMutation = createDeleteCampaignApiV1CampaignsCampaignIdDelete();
 
-    onMount(() => {
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            try {
-                const tokenPayload = JSON.parse(atob(token.split('.')[1]));
-                currentUserId = parseInt(tokenPayload.sub);
-            } catch (e) {
-                console.error("Помилка читання токена");
-            }
-        }
-    });
+	onMount(() => {
+		const token = localStorage.getItem('access_token');
+		if (token) {
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				currentUserId = parseInt(payload.sub);
+			} catch {
+				// ignore parse errors
+			}
+		}
+	});
 
-    let filteredCampaigns = $derived(
-        campaigns.filter((campaign: any) => 
-            campaign.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-            campaign.description.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-    );
+	function getCampaigns(): CampaignResponse[] {
+		const d = campaignsQuery.data;
+		if (!d) return [];
+		if (Array.isArray(d)) return d as CampaignResponse[];
 
-    async function handleDelete(id: number) {
-        if (!confirm('Ви впевнені, що хочете видалити цей збір? Цю дію неможливо скасувати.')) {
-            return;
-        }
+		if (typeof d === 'object' && d !== null && 'data' in d) {
+			const safeData = (d as Record<string, unknown>).data;
+			if (Array.isArray(safeData)) {
+				return safeData as CampaignResponse[];
+			}
+		}
+		return [];
+	}
 
-        const token = localStorage.getItem('access_token');
+	let filterLimit = $state(50);
+	let filteredCampaigns = $derived(
+		getCampaigns()
+			.slice(0, filterLimit)
+			.filter(
+				(c) =>
+					c.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+					c.description?.toLowerCase().includes(searchQuery.toLowerCase())
+			)
+	);
 
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/api/v1/campaigns/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Не вдалося видалити збір на сервері');
-            }
-
-            campaigns = campaigns.filter((c: any) => c.id !== id);
-            
-        } catch (error) {
-            console.error(error);
-            alert('Помилка при видаленні збору. Перевірте консоль.');
-        }
-    }
+	function handleDelete(id: number) {
+		if (!confirm('Ви впевнені, що хочете видалити цей збір?')) return;
+		deleteMutation.mutate(
+			{ campaignId: id },
+			{
+				onSuccess: () => campaignsQuery.refetch(),
+				onError: () => alert('Помилка при видаленні збору.')
+			}
+		);
+	}
 </script>
 
-<div class="space-y-6">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-        <h1 class="text-2xl font-bold text-gray-900">Усі збори</h1>
-        
-        <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
-            <div class="relative w-full sm:w-64">
-                <input 
-                    type="text" 
-                    bind:value={searchQuery}
-                    placeholder="Знайти збір..." 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                />
-            </div>
-            
-            <a href="/campaigns/create" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center justify-center whitespace-nowrap">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-                Створити збір
-            </a>
-        </div>
-    </div>
+<svelte:head>
+	<title>RazomFund - Всі збори</title>
+</svelte:head>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {#each filteredCampaigns as campaign}
-            <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col h-full group relative">
-                
-                {#if currentUserId === campaign.organizer_id}
-                    <button 
-                        onclick={() => handleDelete(campaign.id)}
-                        class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full p-1 shadow-sm border border-gray-100 opacity-0 group-hover:opacity-100"
-                        title="Видалити збір"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                    </button>
-                {/if}
+<div class="mx-auto max-w-6xl space-y-8">
+	<div
+		class="flex flex-col items-start justify-between gap-4 rounded-2xl border border-slate-200/60 bg-white/60 p-6 shadow-sm backdrop-blur-sm sm:flex-row sm:items-center"
+	>
+		<h1 class="text-3xl font-bold tracking-tight text-slate-900">Усі збори</h1>
 
-                <h2 class="text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors pr-6">{campaign.title}</h2>
-                <p class="text-gray-600 mb-6 flex-grow line-clamp-3 leading-relaxed">{campaign.description}</p>
-                
-                <div class="space-y-3 mt-auto">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Зібрано: <span class="font-bold text-gray-900">{campaign.current_amount} ₴</span></span>
-                        <span class="text-gray-500">Ціль: <span class="font-bold text-gray-900">{campaign.target_amount} ₴</span></span>
-                    </div>
-                    
-                    <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                        <div 
-                            class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" 
-                            style="width: {Math.min((campaign.current_amount / campaign.target_amount) * 100, 100)}%">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {:else}
-            <div class="col-span-full text-center py-16 bg-white rounded-xl border border-gray-200 border-dashed">
-                <h3 class="text-lg font-medium text-gray-900">Зборів не знайдено</h3>
-                <p class="text-gray-500 mt-1">Спробуйте змінити пошуковий запит або створіть перший збір.</p>
-            </div>
-        {/each}
-    </div>
+		<div class="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row">
+			<div class="relative w-full sm:w-48">
+				<Filter
+					class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400"
+				/>
+				<select
+					bind:value={filterLimit}
+					class="flex h-10 w-full cursor-pointer appearance-none items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 pl-9 text-sm ring-offset-white transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none"
+				>
+					<option value={50}>Усі збори</option>
+					<option value={10}>Топ 10 зборів</option>
+				</select>
+			</div>
+
+			<div class="relative w-full sm:w-72">
+				<Search class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+				<Input
+					type="text"
+					bind:value={searchQuery}
+					placeholder="Знайти збір..."
+					class="bg-white pl-9"
+				/>
+			</div>
+
+			<Button
+				href={resolve('/campaigns/create')}
+				class="w-full gap-2 bg-blue-600 hover:bg-blue-700 sm:w-auto"
+			>
+				<Plus class="h-4 w-4" />
+				Створити збір
+			</Button>
+		</div>
+	</div>
+
+	{#if campaignsQuery.isLoading}
+		<div class="flex items-center justify-center py-20">
+			<div class="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+		</div>
+	{:else if campaignsQuery.isError}
+		<Card class="border-red-200 bg-red-50/50">
+			<CardContent class="py-10 text-center text-red-600">
+				<p class="font-medium">Помилка завантаження зборів</p>
+				<Button variant="outline" class="mt-4" onclick={() => campaignsQuery.refetch()}
+					>Спробувати знову</Button
+				>
+			</CardContent>
+		</Card>
+	{:else}
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+			{#each filteredCampaigns as campaign (campaign.id)}
+				<Card
+					class="group relative flex h-full flex-col overflow-hidden border-slate-200/60 bg-white/80 backdrop-blur-sm transition-all hover:shadow-lg"
+				>
+					{#if currentUserId === campaign.organizer_id}
+						<Button
+							variant="destructive"
+							size="icon"
+							class="absolute top-3 right-3 z-10 h-8 w-8 rounded-full opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+							onclick={() => handleDelete(campaign.id)}
+							title="Видалити збір"
+						>
+							<Trash2 class="h-4 w-4" />
+						</Button>
+					{/if}
+
+					<a
+						href={resolve(`/campaigns/${campaign.id}`)}
+						class="flex flex-1 flex-col hover:no-underline"
+					>
+						<div
+							class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200"
+						>
+							<span class="font-medium text-slate-400">Фото відсутнє</span>
+						</div>
+
+						<CardHeader class="flex-none">
+							<CardTitle
+								class="line-clamp-2 leading-tight transition-colors group-hover:text-blue-600"
+								>{campaign.title}</CardTitle
+							>
+						</CardHeader>
+
+						<CardContent class="flex grow flex-col">
+							<CardDescription class="mb-4 line-clamp-3 text-slate-600"
+								>{campaign.description}</CardDescription
+							>
+
+							<div class="mb-5 flex flex-col gap-1.5 text-xs">
+								<div class="flex items-center gap-1.5 text-slate-500">
+									<Clock class="h-3.5 w-3.5" />
+									<span
+										>Створено: {campaign.created_at
+											? new Date(campaign.created_at).toLocaleDateString('uk-UA')
+											: '—'}</span
+									>
+								</div>
+								<div class="flex items-center gap-1.5 font-medium text-blue-600/80">
+									<Calendar class="h-3.5 w-3.5" />
+									<span
+										>Завершення: {campaign.created_at
+											? new Date(
+													new Date(campaign.created_at).getTime() + 14 * 24 * 60 * 60 * 1000
+												).toLocaleDateString('uk-UA')
+											: '—'}</span
+									>
+								</div>
+							</div>
+
+							<div class="mt-auto space-y-3">
+								<div class="flex items-end justify-between text-sm">
+									<div class="flex flex-col">
+										<span class="text-xs text-slate-500">Зібрано</span>
+										<span class="text-lg leading-none font-bold text-slate-900"
+											>{campaign.current_amount ?? 0} ₴</span
+										>
+									</div>
+									<div class="flex flex-col items-end">
+										<span class="text-xs text-slate-500">Ціль</span>
+										<span class="font-medium text-slate-600">{campaign.target_amount} ₴</span>
+									</div>
+								</div>
+								<Progress
+									value={Math.min(
+										((campaign.current_amount ?? 0) / (Number(campaign.target_amount) || 1)) * 100,
+										100
+									)}
+									class="h-2 bg-slate-100 [&>div]:bg-blue-600"
+								/>
+							</div>
+						</CardContent>
+					</a>
+				</Card>
+			{:else}
+				<div
+					class="col-span-full flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white/50 py-20 text-center backdrop-blur-sm"
+				>
+					<div class="mb-4 rounded-full bg-slate-100 p-4">
+						<Search class="h-8 w-8 text-slate-400" />
+					</div>
+					<h3 class="mb-2 text-xl font-semibold text-slate-900">Зборів не знайдено</h3>
+					<p class="max-w-sm text-slate-500">
+						Спробуйте змінити пошуковий запит або створіть перший збір.
+					</p>
+				</div>
+			{/each}
+		</div>
+	{/if}
 </div>

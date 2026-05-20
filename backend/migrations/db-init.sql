@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS users
     email           TEXT NOT NULL UNIQUE,
     hashed_password TEXT NOT NULL,
     role            TEXT     DEFAULT 'donor',
+    is_active       BOOLEAN  DEFAULT TRUE,
+    is_superuser    BOOLEAN  DEFAULT FALSE,
+    is_verified     BOOLEAN  DEFAULT FALSE,
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

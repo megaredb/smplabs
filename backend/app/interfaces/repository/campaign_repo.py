@@ -2,7 +2,12 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.schemas.campaign import Campaign, CampaignCreate, CampaignId
+    from app.schemas.campaign import (
+        Campaign,
+        CampaignCreate,
+        CampaignId,
+        CampaignUpdate,
+    )
 
 
 class ICampaignRepository(ABC):
@@ -19,5 +24,21 @@ class ICampaignRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    async def update_one(self, campaign_id: CampaignId, data: CampaignUpdate) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def update_current_amount(
+        self, campaign_id: CampaignId, amount_to_add: float
+    ) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
     async def get_top_campaigns(self, limit: int = 10) -> list[Campaign]:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_by_organizer_id(
+        self, organizer_id: int, offset: int = 0, limit: int = 50
+    ) -> list[Campaign]:
         raise NotImplementedError

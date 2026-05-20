@@ -3,12 +3,15 @@ from typing import TYPE_CHECKING, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from app.api.deps.transaction import get_transaction_service
 from app.api.deps.user import get_user_service
 from app.core.users import current_superuser, current_user
+from app.schemas.transaction import TransactionResponse
 from app.schemas.user import UserDB, UserId, UserRead
+from app.services.transaction_service import TransactionService
 
 if TYPE_CHECKING:
-    from app.services.user_service import UserService
+    from app.services.user_service import UserService  # noqa: TC004
 
 users_router = APIRouter()
 
@@ -44,7 +47,7 @@ async def get_users(
     offset: int = 0,
     limit: int = 10,
 ) -> list[UserRead]:
-    users = await user_service.get_users(offset, limit)
+    users = await user_service.get_users(limit=limit, offset=offset)
     return [UserRead.model_validate(user, from_attributes=True) for user in users]
 
 

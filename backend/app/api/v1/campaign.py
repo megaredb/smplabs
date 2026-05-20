@@ -1,31 +1,32 @@
-from __future__ import annotations
-
 from http import HTTPStatus
-from typing import Annotated  # TYPE_CHECKING тут більше не потрібен
+from typing import TYPE_CHECKING, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.deps.campaign import get_campaign_service
+from app.core.users import current_user
+from app.schemas.campaign import (
+    CampaignCreate,
+    CampaignId,
+    CampaignResponse,
+    CampaignUpdate,
+)
 
-from app.schemas.campaign import CampaignId, CampaignResponse, CampaignCreate
-
-from app.services.campaign_service import CampaignService
+if TYPE_CHECKING:
+    from app.schemas.user import UserDB
+    from app.services.campaign_service import CampaignService
 
 campaigns_router = APIRouter()
 
 
 @campaigns_router.post("/", status_code=HTTPStatus.CREATED)
 async def create_campaign(
+    _current_user: Annotated[UserDB, Depends(current_user)],
     campaign_data: CampaignCreate,
     campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
 ) -> None:
-    try:
-        await campaign_service.add_campaign(campaign_data)
-    except Exception as e:
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"Помилка при створенні збору: {str(e)}",
-        )
+    campaign_data.organizer_id = _current_user.id
+    await campaign_service.add_campaign(campaign_data)
 
 
 @campaigns_router.get("/top")
@@ -35,6 +36,48 @@ async def get_top_campaigns(
 ) -> list[CampaignResponse]:
     campaigns = await campaign_service.get_top_campaigns(limit)
     return [CampaignResponse.model_validate(c) for c in campaigns]
+
+
+@campaigns_router.delete("/{campaign_id}", status_code=HTTPStatus.NO_CONTENT)
+async def delete_campaign(
+    campaign_id: CampaignId,
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> None:
+    campaign = await campaign_service.get_campaign(campaign_id)
+    if not campaign:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="Campaign not found"
+        )
+
+    await campaign_service.remove_campaign(campaign_id)
+
+
+@campaigns_router.get("/my")
+async def get_my_campaigns(
+    _current_user: Annotated[UserDB, Depends(current_user)],
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+    offset: int = 0,
+    limit: int = 10,
+) -> list[CampaignResponse]:
+    campaigns = await campaign_service.get_by_organizer(_current_user.id, limit, offset)
+    return [CampaignResponse.model_validate(c) for c in campaigns]
+
+
+@campaigns_router.patch("/{campaign_id}")
+async def update_campaign(
+    campaign_id: CampaignId,
+    campaign_data: CampaignUpdate,
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> CampaignResponse:
+    campaign = await campaign_service.get_campaign(campaign_id)
+    if not campaign:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="Campaign not found"
+        )
+
+    await campaign_service.update_campaign(campaign_id, campaign_data)
+    updated_campaign = await campaign_service.get_campaign(campaign_id)
+    return CampaignResponse.model_validate(updated_campaign)
 
 
 @campaigns_router.get("/{campaign_id}")
@@ -50,17 +93,3 @@ async def get_campaign(
         )
 
     return CampaignResponse.model_validate(campaign)
-
-
-@campaigns_router.delete("/{campaign_id}", status_code=HTTPStatus.NO_CONTENT)
-async def delete_campaign(
-    campaign_id: CampaignId,
-    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
-) -> None:
-    campaign = await campaign_service.get_campaign(campaign_id)
-    if not campaign:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="Campaign not found"
-        )
-
-    await campaign_service.remove_campaign(campaign_id)

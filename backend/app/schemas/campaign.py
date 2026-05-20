@@ -33,6 +33,12 @@ class CampaignCreate(CampaignBase):
     pass
 
 
+class CampaignUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    target_amount: TargetAmount | None = None
+
+
 class Campaign(CampaignBase):
     id: CampaignId
     current_amount: float
