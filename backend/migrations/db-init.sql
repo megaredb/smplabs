@@ -36,3 +36,20 @@ CREATE TABLE IF NOT EXISTS transactions
     FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE CASCADE,
     FOREIGN KEY (donor_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS page_visits
+(
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    page_url    TEXT     NOT NULL,
+    user_id     INTEGER,             -- Залишаємо NULL, якщо це гість
+    session_id  TEXT     NOT NULL,   -- Унікальний ідентифікатор сесії браузера (UUID)
+    visited_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    -- Якщо користувач видаляє акаунт, ми не хочемо втрачати статистику відвідувань, 
+    -- тому просто скидаємо user_id в NULL (анонімізуємо візит)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
+);
+
+-- Корисно додати індекси для швидкодії, оскільки запити до лічильників будуть частими:
+CREATE INDEX idx_page_url ON page_visits(page_url);
+CREATE INDEX idx_user_id ON page_visits(user_id);

@@ -35,17 +35,109 @@ import type {
   GetMyTransactionsApiV1TransactionsMyGetParams,
   GetTopCampaignsApiV1CampaignsTopGetParams,
   GetUsersApiV1UsersGetParams,
+  GetVisitStatsApiV1VisitsStatsGetParams,
   HTTPValidationError,
   TransactionCreate,
   TransactionResponse,
   UserCreate,
-  UserRead
+  UserRead,
+  VisitCreate,
+  VisitStatsResponse
 } from './model';
 
 import { customInstance } from '../axios';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
+
+export type testXmlParsingApiLabXmlTestGetResponse200 = {
+  data: unknown
+  status: 200
+}
+
+export type testXmlParsingApiLabXmlTestGetResponseSuccess = (testXmlParsingApiLabXmlTestGetResponse200) & {
+  headers: Headers;
+};
+;
+
+export type testXmlParsingApiLabXmlTestGetResponse = (testXmlParsingApiLabXmlTestGetResponseSuccess)
+
+export const getTestXmlParsingApiLabXmlTestGetUrl = () => {
+
+
+
+
+  return `/api/lab/xml-test`
+}
+
+/**
+ * @summary Test Xml Parsing
+ */
+export const testXmlParsingApiLabXmlTestGet = async ( options?: RequestInit): Promise<testXmlParsingApiLabXmlTestGetResponse> => {
+
+  return customInstance<testXmlParsingApiLabXmlTestGetResponse>(getTestXmlParsingApiLabXmlTestGetUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getTestXmlParsingApiLabXmlTestGetQueryKey = () => {
+    return [
+    `/api/lab/xml-test`
+    ] as const;
+    }
+
+
+export const getTestXmlParsingApiLabXmlTestGetQueryOptions = <TData = Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError = unknown>( options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getTestXmlParsingApiLabXmlTestGetQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>> = ({ signal }) => testXmlParsingApiLabXmlTestGet({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type TestXmlParsingApiLabXmlTestGetQueryResult = NonNullable<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>>
+export type TestXmlParsingApiLabXmlTestGetQueryError = unknown
+
+
+/**
+ * @summary Test Xml Parsing
+ */
+
+export function createTestXmlParsingApiLabXmlTestGet<TData = Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError = unknown>(
+  options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient
+ ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+
+
+  const query = createQuery(() => getTestXmlParsingApiLabXmlTestGetQueryOptions(options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return query
+}
+
+
+
+
 
 
 
@@ -619,102 +711,6 @@ export function createGetTopCampaignsApiV1CampaignsTopGet<TData = Awaited<Return
 
 
 
-export type getCampaignApiV1CampaignsCampaignIdGetResponse200 = {
-  data: CampaignResponse
-  status: 200
-}
-
-export type getCampaignApiV1CampaignsCampaignIdGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getCampaignApiV1CampaignsCampaignIdGetResponseSuccess = (getCampaignApiV1CampaignsCampaignIdGetResponse200) & {
-  headers: Headers;
-};
-export type getCampaignApiV1CampaignsCampaignIdGetResponseError = (getCampaignApiV1CampaignsCampaignIdGetResponse422) & {
-  headers: Headers;
-};
-
-export type getCampaignApiV1CampaignsCampaignIdGetResponse = (getCampaignApiV1CampaignsCampaignIdGetResponseSuccess | getCampaignApiV1CampaignsCampaignIdGetResponseError)
-
-export const getGetCampaignApiV1CampaignsCampaignIdGetUrl = (campaignId: number,) => {
-
-
-
-
-  return `/api/v1/campaigns/${campaignId}`
-}
-
-/**
- * @summary Get Campaign
- */
-export const getCampaignApiV1CampaignsCampaignIdGet = async (campaignId: number, options?: RequestInit): Promise<getCampaignApiV1CampaignsCampaignIdGetResponse> => {
-
-  return customInstance<getCampaignApiV1CampaignsCampaignIdGetResponse>(getGetCampaignApiV1CampaignsCampaignIdGetUrl(campaignId),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetCampaignApiV1CampaignsCampaignIdGetQueryKey = (campaignId: number,) => {
-    return [
-    `/api/v1/campaigns/${campaignId}`
-    ] as const;
-    }
-
-
-export const getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError = HTTPValidationError>(campaignId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetCampaignApiV1CampaignsCampaignIdGetQueryKey(campaignId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>> = ({ signal }) => getCampaignApiV1CampaignsCampaignIdGet(campaignId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: !!(campaignId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetCampaignApiV1CampaignsCampaignIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>>
-export type GetCampaignApiV1CampaignsCampaignIdGetQueryError = HTTPValidationError
-
-
-/**
- * @summary Get Campaign
- */
-
-export function createGetCampaignApiV1CampaignsCampaignIdGet<TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError = HTTPValidationError>(
- campaignId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-
-
-  const query = createQuery(() => getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions(campaignId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
-}
-
-
-
-
-
-
-
 export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponse204 = {
   data: void
   status: 204
@@ -895,6 +891,102 @@ export const createUpdateCampaignApiV1CampaignsCampaignIdPatch = <TError = HTTPV
       return createMutation(() => ({ ...getUpdateCampaignApiV1CampaignsCampaignIdPatchMutationOptions(options?.()) }), queryClient);
     }
 
+export type getCampaignApiV1CampaignsCampaignIdGetResponse200 = {
+  data: CampaignResponse
+  status: 200
+}
+
+export type getCampaignApiV1CampaignsCampaignIdGetResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+
+export type getCampaignApiV1CampaignsCampaignIdGetResponseSuccess = (getCampaignApiV1CampaignsCampaignIdGetResponse200) & {
+  headers: Headers;
+};
+export type getCampaignApiV1CampaignsCampaignIdGetResponseError = (getCampaignApiV1CampaignsCampaignIdGetResponse422) & {
+  headers: Headers;
+};
+
+export type getCampaignApiV1CampaignsCampaignIdGetResponse = (getCampaignApiV1CampaignsCampaignIdGetResponseSuccess | getCampaignApiV1CampaignsCampaignIdGetResponseError)
+
+export const getGetCampaignApiV1CampaignsCampaignIdGetUrl = (campaignId: number,) => {
+
+
+
+
+  return `/api/v1/campaigns/${campaignId}`
+}
+
+/**
+ * @summary Get Campaign
+ */
+export const getCampaignApiV1CampaignsCampaignIdGet = async (campaignId: number, options?: RequestInit): Promise<getCampaignApiV1CampaignsCampaignIdGetResponse> => {
+
+  return customInstance<getCampaignApiV1CampaignsCampaignIdGetResponse>(getGetCampaignApiV1CampaignsCampaignIdGetUrl(campaignId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCampaignApiV1CampaignsCampaignIdGetQueryKey = (campaignId: number,) => {
+    return [
+    `/api/v1/campaigns/${campaignId}`
+    ] as const;
+    }
+
+
+export const getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError = HTTPValidationError>(campaignId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCampaignApiV1CampaignsCampaignIdGetQueryKey(campaignId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>> = ({ signal }) => getCampaignApiV1CampaignsCampaignIdGet(campaignId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(campaignId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCampaignApiV1CampaignsCampaignIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>>
+export type GetCampaignApiV1CampaignsCampaignIdGetQueryError = HTTPValidationError
+
+
+/**
+ * @summary Get Campaign
+ */
+
+export function createGetCampaignApiV1CampaignsCampaignIdGet<TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError = HTTPValidationError>(
+ campaignId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient
+ ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+
+
+  const query = createQuery(() => getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions(campaignId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return query
+}
+
+
+
+
+
+
+
 export type getMyCampaignsApiV1CampaignsMyGetResponse200 = {
   data: CampaignResponse[]
   status: 200
@@ -997,191 +1089,6 @@ export function createGetMyCampaignsApiV1CampaignsMyGet<TData = Awaited<ReturnTy
 
 
 
-
-export type getTransactionApiV1TransactionsTransactionIdGetResponse200 = {
-  data: TransactionResponse
-  status: 200
-}
-
-export type getTransactionApiV1TransactionsTransactionIdGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getTransactionApiV1TransactionsTransactionIdGetResponseSuccess = (getTransactionApiV1TransactionsTransactionIdGetResponse200) & {
-  headers: Headers;
-};
-export type getTransactionApiV1TransactionsTransactionIdGetResponseError = (getTransactionApiV1TransactionsTransactionIdGetResponse422) & {
-  headers: Headers;
-};
-
-export type getTransactionApiV1TransactionsTransactionIdGetResponse = (getTransactionApiV1TransactionsTransactionIdGetResponseSuccess | getTransactionApiV1TransactionsTransactionIdGetResponseError)
-
-export const getGetTransactionApiV1TransactionsTransactionIdGetUrl = (transactionId: number,) => {
-
-
-
-
-  return `/api/v1/transactions/${transactionId}`
-}
-
-/**
- * @summary Get Transaction
- */
-export const getTransactionApiV1TransactionsTransactionIdGet = async (transactionId: number, options?: RequestInit): Promise<getTransactionApiV1TransactionsTransactionIdGetResponse> => {
-
-  return customInstance<getTransactionApiV1TransactionsTransactionIdGetResponse>(getGetTransactionApiV1TransactionsTransactionIdGetUrl(transactionId),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetTransactionApiV1TransactionsTransactionIdGetQueryKey = (transactionId: number,) => {
-    return [
-    `/api/v1/transactions/${transactionId}`
-    ] as const;
-    }
-
-
-export const getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError = HTTPValidationError>(transactionId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetTransactionApiV1TransactionsTransactionIdGetQueryKey(transactionId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>> = ({ signal }) => getTransactionApiV1TransactionsTransactionIdGet(transactionId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: !!(transactionId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetTransactionApiV1TransactionsTransactionIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>>
-export type GetTransactionApiV1TransactionsTransactionIdGetQueryError = HTTPValidationError
-
-
-/**
- * @summary Get Transaction
- */
-
-export function createGetTransactionApiV1TransactionsTransactionIdGet<TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError = HTTPValidationError>(
- transactionId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-
-
-  const query = createQuery(() => getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions(transactionId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
-}
-
-
-
-
-
-
-
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse204 = {
-  data: void
-  status: 204
-}
-
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponse204) & {
-  headers: Headers;
-};
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponse422) & {
-  headers: Headers;
-};
-
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess | deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError)
-
-export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl = (transactionId: number,) => {
-
-
-
-
-  return `/api/v1/transactions/${transactionId}`
-}
-
-/**
- * @summary Delete Transaction
- */
-export const deleteTransactionApiV1TransactionsTransactionIdDelete = async (transactionId: number, options?: RequestInit): Promise<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse> => {
-
-  return customInstance<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse>(getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl(transactionId),
-  {
-    ...options,
-    method: 'DELETE'
-
-
-  }
-);}
-
-
-
-
-export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext> => {
-
-const mutationKey = ['deleteTransactionApiV1TransactionsTransactionIdDelete'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, {transactionId: number}> = (props) => {
-          const {transactionId} = props ?? {};
-
-          return  deleteTransactionApiV1TransactionsTransactionIdDelete(transactionId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>>
-
-    export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationError = HTTPValidationError
-
-    /**
- * @summary Delete Transaction
- */
-export const createDeleteTransactionApiV1TransactionsTransactionIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
-        TError,
-        {transactionId: number},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions(options?.()) }), queryClient);
-    }
 
 export type createTransactionApiV1TransactionsPostResponse201 = {
   data: unknown
@@ -1366,6 +1273,384 @@ export function createGetMyTransactionsApiV1TransactionsMyGet<TData = Awaited<Re
 
 
   const query = createQuery(() => getGetMyTransactionsApiV1TransactionsMyGetQueryOptions(params?.(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return query
+}
+
+
+
+
+
+
+
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse204 = {
+  data: void
+  status: 204
+}
+
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponse204) & {
+  headers: Headers;
+};
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponse422) & {
+  headers: Headers;
+};
+
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess | deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError)
+
+export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl = (transactionId: number,) => {
+
+
+
+
+  return `/api/v1/transactions/${transactionId}`
+}
+
+/**
+ * @summary Delete Transaction
+ */
+export const deleteTransactionApiV1TransactionsTransactionIdDelete = async (transactionId: number, options?: RequestInit): Promise<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse> => {
+
+  return customInstance<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse>(getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl(transactionId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext> => {
+
+const mutationKey = ['deleteTransactionApiV1TransactionsTransactionIdDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, {transactionId: number}> = (props) => {
+          const {transactionId} = props ?? {};
+
+          return  deleteTransactionApiV1TransactionsTransactionIdDelete(transactionId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>>
+
+    export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationError = HTTPValidationError
+
+    /**
+ * @summary Delete Transaction
+ */
+export const createDeleteTransactionApiV1TransactionsTransactionIdDelete = <TError = HTTPValidationError,
+    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient): CreateMutationResult<
+        Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
+        TError,
+        {transactionId: number},
+        TContext
+      > => {
+      return createMutation(() => ({ ...getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions(options?.()) }), queryClient);
+    }
+
+export type getTransactionApiV1TransactionsTransactionIdGetResponse200 = {
+  data: TransactionResponse
+  status: 200
+}
+
+export type getTransactionApiV1TransactionsTransactionIdGetResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+
+export type getTransactionApiV1TransactionsTransactionIdGetResponseSuccess = (getTransactionApiV1TransactionsTransactionIdGetResponse200) & {
+  headers: Headers;
+};
+export type getTransactionApiV1TransactionsTransactionIdGetResponseError = (getTransactionApiV1TransactionsTransactionIdGetResponse422) & {
+  headers: Headers;
+};
+
+export type getTransactionApiV1TransactionsTransactionIdGetResponse = (getTransactionApiV1TransactionsTransactionIdGetResponseSuccess | getTransactionApiV1TransactionsTransactionIdGetResponseError)
+
+export const getGetTransactionApiV1TransactionsTransactionIdGetUrl = (transactionId: number,) => {
+
+
+
+
+  return `/api/v1/transactions/${transactionId}`
+}
+
+/**
+ * @summary Get Transaction
+ */
+export const getTransactionApiV1TransactionsTransactionIdGet = async (transactionId: number, options?: RequestInit): Promise<getTransactionApiV1TransactionsTransactionIdGetResponse> => {
+
+  return customInstance<getTransactionApiV1TransactionsTransactionIdGetResponse>(getGetTransactionApiV1TransactionsTransactionIdGetUrl(transactionId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetTransactionApiV1TransactionsTransactionIdGetQueryKey = (transactionId: number,) => {
+    return [
+    `/api/v1/transactions/${transactionId}`
+    ] as const;
+    }
+
+
+export const getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError = HTTPValidationError>(transactionId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTransactionApiV1TransactionsTransactionIdGetQueryKey(transactionId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>> = ({ signal }) => getTransactionApiV1TransactionsTransactionIdGet(transactionId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(transactionId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetTransactionApiV1TransactionsTransactionIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>>
+export type GetTransactionApiV1TransactionsTransactionIdGetQueryError = HTTPValidationError
+
+
+/**
+ * @summary Get Transaction
+ */
+
+export function createGetTransactionApiV1TransactionsTransactionIdGet<TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError = HTTPValidationError>(
+ transactionId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient
+ ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+
+
+  const query = createQuery(() => getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions(transactionId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return query
+}
+
+
+
+
+
+
+
+export type createVisitApiV1VisitsPostResponse200 = {
+  data: unknown
+  status: 200
+}
+
+export type createVisitApiV1VisitsPostResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+
+export type createVisitApiV1VisitsPostResponseSuccess = (createVisitApiV1VisitsPostResponse200) & {
+  headers: Headers;
+};
+export type createVisitApiV1VisitsPostResponseError = (createVisitApiV1VisitsPostResponse422) & {
+  headers: Headers;
+};
+
+export type createVisitApiV1VisitsPostResponse = (createVisitApiV1VisitsPostResponseSuccess | createVisitApiV1VisitsPostResponseError)
+
+export const getCreateVisitApiV1VisitsPostUrl = () => {
+
+
+
+
+  return `/api/v1/visits/`
+}
+
+/**
+ * @summary Create Visit
+ */
+export const createVisitApiV1VisitsPost = async (visitCreate: VisitCreate, options?: RequestInit): Promise<createVisitApiV1VisitsPostResponse> => {
+
+  return customInstance<createVisitApiV1VisitsPostResponse>(getCreateVisitApiV1VisitsPostUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      visitCreate,)
+  }
+);}
+
+
+
+
+export const getCreateVisitApiV1VisitsPostMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, TError,{data: VisitCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
+): CreateMutationOptions<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, TError,{data: VisitCreate}, TContext> => {
+
+const mutationKey = ['createVisitApiV1VisitsPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, {data: VisitCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createVisitApiV1VisitsPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateVisitApiV1VisitsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>>
+    export type CreateVisitApiV1VisitsPostMutationBody = VisitCreate
+    export type CreateVisitApiV1VisitsPostMutationError = HTTPValidationError
+
+    /**
+ * @summary Create Visit
+ */
+export const createCreateVisitApiV1VisitsPost = <TError = HTTPValidationError,
+    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, TError,{data: VisitCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient): CreateMutationResult<
+        Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>,
+        TError,
+        {data: VisitCreate},
+        TContext
+      > => {
+      return createMutation(() => ({ ...getCreateVisitApiV1VisitsPostMutationOptions(options?.()) }), queryClient);
+    }
+
+export type getVisitStatsApiV1VisitsStatsGetResponse200 = {
+  data: VisitStatsResponse
+  status: 200
+}
+
+export type getVisitStatsApiV1VisitsStatsGetResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+
+export type getVisitStatsApiV1VisitsStatsGetResponseSuccess = (getVisitStatsApiV1VisitsStatsGetResponse200) & {
+  headers: Headers;
+};
+export type getVisitStatsApiV1VisitsStatsGetResponseError = (getVisitStatsApiV1VisitsStatsGetResponse422) & {
+  headers: Headers;
+};
+
+export type getVisitStatsApiV1VisitsStatsGetResponse = (getVisitStatsApiV1VisitsStatsGetResponseSuccess | getVisitStatsApiV1VisitsStatsGetResponseError)
+
+export const getGetVisitStatsApiV1VisitsStatsGetUrl = (params: GetVisitStatsApiV1VisitsStatsGetParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/v1/visits/stats?${stringifiedParams}` : `/api/v1/visits/stats`
+}
+
+/**
+ * @summary Get Visit Stats
+ */
+export const getVisitStatsApiV1VisitsStatsGet = async (params: GetVisitStatsApiV1VisitsStatsGetParams, options?: RequestInit): Promise<getVisitStatsApiV1VisitsStatsGetResponse> => {
+
+  return customInstance<getVisitStatsApiV1VisitsStatsGetResponse>(getGetVisitStatsApiV1VisitsStatsGetUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetVisitStatsApiV1VisitsStatsGetQueryKey = (params?: GetVisitStatsApiV1VisitsStatsGetParams,) => {
+    return [
+    `/api/v1/visits/stats`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetVisitStatsApiV1VisitsStatsGetQueryOptions = <TData = Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError = HTTPValidationError>(params: GetVisitStatsApiV1VisitsStatsGetParams, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetVisitStatsApiV1VisitsStatsGetQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>> = ({ signal }) => getVisitStatsApiV1VisitsStatsGet(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetVisitStatsApiV1VisitsStatsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>>
+export type GetVisitStatsApiV1VisitsStatsGetQueryError = HTTPValidationError
+
+
+/**
+ * @summary Get Visit Stats
+ */
+
+export function createGetVisitStatsApiV1VisitsStatsGet<TData = Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError = HTTPValidationError>(
+ params: () =>  GetVisitStatsApiV1VisitsStatsGetParams, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient
+ ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+
+
+  const query = createQuery(() => getGetVisitStatsApiV1VisitsStatsGetQueryOptions(params(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return query
 }

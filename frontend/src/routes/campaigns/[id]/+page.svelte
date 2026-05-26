@@ -26,6 +26,23 @@
 
 	let campaignId = $derived(Number($page.params.id));
 	let currentUserId = $state<number | null>(null);
+	let myUid = $state('');
+
+	let messages = $state<string[]>([]);
+	let newMessage = $state('');
+	let targetUser = $state('');
+	let ws = $state<WebSocket | null>(null);
+
+	function sendMessage() {
+		if (!targetUser.trim()) {
+			alert('Введіть ID одержувача!');
+			return;
+		}
+		if (ws && newMessage.trim() !== '') {
+			ws.send(`${targetUser}:${newMessage}`);
+			newMessage = '';
+		}
+	}
 
 	onMount(() => {
 		const token = localStorage.getItem('access_token');
@@ -37,6 +54,22 @@
 				// ignore parse errors
 			}
 		}
+
+		const cid = campaignId;
+		const uid = currentUserId
+			? `User_${currentUserId}`
+			: `Guest_${Math.floor(Math.random() * 1000)}`;
+		myUid = uid;
+		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+		ws = new WebSocket(`${protocol}//${window.location.host}/ws/chat/${cid}/${uid}`);
+
+		ws.onmessage = (event) => {
+			messages = [...messages, event.data];
+		};
+
+		return () => {
+			if (ws) ws.close();
+		};
 	});
 
 	const campaignQuery = $derived(createGetCampaignApiV1CampaignsCampaignIdGet(() => campaignId));
@@ -317,5 +350,48 @@
 				</Dialog.Content>
 			</Dialog.Root>
 		{/if}
+
+		<!-- UI Чату (Лабораторна) -->
+		<div class="mt-12 max-w-md rounded-lg border bg-white p-4 shadow-sm">
+			<h3 class="mb-2 border-b pb-2 text-lg font-semibold text-gray-800">Приватний чат</h3>
+			<p class="mb-4 text-xs text-gray-500">Ваш ID: <strong>{myUid}</strong></p>
+
+			<div
+				class="mb-4 flex h-64 flex-col gap-2 overflow-y-auto rounded border bg-gray-50 p-3 text-sm"
+			>
+				{#each messages as msg}
+					<div class="rounded border bg-white p-2 break-words text-gray-700 shadow-sm">
+						{msg}
+					</div>
+				{/each}
+				{#if messages.length === 0}
+					<div class="mt-10 text-center text-gray-400 italic">Немає повідомлень...</div>
+				{/if}
+			</div>
+
+			<div class="mb-2">
+				<input
+					type="text"
+					bind:value={targetUser}
+					placeholder="Кому (введіть ID)"
+					class="w-full rounded border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+				/>
+			</div>
+			<div class="flex gap-2">
+				<input
+					type="text"
+					bind:value={newMessage}
+					onkeydown={(e) => e.key === 'Enter' && sendMessage()}
+					placeholder="Введіть повідомлення..."
+					class="flex-1 rounded border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+				/>
+				<button
+					onclick={sendMessage}
+					class="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+				>
+					Відправити
+				</button>
+			</div>
+		</div>
 	{/if}
 </div>

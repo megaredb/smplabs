@@ -1,10 +1,12 @@
 <script lang="ts">
 	import './app.css';
 	import { onMount } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { browser } from '$app/environment';
 	import { Button } from '$lib/components/ui/button';
 	import { resolve } from '$app/paths';
+	import { createCreateVisitApiV1VisitsPost } from '$lib/api/generated/endpoints';
 
 	let { children } = $props();
 
@@ -18,16 +20,49 @@
 	});
 
 	let isLoggedIn = $state(false);
+	let currentUserId = $state<number | null>(null);
 
 	onMount(() => {
-		if (localStorage.getItem('access_token')) {
+		const token = localStorage.getItem('access_token');
+		if (token) {
 			isLoggedIn = true;
-			// Optionally fetch user info here
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				currentUserId = parseInt(payload.sub);
+			} catch {}
+		}
+
+		// Підключення до WebSockets для нотифікацій
+		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+		const wsUrl = `${protocol}//${window.location.host}/ws/notifications`;
+		const ws = new WebSocket(wsUrl);
+
+		ws.onmessage = (event) => {
+			alert('Нове сповіщення: ' + event.data);
+		};
+
+		return () => {
+			ws.close();
+		};
+	});
+
+	const createVisitMutation = createCreateVisitApiV1VisitsPost(undefined, () => queryClient);
+
+	// Відстеження візитів при кожній зміні сторінки
+	afterNavigate(({ to }) => {
+		if (to) {
+			createVisitMutation.mutate({
+				data: {
+					page_url: to.url.pathname,
+					...(currentUserId ? { user_id: currentUserId } : {})
+				}
+			});
 		}
 	});
 
 	function logout() {
 		localStorage.removeItem('access_token');
+		localStorage.removeItem('user_id');
 		isLoggedIn = false;
 		queryClient.clear();
 		window.location.href = resolve('/');

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<users>
+    <user id="1001">
+        <name>Ігор Мельник</name>
+        <role>admin</role>
+    </user>
+    <user id="2002">
+        <name>Олена Шевченко</name>
+        <role>organizer</role>
+    </user>
+    <user id="3003">
+        <name>Петро Коваленко</name>
+        <role>donor</role>
+    </user>
+    <user id="4004">
+        <name>Наталя Бойко</name>
+        <role>user</role>
+    </user>
+</users>

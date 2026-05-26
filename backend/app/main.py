@@ -47,4 +47,13 @@ if settings.cors_origins:
         allow_headers=["*"],
     )
 
+@app.get("/api/lab/xml-test", tags=["lab"])
+def test_xml_parsing():
+    from app.domain.lab_patterns import XMLCampaignAdapter
+    adapter = XMLCampaignAdapter()
+    return adapter.parse_xml()
+
 app.include_router(api_router, prefix="/api", tags=["api"])
+
+from app.api.ws import ws_router
+app.include_router(ws_router)

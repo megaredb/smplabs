@@ -7,12 +7,14 @@ if TYPE_CHECKING:
     from app.interfaces.repository.campaign_repo import ICampaignRepository
     from app.interfaces.repository.transaction_repo import ITransactionRepository
     from app.interfaces.repository.user_repo import IUserRepository
+    from app.interfaces.repository.visits_repo import IVisitsRepository
 
 
 class IUnitOfWork(ABC):
     users: IUserRepository
     campaigns: ICampaignRepository
     transactions: ITransactionRepository
+    visits: "IVisitsRepository"
 
     @abstractmethod
     async def __aenter__(self) -> Self:

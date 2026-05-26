@@ -9,7 +9,7 @@
 	// Загальне Завдання 6: Перетворення рядків/файлів до формату HTML та навпаки
 	// ==========================================
 
-	// З Тексту (Markdown-подібного) в HTML
+	// З Тексту в HTML
 	let rawTextToHtml = $state(
 		'Привіт!\nЦе **жирний текст** та *курсив*.\nПеренесення рядків також працює.'
 	);
@@ -220,7 +220,7 @@
 		}
 
 		if (includeTextLinks) {
-			const textRegex = /(?<!["'=])\b(https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/[^\s<]*)?)\b/gi;
+			const textRegex = /(?<!["'=])\b(https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/[^\s<"']*)?)\b/gi;
 			let textMatch;
 			while ((textMatch = textRegex.exec(htmlSnippet)) !== null) {
 				links.push(textMatch[1]);

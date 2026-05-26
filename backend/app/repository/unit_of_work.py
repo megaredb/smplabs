@@ -4,6 +4,7 @@ from app.interfaces.unit_of_work import IUnitOfWork
 from app.repository.campaign_repo import CampaignRepository
 from app.repository.transaction_repo import TransactionRepository
 from app.repository.user_repo import UserRepository
+from app.repository.visits_repo import VisitsRepository
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -32,6 +33,7 @@ class UnitOfWork(IUnitOfWork):
         self.users = UserRepository(self.connection)
         self.transactions = TransactionRepository(self.connection)
         self.campaigns = CampaignRepository(self.connection)
+        self.visits = VisitsRepository(self.connection)
 
         return self
 
