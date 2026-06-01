@@ -79,7 +79,10 @@
     "targetLabel": "Цільова сума (₴)",
     "cancelBtn": "Скасувати",
     "creatingBtn": "Створення...",
-    "submitBtn": "Створити збір"
+    "submitBtn": "Створити збір",
+    "endDateLabel": "Дата завершення",
+    "imageUrlLabel": "Посилання на зображення (URL)",
+    "imageUrlPlaceholder": "https://example.com/image.jpg"
   },
   "campaignDetails": {
     "pageTitle": "RazomFund - Деталі збору",
@@ -114,7 +117,11 @@
     "toPlaceholder": "Кому (введіть ID)",
     "msgPlaceholder": "Введіть повідомлення...",
     "sendBtn": "Відправити",
-    "enterRecipientAlert": "Введіть ID одержувача!"
+    "enterRecipientAlert": "Введіть ID одержувача!",
+    "endDateLabel": "Дата завершення",
+    "imageUrlLabel": "Посилання на зображення (URL)",
+    "statusClosed": "Час збору вийшов",
+    "statusFullyFunded": "Ціль досягнуто"
   },
   "adminUsers": {
     "pageTitle": "Панель адміністратора - Користувачі",

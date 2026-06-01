@@ -133,25 +133,30 @@
             </Button>
           {/if}
           <a href={resolve(`/campaigns/${campaign.id}`)} class="flex flex-1 flex-col hover:no-underline">
-            <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-              <span class="font-medium text-slate-400">{$_('campaigns.noPhoto')}</span>
-            </div>
-            <CardHeader class="flex-none">
-              <CardTitle class="line-clamp-2 leading-tight transition-colors group-hover:text-blue-600">{campaign.title}</CardTitle>
-            </CardHeader>
-            <CardContent class="flex grow flex-col">
-              <CardDescription class="mb-4 line-clamp-3 text-slate-600">{campaign.description}</CardDescription>
-              <div class="mb-5 flex flex-col gap-1.5 text-xs">
-                <div class="flex items-center gap-1.5 text-slate-500">
-                  <Clock class="h-3.5 w-3.5" />
-                  <span>{$_('campaigns.createdAt')} {campaign.created_at ? new Date(campaign.created_at).toLocaleDateString('uk-UA') : '—'}</span>
-                </div>
-                <div class="flex items-center gap-1.5 font-medium text-blue-600/80">
-                  <Calendar class="h-3.5 w-3.5" />
-                  <span>{$_('campaigns.endingAt')} {campaign.created_at ? new Date(new Date(campaign.created_at).getTime() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('uk-UA') : '—'}</span>
-                </div>
-              </div>
-              <div class="mt-auto space-y-3">
+                        {#if (campaign as any).image_url}
+                            <img src={(campaign as any).image_url} alt={campaign.title} class="h-48 w-full object-cover" />
+                        {:else}
+                            <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                                <span class="font-medium text-slate-400">{$_('campaigns.noPhoto')}</span>
+                            </div>
+                        {/if}
+                        
+                        <CardHeader class="flex-none">
+                            <CardTitle class="line-clamp-2 leading-tight transition-colors group-hover:text-blue-600">{campaign.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent class="flex grow flex-col">
+                            <CardDescription class="mb-4 line-clamp-3 text-slate-600">{campaign.description}</CardDescription>
+                            <div class="mb-5 flex flex-col gap-1.5 text-xs">
+                                <div class="flex items-center gap-1.5 text-slate-500">
+                                    <Clock class="h-3.5 w-3.5" />
+                                    <span>{$_('campaigns.createdAt')} {campaign.created_at ? new Date(campaign.created_at).toLocaleDateString('uk-UA') : '—'}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 font-medium text-blue-600/80">
+                                    <Calendar class="h-3.5 w-3.5" />
+                                    <span>{$_('campaigns.endingAt')} {(campaign as any).end_date ? new Date((campaign as any).end_date).toLocaleDateString('uk-UA') : '—'}</span>
+                                </div>
+                            </div>
+                            <div class="mt-auto space-y-3">
                 <div class="flex items-end justify-between text-sm">
                   <div class="flex flex-col">
                     <span class="text-xs text-slate-500">{$_('campaigns.collected')}</span>

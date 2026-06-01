@@ -86,6 +86,8 @@
     let editTitle = $state('');
     let editDescription = $state('');
     let editTargetAmount = $state('');
+	let editEndDate = $state(''); // НОВЕ
+    let editImageUrl = $state(''); // НОВЕ
 
     function openEditDialog() {
         const campaign = getCampaign();
@@ -93,6 +95,9 @@
             editTitle = campaign.title || '';
             editDescription = campaign.description || '';
             editTargetAmount = String(campaign.target_amount || '');
+            // Витягуємо дату формату YYYY-MM-DD для інпуту
+            editEndDate = (campaign as any).end_date ? new Date((campaign as any).end_date).toISOString().split('T')[0] : '';
+            editImageUrl = (campaign as any).image_url || '';
             isEditDialogOpen = true;
         }
     }
@@ -105,8 +110,10 @@
                 data: {
                     title: editTitle,
                     description: editDescription,
-                    target_amount: Number(editTargetAmount)
-                }
+                    target_amount: Number(editTargetAmount),
+                    end_date: editEndDate ? new Date(editEndDate).toISOString() : null, // НОВЕ
+                    image_url: editImageUrl || null // НОВЕ
+                } as any
             },
             {
                 onSuccess: () => {
@@ -123,6 +130,16 @@
 
     function handleDonate(event: Event) {
         event.preventDefault();
+
+		const campaign = getCampaign();
+        if (campaign) {
+            const maxAllowed = Number(campaign.target_amount) - Number(campaign.current_amount);
+            if (Number(donateAmount) > maxAllowed) {
+                alert(`Максимальна сума донату: ${maxAllowed} ₴`);
+                return;
+            }
+        }
+
         donateMutation.mutate(
             {
                 data: {
@@ -174,6 +191,8 @@
             {@const targetAmount = Number(campaign.target_amount) || 0}
             {@const currentAmount = Number(campaign.current_amount) || 0}
             {@const progress = Math.min(Math.round((currentAmount / (targetAmount || 1)) * 100), 100)}
+			{@const remainingAmount = Math.max(targetAmount - currentAmount, 0)}
+            {@const isClosed = (campaign as any).end_date ? new Date((campaign as any).end_date) < new Date() : false}
             <div class="grid gap-6 md:grid-cols-3">
                 <div class="space-y-6 md:col-span-2">
                     <Card
@@ -189,11 +208,16 @@
                                 {$_('campaignDetails.editBtn')}
                             </Button>
                         {/if}
-                        <div
-                            class="flex h-64 w-full items-center justify-center bg-linear-to-br from-slate-100 to-slate-200"
-                        >
-                            <span class="text-lg font-medium text-slate-400">{$_('campaignDetails.noImage')}</span>
-                        </div>
+
+                        {#if (campaign as any).image_url}
+                            <img src={(campaign as any).image_url} alt={campaign.title} class="h-64 w-full object-cover" />
+                        {:else}
+                            <div
+                                class="flex h-64 w-full items-center justify-center bg-linear-to-br from-slate-100 to-slate-200"
+                            >
+                                <span class="text-lg font-medium text-slate-400">{$_('campaignDetails.noImage')}</span>
+                            </div>
+                        {/if}
                         <CardHeader>
                             <div class="mb-2">
                                 <Badge class="bg-green-100 text-green-800 hover:bg-green-100">{$_('campaignDetails.statusActive')}</Badge>
@@ -247,20 +271,25 @@
                                         <span>{$_('campaignDetails.ends')}</span>
                                     </div>
                                     <p class="text-[11px] font-semibold text-blue-600">
-                                        {campaign.created_at
-                                            ? new Date(
-                                                  new Date(campaign.created_at).getTime() + 14 * 24 * 60 * 60 * 1000
-                                              ).toLocaleDateString('uk-UA')
+                                        {(campaign as any).end_date
+                                            ? new Date((campaign as any).end_date).toLocaleDateString('uk-UA')
                                             : '—'}
                                     </p>
                                 </div>
                             </div>
                             <Button
                                 size="lg"
-                                class="w-full bg-blue-600 py-6 text-base font-semibold shadow-md transition-all hover:bg-blue-700 active:scale-[0.98]"
+                                class="w-full py-6 text-base font-semibold shadow-md transition-all active:scale-[0.98] {isClosed || remainingAmount <= 0 ? 'bg-slate-300 text-slate-500 hover:bg-slate-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}"
                                 onclick={() => (isDonateDialogOpen = true)}
+                                disabled={isClosed || remainingAmount <= 0}
                             >
-                                {$_('campaignDetails.supportBtn')}
+                                {#if remainingAmount <= 0}
+                                    {$_('campaignDetails.statusFullyFunded')}
+                                {:else if isClosed}
+                                    {$_('campaignDetails.statusClosed')}
+                                {:else}
+                                    {$_('campaignDetails.supportBtn')}
+                                {/if}
                             </Button>
                         </CardContent>
                     </Card>
@@ -268,7 +297,7 @@
             </div>
 
             <Dialog.Root bind:open={isEditDialogOpen}>
-                <Dialog.Content class="sm:max-w-[500px]">
+                <Dialog.Content class="bg-white sm:max-w-[500px]">
                     <Dialog.Header>
                         <Dialog.Title>{$_('campaignDetails.editDialogTitle')}</Dialog.Title>
                         <Dialog.Description>{$_('campaignDetails.editDialogDesc')}</Dialog.Description>
@@ -292,6 +321,20 @@
                                 required
                             />
                         </div>
+						<div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <Label for="edit-target">{$_('campaignDetails.targetLabel')}</Label>
+                                <Input id="edit-target" type="number" min="1" bind:value={editTargetAmount} required />
+                            </div>
+                            <div class="space-y-2">
+                                <Label for="edit-end-date">{$_('campaignDetails.endDateLabel')}</Label>
+                                <Input id="edit-end-date" type="date" bind:value={editEndDate} />
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <Label for="edit-image">{$_('campaignDetails.imageUrlLabel')}</Label>
+                            <Input id="edit-image" type="url" bind:value={editImageUrl} />
+                        </div>
                         <Dialog.Footer>
                             <Button type="button" variant="outline" onclick={() => (isEditDialogOpen = false)}
                                 >{$_('campaignDetails.cancelBtn')}</Button
@@ -303,7 +346,7 @@
             </Dialog.Root>
 
             <Dialog.Root bind:open={isDonateDialogOpen}>
-                <Dialog.Content class="sm:max-w-[425px]">
+                <Dialog.Content class="bg-white sm:max-w-[425px]">
                     <Dialog.Header>
                         <Dialog.Title>{$_('campaignDetails.donateDialogTitle')}</Dialog.Title>
                         <Dialog.Description>{$_('campaignDetails.donateDialogDesc')}</Dialog.Description>
@@ -315,6 +358,7 @@
                                 id="donate-amount"
                                 type="number"
                                 min="1"
+                                max={remainingAmount}
                                 bind:value={donateAmount}
                                 required
                                 placeholder="500"

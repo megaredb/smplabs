@@ -79,7 +79,10 @@
     "targetLabel": "Target Amount (UAH)",
     "cancelBtn": "Cancel",
     "creatingBtn": "Creating...",
-    "submitBtn": "Create Campaign"
+    "submitBtn": "Create Campaign",
+    "endDateLabel": "End Date",
+    "imageUrlLabel": "Image URL",
+    "imageUrlPlaceholder": "https://example.com/image.jpg"
   },
   "campaignDetails": {
     "pageTitle": "RazomFund - Campaign Details",
@@ -114,7 +117,9 @@
     "toPlaceholder": "To (enter ID)",
     "msgPlaceholder": "Enter message...",
     "sendBtn": "Send",
-    "enterRecipientAlert": "Enter recipient ID!"
+    "enterRecipientAlert": "Enter recipient ID!",
+    "endDateLabel": "End Date",
+    "imageUrlLabel": "Image URL"
   },
   "adminUsers": {
     "pageTitle": "Admin Panel - Users",

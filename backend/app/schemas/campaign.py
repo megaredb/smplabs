@@ -27,16 +27,18 @@ class CampaignBase(BaseModel):
     title: str
     description: str | None = None
     target_amount: TargetAmount
-
+    end_date: datetime | None = None
+    image_url: str | None = None
 
 class CampaignCreate(CampaignBase):
     pass
-
 
 class CampaignUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     target_amount: TargetAmount | None = None
+    end_date: datetime | None = None
+    image_url: str | None = None
 
 
 class Campaign(CampaignBase):

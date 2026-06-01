@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from datetime import datetime, timezone
+
 if TYPE_CHECKING:
     from app.interfaces.unit_of_work import IUnitOfWork
     from app.schemas.transaction import Transaction, TransactionCreate, TransactionId
@@ -12,6 +14,23 @@ class TransactionService:
         self.uow = uow
 
     async def add_transaction(self, transaction: TransactionCreate) -> None:
+        # 1. Отримуємо дані збору з бази
+        campaign = await self.uow.campaigns.get_by_id(transaction.campaign_id)
+        if not campaign:
+            raise ValueError("Збір не знайдено")
+
+        # 2. Перевірка дати: чи не закінчився час
+        if campaign.end_date:
+            now = datetime.now(timezone.utc) if campaign.end_date.tzinfo else datetime.now()
+            if now > campaign.end_date:
+                raise ValueError("Час збору вже минув, донати не приймаються.")
+
+        # 3. Перевірка суми: щоб не перевищити ціль
+        remaining = campaign.target_amount - campaign.current_amount
+        if transaction.amount > remaining:
+            raise ValueError(f"Сума перевищує залишок. Максимум можна задонатити {remaining} ₴")
+
+        # 4. Якщо перевірки пройдені, записуємо транзакцію
         await self.uow.transactions.add_one(transaction)
         await self.uow.campaigns.update_current_amount(
             transaction.campaign_id, transaction.amount
