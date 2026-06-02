@@ -152,8 +152,15 @@
             </main>
 
             <footer class="mt-auto border-t border-slate-200 bg-white">
-                <div class="mx-auto max-w-7xl px-4 py-6 text-center text-sm text-slate-500 sm:px-6 lg:px-8">
-                    &copy; 2026 RazomFund Platform. Усі права захищено.
+                <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row sm:px-6 lg:px-8">
+                    <div class="text-sm text-slate-500">
+                        &copy; 2026 RazomFund Platform. {$_('footer.rights')}
+                    </div>
+                    <div class="flex space-x-6 text-sm font-medium text-slate-600">
+                        <a href={resolve('/')} class="transition-colors hover:text-blue-600">{$_('footer.home')}</a>
+                        <a href={resolve('/campaigns')} class="transition-colors hover:text-blue-600">{$_('footer.campaigns')}</a>
+                        <a href={resolve('/terms')} class="transition-colors hover:text-blue-600">{$_('footer.terms')}</a>
+                    </div>
                 </div>
             </footer>
         </div>

@@ -205,5 +205,20 @@
     "amount": "By collected amount",
     "target": "By target amount",
     "newest": "Newest first"
+  },
+  "footer": {
+    "home": "Home",
+    "campaigns": "All Campaigns",
+    "terms": "Terms of Use",
+    "rights": "All rights reserved."
+  },
+  "terms": {
+    "title": "Terms of Use & About Us",
+    "aboutTitle": "About the Platform",
+    "aboutText": "RazomFund is a collective fundraising platform created for volunteers, public figures, and private initiatives. Our goal is to provide fast and transparent fundraising for charity, military needs, or shared goals.",
+    "commissionTitle": "Commissions and Payments",
+    "commissionText": "We support transparency. The platform commission is only 1% of each donation. Secure systems are used for payments, including Stripe, with support for fast payments via Apple Pay and Google Pay.",
+    "rulesTitle": "Rules for Organizers and Donors",
+    "rulesText": "Organizers commit to providing accurate information about the goals of their campaigns and guarantee the intended use of funds. Donors can make transfers securely, in a few clicks, and without mandatory registration."
   }
 }
