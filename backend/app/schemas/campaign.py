@@ -33,6 +33,10 @@ class CampaignBase(BaseModel):
     image_url: str | None = None
     category: CategoryType
     organizer_name: str | None = None
+    status: str = "active"
+    is_verified: bool = False
+
+    model_config = ConfigDict(from_attributes=True)
 
 class CampaignCreate(CampaignBase):
     pass
