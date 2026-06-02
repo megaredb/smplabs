@@ -5,6 +5,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface BodyVerifyVerifyApiAuthVerifyPost {
-  token: string;
+export interface CampaignReportCreate {
+  title: string;
+  description: string;
+  image_url?: string | null;
 }

@@ -156,10 +156,13 @@
                     <div class="text-sm text-slate-500">
                         &copy; 2026 RazomFund Platform. {$_('footer.rights')}
                     </div>
-                    <div class="flex space-x-6 text-sm font-medium text-slate-600">
+                    <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-slate-600">
                         <a href={resolve('/')} class="transition-colors hover:text-blue-600">{$_('footer.home')}</a>
                         <a href={resolve('/campaigns')} class="transition-colors hover:text-blue-600">{$_('footer.campaigns')}</a>
                         <a href={resolve('/terms')} class="transition-colors hover:text-blue-600">{$_('footer.terms')}</a>
+                        <a href={resolve('/faq')} class="transition-colors hover:text-blue-600">{$_('footer.faq')}</a>
+                        <a href={resolve('/trust')} class="transition-colors hover:text-blue-600">{$_('footer.trust')}</a>
+                        <a href={resolve('/contact')} class="transition-colors hover:text-blue-600">{$_('footer.contact')}</a>
                     </div>
                 </div>
             </footer>

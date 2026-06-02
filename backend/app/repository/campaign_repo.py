@@ -4,6 +4,8 @@ from app.interfaces.repository.campaign_repo import ICampaignRepository
 from app.schemas.campaign import Campaign as CampaignSchema, Campaign
 from app.schemas.campaign import CampaignId
 
+from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse
+
 if TYPE_CHECKING:
     import aiosqlite
 
@@ -25,18 +27,18 @@ class CampaignRepository(ICampaignRepository):
         )
 
     async def get_by_id(self, campaign_id: CampaignId) -> CampaignSchema | None:
+        # Ми робимо LEFT JOIN, щоб підтягнути ім'я (u.name) з таблиці users
         query = """
-        SELECT id, organizer_id, title, description, target_amount, current_amount,
-       created_at, end_date, image_url, category
-        FROM campaigns
-        WHERE id = ?
+            SELECT c.id, c.organizer_id, c.title, c.description, c.target_amount, c.current_amount,
+                   c.created_at, c.end_date, c.image_url, c.category, u.name
+            FROM campaigns c
+            LEFT JOIN users u ON c.organizer_id = u.id
+            WHERE c.id = ?
         """
         async with self.connection.execute(query, (campaign_id,)) as cursor:
             row = await cursor.fetchone()
-
             if not row:
                 return None
-
             return CampaignSchema(
                 id=row[0],
                 organizer_id=row[1],
@@ -48,6 +50,7 @@ class CampaignRepository(ICampaignRepository):
                 end_date=row[7],
                 image_url=row[8],
                 category=row[9],
+                organizer_name=row[10] # ДОДАНО ІМ'Я
             )
 
     async def remove_by_id(self, campaign_id: CampaignId) -> None:
@@ -117,27 +120,28 @@ class CampaignRepository(ICampaignRepository):
         category: str | None = None, 
         sort_by: str = "current_amount"
     ) -> list[CampaignSchema]:
+        # НОВЕ: Змінили SELECT та додали LEFT JOIN, щоб тягнути ім'я
         query = """
-            SELECT id, organizer_id, title, description, target_amount, current_amount,
-                   created_at, end_date, image_url, category
-            FROM campaigns
+            SELECT c.id, c.organizer_id, c.title, c.description, c.target_amount, c.current_amount,
+                   c.created_at, c.end_date, c.image_url, c.category, u.name
+            FROM campaigns c
+            LEFT JOIN users u ON c.organizer_id = u.id
         """
         params = []
         
         # Фільтрація по категорії
         if category:
-            query += " WHERE category = ?"
+            query += " WHERE c.category = ?"
             params.append(category)
 
         # Сортування
         if sort_by == "date":
-            query += " ORDER BY created_at DESC"
+            query += " ORDER BY c.created_at DESC"
         elif sort_by == "target":
-            query += " ORDER BY target_amount DESC"
+            query += " ORDER BY c.target_amount DESC"
         else:
-            query += " ORDER BY current_amount DESC"
+            query += " ORDER BY c.current_amount DESC"
 
-        # Ліміт
         query += " LIMIT ?"
         params.append(limit)
 
@@ -155,6 +159,34 @@ class CampaignRepository(ICampaignRepository):
                     end_date=row[7],
                     image_url=row[8],
                     category=row[9],
+                    organizer_name=row[10] # ТЕПЕР ІМ'Я Є ТУТ!
                 )
                 for row in rows
+            ]
+    
+    async def add_report(self, campaign_id: int, data: CampaignReportCreate) -> None:
+        query = """
+            INSERT INTO campaign_reports (campaign_id, title, description, image_url)
+            VALUES (?, ?, ?, ?)
+        """
+        await self.connection.execute(query, (campaign_id, data.title, data.description, data.image_url))
+
+    async def get_reports(self, campaign_id: int) -> list[CampaignReportResponse]:
+        query = """
+            SELECT id, campaign_id, title, description, image_url, created_at
+            FROM campaign_reports
+            WHERE campaign_id = ?
+            ORDER BY created_at DESC
+        """
+        async with self.connection.execute(query, (campaign_id,)) as cursor:
+            rows = await cursor.fetchall()
+            return [
+                CampaignReportResponse(
+                    id=row[0],
+                    campaign_id=row[1],
+                    title=row[2],
+                    description=row[3],
+                    image_url=row[4],
+                    created_at=row[5]
+                ) for row in rows
             ]

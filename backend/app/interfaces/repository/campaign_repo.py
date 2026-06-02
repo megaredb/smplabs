@@ -47,3 +47,11 @@ class ICampaignRepository(ABC):
         self, organizer_id: int, offset: int = 0, limit: int = 50
     ) -> list[Campaign]:
         raise NotImplementedError
+
+    @abstractmethod
+    async def add_report(self, campaign_id: int, data: "CampaignReportCreate") -> None:
+        pass
+
+    @abstractmethod
+    async def get_reports(self, campaign_id: int) -> list["CampaignReportResponse"]:
+        pass

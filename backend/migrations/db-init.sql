@@ -56,3 +56,14 @@ CREATE TABLE IF NOT EXISTS visits
 -- Корисно додати індекси для швидкодії, оскільки запити до лічильників будуть частими:
 CREATE INDEX idx_page_url ON visits(page_url);
 CREATE INDEX idx_user_id ON visits(user_id);
+
+CREATE TABLE IF NOT EXISTS campaign_reports
+(
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    campaign_id INTEGER NOT NULL,
+    title       TEXT NOT NULL,         -- Наприклад: "Купили перший мавік!"
+    description TEXT NOT NULL,         -- Детальний опис витрат
+    image_url   TEXT,                  -- Посилання на фото чека або купленої речі
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE CASCADE
+);

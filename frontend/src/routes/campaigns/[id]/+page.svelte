@@ -20,13 +20,18 @@
     import { Input } from '$lib/components/ui/input';
     import { Label } from '$lib/components/ui/label';
     import { Textarea } from '$lib/components/ui/textarea';
-    import { ArrowLeft, Clock, Target, Edit, Calendar } from '@lucide/svelte';
+    import { ArrowLeft, Clock, Target, Edit, Calendar, Plus, User } from '@lucide/svelte';
     import { resolve } from '$app/paths';
     import { onMount } from 'svelte';
     import { get } from 'svelte/store'; // Для використання в алертах
 
     // ДОДАНО: імпорт перекладу
     import { _ } from 'svelte-i18n';
+
+    import { 
+        createGetReportsApiV1CampaignsCampaignIdReportsGet, 
+        createCreateReportApiV1CampaignsCampaignIdReportsPost 
+    } from '$lib/api/generated/endpoints';
 
     let campaignId = $derived(Number($page.params.id));
     let currentUserId = $state<number | null>(null);
@@ -90,7 +95,6 @@
     let editImageUrl = $state(''); // НОВЕ
     let editCategory = $state(''); // НОВЕ
 
-    const categories = ["ЗСУ / Військові", "Медицина", "Відбудова", "Тварини", "Інше"];
     const categoryOptions = [
         { id: "ЗСУ / Військові", key: 'categories.military' },
         { id: "Медицина", key: 'categories.medical' },
@@ -176,6 +180,46 @@
             }
         );
     }
+
+    let activeTab = $state('description'); // 'description' або 'reports'
+    
+    let isReportDialogOpen = $state(false);
+    let reportTitle = $state('');
+    let reportDescription = $state('');
+    let reportImageUrl = $state('');
+
+    // СТАЛО: другий аргумент тепер теж є стрілочною функцією
+    const reportsQuery = $derived(
+        createGetReportsApiV1CampaignsCampaignIdReportsGet(
+            () => campaignId, 
+            () => ({ query: { enabled: !!campaignId } } as any) // <-- ДОДАНО () =>
+        )
+    );
+
+    const reportMutation = createCreateReportApiV1CampaignsCampaignIdReportsPost();
+
+    function handleCreateReport(event: Event) {
+        event.preventDefault();
+        reportMutation.mutate(
+            {
+                campaignId,
+                data: {
+                    title: reportTitle,
+                    description: reportDescription,
+                    image_url: reportImageUrl || null
+                } as any
+            },
+            {
+                onSuccess: () => {
+                    isReportDialogOpen = false;
+                    reportTitle = '';
+                    reportDescription = '';
+                    reportImageUrl = '';
+                    reportsQuery.refetch(); // Оновлюємо список звітів
+                }
+            }
+        );
+    }
 </script>
 
 <svelte:head>
@@ -240,15 +284,85 @@
                                 <Badge class="bg-green-100 text-green-800 hover:bg-green-100">{$_('campaignDetails.statusActive')}</Badge>
                                 <Badge variant="outline" class="text-slate-600">{translateCategory((campaign as any).category)}</Badge>
                             </div>
-                            <CardTitle class="text-3xl leading-tight font-bold text-slate-900"
-                                >{campaign.title}</CardTitle
-                            >
-                            <CardDescription
-                                class="pt-4 text-base leading-relaxed whitespace-pre-wrap text-slate-700"
-                            >
-                                {campaign.description}
-                            </CardDescription>
+                            <CardTitle class="text-3xl leading-tight font-bold text-slate-900">
+                                {campaign.title}
+                            </CardTitle>
+                            
+                            <div class="mt-4 flex items-center gap-2 text-slate-600 border-t border-slate-100 pt-4">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                                    <User class="h-4 w-4 text-slate-500" />
+                                </div>
+                                <span class="text-sm">
+                                    {$_('campaignDetails.organizerLabel')}: 
+                                    <strong class="font-medium text-slate-900">
+                                        {(campaign as any).organizer_name || $_('campaignDetails.defaultOrganizer')}
+                                    </strong>
+                                </span>
+                            </div>
                         </CardHeader>
+                        <div class="border-b border-slate-200 px-6 mt-4">
+                            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                                <button
+                                    type="button"
+                                    onclick={() => activeTab = 'description'}
+                                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors {activeTab === 'description' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}"
+                                >
+                                    {$_('campaignDetails.tabDescription')}
+                                </button>
+                                <button
+                                    type="button"
+                                    onclick={() => activeTab = 'reports'}
+                                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors {activeTab === 'reports' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}"
+                                >
+                                    {$_('campaignDetails.tabReports')}
+                                </button>
+                            </nav>
+                        </div>
+
+                        <div class="px-6 pb-6 pt-6">
+                            {#if activeTab === 'description'}
+                                <div class="text-base leading-relaxed whitespace-pre-wrap text-slate-700">
+                                    {campaign.description}
+                                </div>
+                            {:else if activeTab === 'reports'}
+                                <div class="space-y-6">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="text-lg font-semibold text-slate-900">{$_('campaignDetails.reportsTitle')}</h3>
+                                        {#if currentUserId === campaign.organizer_id}
+                                            <Button variant="outline" size="sm" onclick={() => isReportDialogOpen = true}>
+                                                <Plus class="mr-2 h-4 w-4" />
+                                                {$_('campaignDetails.addReportBtn')}
+                                            </Button>
+                                        {/if}
+                                    </div>
+                                    
+                                    {#if reportsQuery.data && reportsQuery.data.length > 0}
+                                        <div class="space-y-6 mt-4">
+                                            {#each reportsQuery.data as report}
+                                                <Card class="overflow-hidden border border-slate-200 shadow-sm">
+                                                    {#if report.image_url}
+                                                        <img src={report.image_url} alt={report.title} class="h-64 w-full object-cover" />
+                                                    {/if}
+                                                    <CardHeader class="p-5 pb-2">
+                                                        <CardTitle class="text-xl font-bold">{report.title}</CardTitle>
+                                                        <div class="text-sm text-slate-500 mt-1">
+                                                            {new Date(report.created_at).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit' })}
+                                                        </div>
+                                                    </CardHeader>
+                                                    <CardContent class="p-5 pt-2 text-slate-700 whitespace-pre-wrap">
+                                                        {report.description}
+                                                    </CardContent>
+                                                </Card>
+                                            {/each}
+                                        </div>
+                                    {:else}
+                                        <div class="py-10 text-center text-slate-500 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                                            {$_('campaignDetails.noReports')}
+                                        </div>
+                                    {/if}
+                                </div>
+                            {/if}
+                        </div>
                     </Card>
                 </div>
                 <div class="space-y-6">
@@ -408,6 +522,40 @@
                                 class="bg-blue-600 hover:bg-blue-700"
                                 disabled={donateMutation.isPending}>{$_('campaignDetails.donateBtn')}</Button
                             >
+                        </Dialog.Footer>
+                    </form>
+                </Dialog.Content>
+            </Dialog.Root>
+
+            <Dialog.Root bind:open={isReportDialogOpen}>
+                <Dialog.Content class="bg-white sm:max-w-[550px]">
+                    <Dialog.Header>
+                        <Dialog.Title>{$_('campaignDetails.addReportBtn')}</Dialog.Title>
+                    </Dialog.Header>
+                    <form onsubmit={handleCreateReport} class="space-y-4 py-4">
+                        <div class="space-y-2">
+                            <Label for="report-title">{$_('campaignDetails.reportTitleLabel')}</Label>
+                            <Input id="report-title" bind:value={reportTitle} required />
+                        </div>
+                        <div class="space-y-2">
+                            <Label for="report-desc">{$_('campaignDetails.reportDescLabel')}</Label>
+                            <textarea 
+                                id="report-desc" 
+                                bind:value={reportDescription} 
+                                required 
+                                rows="5" 
+                                class="w-full resize-y rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                            ></textarea>
+                        </div>
+                        <div class="space-y-2">
+                            <Label for="report-image">{$_('campaignDetails.reportImageLabel')}</Label>
+                            <Input id="report-image" type="url" bind:value={reportImageUrl} />
+                        </div>
+                        <Dialog.Footer class="pt-4">
+                            <Button type="button" variant="outline" onclick={() => isReportDialogOpen = false}>{$_('campaignDetails.cancelBtn')}</Button>
+                            <Button type="submit" class="bg-blue-600 hover:bg-blue-700" disabled={reportMutation.isPending}>
+                                {$_('campaignDetails.reportSubmitBtn')}
+                            </Button>
                         </Dialog.Footer>
                     </form>
                 </Dialog.Content>

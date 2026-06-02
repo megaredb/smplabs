@@ -32,6 +32,7 @@ class CampaignBase(BaseModel):
     end_date: datetime | None = None
     image_url: str | None = None
     category: CategoryType
+    organizer_name: str | None = None
 
 class CampaignCreate(CampaignBase):
     pass
@@ -59,3 +60,16 @@ class CampaignResponse(CampaignBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class CampaignReportBase(BaseModel):
+    title: str
+    description: str
+    image_url: str | None = None
+
+class CampaignReportCreate(CampaignReportBase):
+    pass
+
+class CampaignReportResponse(CampaignReportBase):
+    id: int
+    campaign_id: int
+    created_at: datetime

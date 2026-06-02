@@ -12,6 +12,8 @@ from app.schemas.campaign import (
     CampaignUpdate,
 )
 
+from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse
+
 if TYPE_CHECKING:
     from app.schemas.user import UserDB
     from app.services.campaign_service import CampaignService
@@ -96,3 +98,22 @@ async def get_campaign(
         )
 
     return CampaignResponse.model_validate(campaign)
+
+@campaigns_router.post("/{campaign_id}/reports", status_code=HTTPStatus.CREATED)
+async def create_report(
+    campaign_id: CampaignId,
+    report_data: CampaignReportCreate,
+    _current_user: Annotated[UserDB, Depends(current_user)],
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> None:
+    try:
+        await campaign_service.add_report(campaign_id, _current_user.id, report_data)
+    except ValueError as e:
+        raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail=str(e))
+
+@campaigns_router.get("/{campaign_id}/reports")
+async def get_reports(
+    campaign_id: CampaignId,
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> list[CampaignReportResponse]:
+    return await campaign_service.get_reports(campaign_id)
