@@ -111,14 +111,17 @@
       </div>
       <div class="relative w-full sm:w-48">
           <ArrowUpDown class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <select
-              bind:value={sortBy}
-              class="flex h-10 w-full cursor-pointer appearance-none items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 pl-9 text-sm ring-offset-white transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          >
-              <option value="current_amount">За зібраною сумою</option>
-              <option value="target">За ціллю</option>
-              <option value="date">Спочатку нові</option>
-          </select>
+          <div class="relative w-full sm:w-48">
+                        <ArrowUpDown class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <select
+                            bind:value={sortBy}
+                            class="flex h-10 w-full cursor-pointer appearance-none items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 pl-9 text-sm ring-offset-white transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        >
+                            <option value="current_amount">{$_('sorting.amount')}</option>
+                            <option value="target">{$_('sorting.target')}</option>
+                            <option value="date">{$_('sorting.newest')}</option>
+                        </select>
+                    </div>
       </div>
       <div class="relative w-full sm:w-72">
         <Search class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />

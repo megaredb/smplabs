@@ -200,5 +200,10 @@
     "rebuild": "Rebuilding",
     "animals": "Animals",
     "other": "Other"
+  },
+  "sorting": {
+    "amount": "By collected amount",
+    "target": "By target amount",
+    "newest": "Newest first"
   }
 }

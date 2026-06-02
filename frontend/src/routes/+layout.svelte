@@ -23,8 +23,10 @@
 
 	let isLoggedIn = $state(false);
 	let currentUserId = $state<number | null>(null);
+	let isMounted = $state(false);
 
 	onMount(() => {
+		isMounted = true;
 		const token = localStorage.getItem('access_token');
 		if (token) {
 			isLoggedIn = true;
@@ -47,6 +49,13 @@
 			ws.close();
 		};
 	});
+
+	function changeLanguage(lang: string) {
+		$locale = lang;
+		if (browser) {
+			document.cookie = `locale=${lang}; path=/; max-age=${60 * 60 * 24 * 365}`;
+		}
+	}
 
 	const createVisitMutation = createCreateVisitApiV1VisitsPost(undefined, () => queryClient);
 
@@ -89,53 +98,52 @@
                     </div>
 
                     <nav class="hidden items-center space-x-6 md:flex">
-						<div class="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 mr-2">
-							<button
-								class="text-sm font-bold transition-colors {$locale === 'uk' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}"
-								onclick={() => $locale = 'uk'}
-							>
-								UK
-							</button>
-							<span class="text-slate-300">|</span>
-							<button
-								class="text-sm font-bold transition-colors {$locale === 'en' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}"
-								onclick={() => $locale = 'en'}
-							>
-								EN
-							</button>
-						</div>
-
-						<a
-							href={resolve('/')}
-							class="font-medium text-slate-600 transition-colors hover:text-blue-600">{$_('nav.home')}</a
-						>
-						<a
-							href={resolve('/campaigns')}
-							class="font-medium text-slate-600 transition-colors hover:text-blue-600">{$_('nav.campaigns')}</a
-						>
-						{#if isLoggedIn}
-							<a
-								href={resolve('/user-stats')}
-								class="font-medium text-slate-600 transition-colors hover:text-blue-600"
-								>{$_('nav.dashboard')}</a
-							>
-						{/if}
-
-						{#if isLoggedIn}
-							<Button
-								variant="ghost"
-								class="ml-4 text-red-600 hover:bg-red-50 hover:text-red-700"
-								onclick={logout}>{$_('nav.logout')}</Button
-							>
-						{:else}
-							<div class="ml-4 flex items-center space-x-4 border-l border-slate-200 pl-4">
-								<Button variant="ghost" href={resolve('/login')}>{$_('nav.login')}</Button>
-								<Button href={resolve('/register')} class="bg-blue-600 shadow-sm hover:bg-blue-700"
-									>{$_('nav.register')}</Button
-								>
-							</div>
-						{/if}
-					</nav>
+                        <div class="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 mr-2">
+                            <button
+                                class="text-sm font-bold transition-colors {$locale === 'uk' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}"
+                                onclick={() => changeLanguage('uk')}
+                            >
+                                UK
+                            </button>
+                            <span class="text-slate-300">|</span>
+                            <button
+                                class="text-sm font-bold transition-colors {$locale === 'en' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}"
+                                onclick={() => changeLanguage('en')}
+                            >
+                                EN
+                            </button>
+                        </div>
+                        
+                        <a href={resolve('/')} class="font-medium text-slate-600 transition-colors hover:text-blue-600">
+                            {$_('nav.home')}
+                        </a>
+                        
+                        <a href={resolve('/campaigns')} class="font-medium text-slate-600 transition-colors hover:text-blue-600">
+                            {$_('nav.campaigns')}
+                        </a>
+                        
+                        {#if isMounted}
+                            {#if isLoggedIn}
+                                <a href={resolve('/user-stats')} class="font-medium text-slate-600 transition-colors hover:text-blue-600">
+                                    {$_('nav.dashboard')}
+                                </a>
+                                
+                                <Button variant="ghost" class="ml-4 text-red-600 hover:bg-red-50 hover:text-red-700" onclick={logout}>
+                                    {$_('nav.logout')}
+                                </Button>
+                            {:else}
+                                <div class="ml-4 flex items-center space-x-4 border-l border-slate-200 pl-4">
+                                    <Button variant="ghost" href={resolve('/login')}>
+                                        {$_('nav.login')}
+                                    </Button>
+                                    
+                                    <Button href={resolve('/register')} class="bg-blue-600 shadow-sm hover:bg-blue-700">
+                                        {$_('nav.register')}
+                                    </Button>
+                                </div>
+                            {/if}
+                        {/if}
+                    </nav>
                 </div>
             </header>
 
