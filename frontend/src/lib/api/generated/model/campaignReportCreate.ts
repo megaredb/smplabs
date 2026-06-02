@@ -6,7 +6,7 @@
  */
 
 export interface CampaignReportCreate {
-  title: string;
-  description: string;
-  image_url?: string | null;
+	title: string;
+	description: string;
+	image_url?: string | null;
 }

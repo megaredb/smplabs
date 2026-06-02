@@ -6,6 +6,7 @@ from pydantic import AfterValidator, BaseModel, ConfigDict
 
 CategoryType = Literal["ЗСУ / Військові", "Медицина", "Відбудова", "Тварини", "Інше"]
 
+
 def validate_campaign_id(v: int) -> int:
     if v <= 0:
         msg = "ID must be positive"
@@ -38,8 +39,10 @@ class CampaignBase(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class CampaignCreate(CampaignBase):
     pass
+
 
 class CampaignUpdate(BaseModel):
     title: str | None = None
@@ -69,18 +72,22 @@ class CampaignResponse(CampaignBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class CampaignReportBase(BaseModel):
     title: str
     description: str
     image_url: str | None = None
 
+
 class CampaignReportCreate(CampaignReportBase):
     pass
+
 
 class CampaignReportResponse(CampaignReportBase):
     id: int
     campaign_id: int
     created_at: datetime
+
 
 class ComplaintCreate(BaseModel):
     reason: str

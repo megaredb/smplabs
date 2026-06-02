@@ -35,10 +35,10 @@ class ICampaignRepository(ABC):
 
     @abstractmethod
     async def get_top_campaigns(
-        self, 
-        limit: int = 50, 
-        category: str | None = None, 
-        sort_by: str = "current_amount"
+        self,
+        limit: int = 50,
+        category: str | None = None,
+        sort_by: str = "current_amount",
     ) -> list[CampaignSchema]:
         pass
 

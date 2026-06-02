@@ -100,12 +100,12 @@ class XMLCampaignAdapter(CampaignDatabaseAdapter):
             # Якщо немає дочірніх елементів, повертаємо текст
             if len(elem) == 0:
                 return elem.text.strip() if elem.text else ""
-            
+
             res = {}
             # Якщо є атрибути, можемо додати їх
             if elem.attrib:
                 res["_attributes"] = elem.attrib
-                
+
             for child in elem:
                 child_data = element_to_dict(child)
                 if child.tag in res:
@@ -125,7 +125,9 @@ class XMLCampaignAdapter(CampaignDatabaseAdapter):
                     result[child.tag] = [result[child.tag]]
                 result[child.tag].append(child_data)
             else:
-                result[child.tag] = [child_data] # Завжди робимо список для однотипних елементів, наприклад <user>
+                result[child.tag] = [
+                    child_data
+                ]  # Завжди робимо список для однотипних елементів, наприклад <user>
 
         print(f"Parsed XML data: {result}")
         return {"root": root.tag, "data": result}

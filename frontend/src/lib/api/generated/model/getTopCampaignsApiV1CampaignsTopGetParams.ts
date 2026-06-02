@@ -6,7 +6,7 @@
  */
 
 export type GetTopCampaignsApiV1CampaignsTopGetParams = {
-limit?: number;
-category?: string | null;
-sort_by?: string;
+	limit?: number;
+	category?: string | null;
+	sort_by?: string;
 };

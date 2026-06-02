@@ -6,7 +6,7 @@
  */
 
 export interface VisitStatsResponse {
-  page_url: string;
-  total_visits: number;
-  user_visits?: number | null;
+	page_url: string;
+	total_visits: number;
+	user_visits?: number | null;
 }

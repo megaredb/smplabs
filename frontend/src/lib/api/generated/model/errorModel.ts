@@ -7,5 +7,5 @@
 import type { ErrorModelDetail } from './errorModelDetail';
 
 export interface ErrorModel {
-  detail: ErrorModelDetail;
+	detail: ErrorModelDetail;
 }

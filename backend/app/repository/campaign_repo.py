@@ -23,7 +23,15 @@ class CampaignRepository(ICampaignRepository):
         """
         await self.connection.execute(
             query,
-            (data.organizer_id, data.title, data.description, data.target_amount, data.end_date, data.image_url, data.category),
+            (
+                data.organizer_id,
+                data.title,
+                data.description,
+                data.target_amount,
+                data.end_date,
+                data.image_url,
+                data.category,
+            ),
         )
 
     async def get_by_id(self, campaign_id: int) -> CampaignSchema | None:
@@ -51,7 +59,7 @@ class CampaignRepository(ICampaignRepository):
                 category=row[9],
                 organizer_name=row[10],
                 status=row[11],
-                is_verified=bool(row[12]) # Тепер галочка передається на фронтенд!
+                is_verified=bool(row[12]),  # Тепер галочка передається на фронтенд!
             )
 
     async def remove_by_id(self, campaign_id: CampaignId) -> None:
@@ -116,12 +124,11 @@ class CampaignRepository(ICampaignRepository):
         return [CampaignSchema(**row) for row in rows]
 
     async def get_top_campaigns(
-        self, 
-        limit: int = 50, 
-        category: str | None = None, 
-        sort_by: str = "current_amount"
+        self,
+        limit: int = 50,
+        category: str | None = None,
+        sort_by: str = "current_amount",
     ) -> list[CampaignSchema]:
-        # НОВЕ: Змінили SELECT та додали LEFT JOIN, щоб тягнути ім'я
         query = """
             SELECT c.id, c.organizer_id, c.title, c.description, c.target_amount, c.current_amount,
                 c.created_at, c.end_date, c.image_url, c.category, u.name, c.status, u.is_verified
@@ -129,7 +136,7 @@ class CampaignRepository(ICampaignRepository):
             LEFT JOIN users u ON c.organizer_id = u.id
         """
         params = []
-        
+
         # Фільтрація по категорії
         if category:
             query += " WHERE c.category = ?"
@@ -162,17 +169,19 @@ class CampaignRepository(ICampaignRepository):
                     category=row[9],
                     organizer_name=row[10],
                     status=row[11],
-                    is_verified=bool(row[12])
+                    is_verified=bool(row[12]),
                 )
                 for row in rows
             ]
-    
+
     async def add_report(self, campaign_id: int, data: CampaignReportCreate) -> None:
         query = """
             INSERT INTO campaign_reports (campaign_id, title, description, image_url)
             VALUES (?, ?, ?, ?)
         """
-        await self.connection.execute(query, (campaign_id, data.title, data.description, data.image_url))
+        await self.connection.execute(
+            query, (campaign_id, data.title, data.description, data.image_url)
+        )
 
     async def get_reports(self, campaign_id: int) -> list[CampaignReportResponse]:
         query = """
@@ -190,8 +199,9 @@ class CampaignRepository(ICampaignRepository):
                     title=row[2],
                     description=row[3],
                     image_url=row[4],
-                    created_at=row[5]
-                ) for row in rows
+                    created_at=row[5],
+                )
+                for row in rows
             ]
 
     async def add_complaint(self, campaign_id: int, user_id: int, reason: str) -> None:

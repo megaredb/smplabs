@@ -21,14 +21,20 @@ class TransactionService:
 
         # 2. Перевірка дати: чи не закінчився час
         if campaign.end_date:
-            now = datetime.now(timezone.utc) if campaign.end_date.tzinfo else datetime.now()
+            now = (
+                datetime.now(timezone.utc)
+                if campaign.end_date.tzinfo
+                else datetime.now()
+            )
             if now > campaign.end_date:
                 raise ValueError("Час збору вже минув, донати не приймаються.")
 
         # 3. Перевірка суми: щоб не перевищити ціль
         remaining = campaign.target_amount - campaign.current_amount
         if transaction.amount > remaining:
-            raise ValueError(f"Сума перевищує залишок. Максимум можна задонатити {remaining} ₴")
+            raise ValueError(
+                f"Сума перевищує залишок. Максимум можна задонатити {remaining} ₴"
+            )
 
         # 4. Якщо перевірки пройдені, записуємо транзакцію
         await self.uow.transactions.add_one(transaction)

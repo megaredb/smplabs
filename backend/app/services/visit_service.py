@@ -13,9 +13,7 @@ class VisitService:
     async def get_page_stats(self, page_url: str, user_id: int | None = None) -> dict:
         total = await self.uow.visits.get_total_visits(page_url)
         user_total = (
-            await self.uow.visits.get_user_visits(page_url, user_id)
-            if user_id
-            else 0
+            await self.uow.visits.get_user_visits(page_url, user_id) if user_id else 0
         )
 
         return {

@@ -6,5 +6,5 @@
  */
 
 export interface VisitCreate {
-  page_url: string;
+	page_url: string;
 }

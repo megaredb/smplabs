@@ -9,8 +9,8 @@ import type { CampaignId } from './campaignId';
 import type { DonorId } from './donorId';
 
 export interface TransactionCreate {
-  campaign_id: CampaignId;
-  donor_id?: DonorId | null;
-  amount: Amount;
-  comment?: string | null;
+	campaign_id: CampaignId;
+	donor_id?: DonorId | null;
+	amount: Amount;
+	comment?: string | null;
 }

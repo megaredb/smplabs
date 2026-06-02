@@ -6,5 +6,5 @@
  */
 
 export type GetVisitStatsApiV1VisitsStatsGetParams = {
-page_url: string;
+	page_url: string;
 };

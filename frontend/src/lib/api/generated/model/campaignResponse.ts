@@ -9,17 +9,17 @@ import type { CampaignResponseCategory } from './campaignResponseCategory';
 import type { TargetAmount } from './targetAmount';
 
 export interface CampaignResponse {
-  organizer_id: number;
-  title: string;
-  description?: string | null;
-  target_amount: TargetAmount;
-  end_date?: string | null;
-  image_url?: string | null;
-  category: CampaignResponseCategory;
-  organizer_name?: string | null;
-  id: CampaignId;
-  current_amount: number;
-  created_at: string;
-  status?: string;
-  is_verified?: boolean;
+	organizer_id: number;
+	title: string;
+	description?: string | null;
+	target_amount: TargetAmount;
+	end_date?: string | null;
+	image_url?: string | null;
+	category: CampaignResponseCategory;
+	organizer_name?: string | null;
+	id: CampaignId;
+	current_amount: number;
+	created_at: string;
+	status?: string;
+	is_verified?: boolean;
 }

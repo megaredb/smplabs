@@ -7,12 +7,12 @@
 import type { UserReadRole } from './userReadRole';
 
 export interface UserRead {
-  id: number;
-  email: string;
-  is_active?: boolean;
-  is_superuser?: boolean;
-  is_verified?: boolean;
-  name: string;
-  role: UserReadRole;
-  created_at: string;
+	id: number;
+	email: string;
+	is_active?: boolean;
+	is_superuser?: boolean;
+	is_verified?: boolean;
+	name: string;
+	role: UserReadRole;
+	created_at: string;
 }

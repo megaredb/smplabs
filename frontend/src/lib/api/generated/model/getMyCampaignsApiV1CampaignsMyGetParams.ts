@@ -6,6 +6,6 @@
  */
 
 export type GetMyCampaignsApiV1CampaignsMyGetParams = {
-offset?: number;
-limit?: number;
+	offset?: number;
+	limit?: number;
 };

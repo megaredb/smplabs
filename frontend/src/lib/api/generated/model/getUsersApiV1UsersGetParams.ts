@@ -6,6 +6,6 @@
  */
 
 export type GetUsersApiV1UsersGetParams = {
-offset?: number;
-limit?: number;
+	offset?: number;
+	limit?: number;
 };

@@ -6,5 +6,5 @@
  */
 
 export interface BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost {
-  email: string;
+	email: string;
 }

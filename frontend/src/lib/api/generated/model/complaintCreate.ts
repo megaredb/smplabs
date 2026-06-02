@@ -6,5 +6,5 @@
  */
 
 export interface ComplaintCreate {
-  reason: string;
+	reason: string;
 }

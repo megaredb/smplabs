@@ -8,10 +8,10 @@ import type { CampaignUpdateCategory } from './campaignUpdateCategory';
 import type { TargetAmount } from './targetAmount';
 
 export interface CampaignUpdate {
-  title?: string | null;
-  description?: string | null;
-  target_amount?: TargetAmount | null;
-  end_date?: string | null;
-  image_url?: string | null;
-  category: CampaignUpdateCategory;
+	title?: string | null;
+	description?: string | null;
+	target_amount?: TargetAmount | null;
+	end_date?: string | null;
+	image_url?: string | null;
+	category: CampaignUpdateCategory;
 }

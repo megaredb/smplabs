@@ -5,11 +5,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type UserReadRole = typeof UserReadRole[keyof typeof UserReadRole];
-
+export type UserReadRole = (typeof UserReadRole)[keyof typeof UserReadRole];
 
 export const UserReadRole = {
-  donor: 'donor',
-  organizer: 'organizer',
-  admin: 'admin',
+	donor: 'donor',
+	organizer: 'organizer',
+	admin: 'admin'
 } as const;

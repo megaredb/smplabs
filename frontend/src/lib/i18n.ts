@@ -5,15 +5,15 @@ import { browser } from '$app/environment';
 register('en', () => import('$lib/messages/en.json'));
 register('uk', () => import('$lib/messages/uk.json'));
 
-// НОВЕ: Функція для читання cookie
+// Функція для читання cookie
 function getSavedLocale() {
-    if (!browser) return null;
-    const match = document.cookie.match(new RegExp('(^| )locale=([^;]+)'));
-    return match ? match[2] : null;
+	if (!browser) return null;
+	const match = document.cookie.match(new RegExp('(^| )locale=([^;]+)'));
+	return match ? match[2] : null;
 }
 
 init({
-    fallbackLocale: 'en',
-    // НОВЕ: Спочатку шукаємо в cookie, якщо немає — беремо мову браузера
-    initialLocale: getSavedLocale() || (browser ? window.navigator.language : 'en'),
+	fallbackLocale: 'en',
+	// Спочатку шукаємо в cookie, якщо немає — беремо мову браузера
+	initialLocale: getSavedLocale() || (browser ? window.navigator.language : 'en')
 });

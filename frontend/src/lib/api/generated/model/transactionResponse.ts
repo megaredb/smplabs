@@ -10,10 +10,10 @@ import type { DonorId } from './donorId';
 import type { TransactionId } from './transactionId';
 
 export interface TransactionResponse {
-  campaign_id: CampaignId;
-  donor_id?: DonorId | null;
-  amount: Amount;
-  comment?: string | null;
-  id: TransactionId;
-  created_at: string;
+	campaign_id: CampaignId;
+	donor_id?: DonorId | null;
+	amount: Amount;
+	comment?: string | null;
+	id: TransactionId;
+	created_at: string;
 }

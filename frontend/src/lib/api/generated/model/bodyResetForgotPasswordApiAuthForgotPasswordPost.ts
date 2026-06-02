@@ -6,5 +6,5 @@
  */
 
 export interface BodyResetForgotPasswordApiAuthForgotPasswordPost {
-  email: string;
+	email: string;
 }

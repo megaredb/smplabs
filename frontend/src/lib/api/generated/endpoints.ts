@@ -4,2688 +4,3287 @@
  * backend
  * OpenAPI spec version: 0.1.0
  */
-import {
-  createMutation,
-  createQuery
-} from '@tanstack/svelte-query';
+import { createMutation, createQuery } from '@tanstack/svelte-query';
 import type {
-  CreateMutationOptions,
-  CreateMutationResult,
-  CreateQueryOptions,
-  CreateQueryResult,
-  DataTag,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey
+	CreateMutationOptions,
+	CreateMutationResult,
+	CreateQueryOptions,
+	CreateQueryResult,
+	DataTag,
+	MutationFunction,
+	QueryClient,
+	QueryFunction,
+	QueryKey
 } from '@tanstack/svelte-query';
 
 import type {
-  BearerResponse,
-  BodyAuthJwtLoginApiAuthJwtLoginPost,
-  BodyResetForgotPasswordApiAuthForgotPasswordPost,
-  BodyResetResetPasswordApiAuthResetPasswordPost,
-  BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost,
-  BodyVerifyVerifyApiAuthVerifyPost,
-  CampaignCreate,
-  CampaignReportCreate,
-  CampaignReportResponse,
-  CampaignResponse,
-  CampaignUpdate,
-  ComplaintCreate,
-  ErrorModel,
-  GetMyCampaignsApiV1CampaignsMyGetParams,
-  GetMyTransactionsApiV1TransactionsMyGetParams,
-  GetTopCampaignsApiV1CampaignsTopGetParams,
-  GetUsersApiV1UsersGetParams,
-  GetVisitStatsApiV1VisitsStatsGetParams,
-  HTTPValidationError,
-  TransactionCreate,
-  TransactionResponse,
-  UserCreate,
-  UserRead,
-  VerifyAccountApiV1UsersVerifyPost200,
-  VisitCreate,
-  VisitStatsResponse
+	BearerResponse,
+	BodyAuthJwtLoginApiAuthJwtLoginPost,
+	BodyResetForgotPasswordApiAuthForgotPasswordPost,
+	BodyResetResetPasswordApiAuthResetPasswordPost,
+	BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost,
+	BodyVerifyVerifyApiAuthVerifyPost,
+	CampaignCreate,
+	CampaignReportCreate,
+	CampaignReportResponse,
+	CampaignResponse,
+	CampaignUpdate,
+	ComplaintCreate,
+	ErrorModel,
+	GetMyCampaignsApiV1CampaignsMyGetParams,
+	GetMyTransactionsApiV1TransactionsMyGetParams,
+	GetTopCampaignsApiV1CampaignsTopGetParams,
+	GetUsersApiV1UsersGetParams,
+	GetVisitStatsApiV1VisitsStatsGetParams,
+	HTTPValidationError,
+	TransactionCreate,
+	TransactionResponse,
+	UserCreate,
+	UserRead,
+	VerifyAccountApiV1UsersVerifyPost200,
+	VisitCreate,
+	VisitStatsResponse
 } from './model';
 
 import { customInstance } from '../axios';
 
-
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-
 export type testXmlParsingApiLabXmlTestGetResponse200 = {
-  data: unknown
-  status: 200
-}
-
-export type testXmlParsingApiLabXmlTestGetResponseSuccess = (testXmlParsingApiLabXmlTestGetResponse200) & {
-  headers: Headers;
+	data: unknown;
+	status: 200;
 };
-;
 
-export type testXmlParsingApiLabXmlTestGetResponse = (testXmlParsingApiLabXmlTestGetResponseSuccess)
+export type testXmlParsingApiLabXmlTestGetResponseSuccess =
+	testXmlParsingApiLabXmlTestGetResponse200 & {
+		headers: Headers;
+	};
+export type testXmlParsingApiLabXmlTestGetResponse = testXmlParsingApiLabXmlTestGetResponseSuccess;
 
 export const getTestXmlParsingApiLabXmlTestGetUrl = () => {
-
-
-
-
-  return `/api/lab/xml-test`
-}
+	return `/api/lab/xml-test`;
+};
 
 /**
  * @summary Test Xml Parsing
  */
-export const testXmlParsingApiLabXmlTestGet = async ( options?: RequestInit): Promise<testXmlParsingApiLabXmlTestGetResponse> => {
-
-  return customInstance<testXmlParsingApiLabXmlTestGetResponse>(getTestXmlParsingApiLabXmlTestGetUrl(),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
+export const testXmlParsingApiLabXmlTestGet = async (
+	options?: RequestInit
+): Promise<testXmlParsingApiLabXmlTestGetResponse> => {
+	return customInstance<testXmlParsingApiLabXmlTestGetResponse>(
+		getTestXmlParsingApiLabXmlTestGetUrl(),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
 export const getTestXmlParsingApiLabXmlTestGetQueryKey = () => {
-    return [
-    `/api/lab/xml-test`
-    ] as const;
-    }
+	return [`/api/lab/xml-test`] as const;
+};
 
+export const getTestXmlParsingApiLabXmlTestGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>,
+	TError = unknown
+>(options?: {
+	query?: Partial<
+		CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData>
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getTestXmlParsingApiLabXmlTestGetQueryOptions = <TData = Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError = unknown>( options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
+	const queryKey = queryOptions?.queryKey ?? getTestXmlParsingApiLabXmlTestGetQueryKey();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>> = ({
+		signal
+	}) => testXmlParsingApiLabXmlTestGet({ signal, ...requestOptions });
 
-  const queryKey =  queryOptions?.queryKey ?? getTestXmlParsingApiLabXmlTestGetQueryKey();
+	return { queryKey, queryFn, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>> = ({ signal }) => testXmlParsingApiLabXmlTestGet({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type TestXmlParsingApiLabXmlTestGetQueryResult = NonNullable<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>>
-export type TestXmlParsingApiLabXmlTestGetQueryError = unknown
-
+export type TestXmlParsingApiLabXmlTestGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>
+>;
+export type TestXmlParsingApiLabXmlTestGetQueryError = unknown;
 
 /**
  * @summary Test Xml Parsing
  */
 
-export function createTestXmlParsingApiLabXmlTestGet<TData = Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError = unknown>(
-  options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createTestXmlParsingApiLabXmlTestGet<
+	TData = Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>,
+	TError = unknown
+>(
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<Awaited<ReturnType<typeof testXmlParsingApiLabXmlTestGet>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getTestXmlParsingApiLabXmlTestGetQueryOptions(options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getTestXmlParsingApiLabXmlTestGetQueryOptions(options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type getMeApiV1UsersMeGetResponse200 = {
-  data: UserRead
-  status: 200
-}
-
-export type getMeApiV1UsersMeGetResponseSuccess = (getMeApiV1UsersMeGetResponse200) & {
-  headers: Headers;
+	data: UserRead;
+	status: 200;
 };
-;
 
-export type getMeApiV1UsersMeGetResponse = (getMeApiV1UsersMeGetResponseSuccess)
+export type getMeApiV1UsersMeGetResponseSuccess = getMeApiV1UsersMeGetResponse200 & {
+	headers: Headers;
+};
+export type getMeApiV1UsersMeGetResponse = getMeApiV1UsersMeGetResponseSuccess;
 
 export const getGetMeApiV1UsersMeGetUrl = () => {
-
-
-
-
-  return `/api/v1/users/me`
-}
+	return `/api/v1/users/me`;
+};
 
 /**
  * @summary Get Me
  */
-export const getMeApiV1UsersMeGet = async ( options?: RequestInit): Promise<getMeApiV1UsersMeGetResponse> => {
-
-  return customInstance<getMeApiV1UsersMeGetResponse>(getGetMeApiV1UsersMeGetUrl(),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
+export const getMeApiV1UsersMeGet = async (
+	options?: RequestInit
+): Promise<getMeApiV1UsersMeGetResponse> => {
+	return customInstance<getMeApiV1UsersMeGetResponse>(getGetMeApiV1UsersMeGetUrl(), {
+		...options,
+		method: 'GET'
+	});
+};
 
 export const getGetMeApiV1UsersMeGetQueryKey = () => {
-    return [
-    `/api/v1/users/me`
-    ] as const;
-    }
+	return [`/api/v1/users/me`] as const;
+};
 
+export const getGetMeApiV1UsersMeGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>,
+	TError = unknown
+>(options?: {
+	query?: Partial<
+		CreateQueryOptions<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>, TError, TData>
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getGetMeApiV1UsersMeGetQueryOptions = <TData = Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>, TError = unknown>( options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
+	const queryKey = queryOptions?.queryKey ?? getGetMeApiV1UsersMeGetQueryKey();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>> = ({ signal }) =>
+		getMeApiV1UsersMeGet({ signal, ...requestOptions });
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMeApiV1UsersMeGetQueryKey();
+	return { queryKey, queryFn, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>> = ({ signal }) => getMeApiV1UsersMeGet({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMeApiV1UsersMeGetQueryResult = NonNullable<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>>
-export type GetMeApiV1UsersMeGetQueryError = unknown
-
+export type GetMeApiV1UsersMeGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>
+>;
+export type GetMeApiV1UsersMeGetQueryError = unknown;
 
 /**
  * @summary Get Me
  */
 
-export function createGetMeApiV1UsersMeGet<TData = Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>, TError = unknown>(
-  options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetMeApiV1UsersMeGet<
+	TData = Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>,
+	TError = unknown
+>(
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<Awaited<ReturnType<typeof getMeApiV1UsersMeGet>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetMeApiV1UsersMeGetQueryOptions(options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetMeApiV1UsersMeGetQueryOptions(options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type getUserApiV1UsersUserIdGetResponse200 = {
-  data: UserRead
-  status: 200
-}
+	data: UserRead;
+	status: 200;
+};
 
 export type getUserApiV1UsersUserIdGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getUserApiV1UsersUserIdGetResponseSuccess = (getUserApiV1UsersUserIdGetResponse200) & {
-  headers: Headers;
-};
-export type getUserApiV1UsersUserIdGetResponseError = (getUserApiV1UsersUserIdGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getUserApiV1UsersUserIdGetResponse = (getUserApiV1UsersUserIdGetResponseSuccess | getUserApiV1UsersUserIdGetResponseError)
+export type getUserApiV1UsersUserIdGetResponseSuccess = getUserApiV1UsersUserIdGetResponse200 & {
+	headers: Headers;
+};
+export type getUserApiV1UsersUserIdGetResponseError = getUserApiV1UsersUserIdGetResponse422 & {
+	headers: Headers;
+};
 
-export const getGetUserApiV1UsersUserIdGetUrl = (userId: number,) => {
+export type getUserApiV1UsersUserIdGetResponse =
+	| getUserApiV1UsersUserIdGetResponseSuccess
+	| getUserApiV1UsersUserIdGetResponseError;
 
-
-
-
-  return `/api/v1/users/${userId}`
-}
+export const getGetUserApiV1UsersUserIdGetUrl = (userId: number) => {
+	return `/api/v1/users/${userId}`;
+};
 
 /**
  * @summary Get User
  */
-export const getUserApiV1UsersUserIdGet = async (userId: number, options?: RequestInit): Promise<getUserApiV1UsersUserIdGetResponse> => {
+export const getUserApiV1UsersUserIdGet = async (
+	userId: number,
+	options?: RequestInit
+): Promise<getUserApiV1UsersUserIdGetResponse> => {
+	return customInstance<getUserApiV1UsersUserIdGetResponse>(
+		getGetUserApiV1UsersUserIdGetUrl(userId),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-  return customInstance<getUserApiV1UsersUserIdGetResponse>(getGetUserApiV1UsersUserIdGetUrl(userId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetUserApiV1UsersUserIdGetQueryKey = (userId: number) => {
+	return [`/api/v1/users/${userId}`] as const;
+};
 
-
-  }
-);}
-
-
-
-
-
-export const getGetUserApiV1UsersUserIdGetQueryKey = (userId: number,) => {
-    return [
-    `/api/v1/users/${userId}`
-    ] as const;
-    }
-
-
-export const getGetUserApiV1UsersUserIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>, TError = HTTPValidationError>(userId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetUserApiV1UsersUserIdGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>,
+	TError = HTTPValidationError
+>(
+	userId: number,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
 ) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	const queryKey = queryOptions?.queryKey ?? getGetUserApiV1UsersUserIdGetQueryKey(userId);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetUserApiV1UsersUserIdGetQueryKey(userId);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>> = ({
+		signal
+	}) => getUserApiV1UsersUserIdGet(userId, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, enabled: !!userId, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>> = ({ signal }) => getUserApiV1UsersUserIdGet(userId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetUserApiV1UsersUserIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>>
-export type GetUserApiV1UsersUserIdGetQueryError = HTTPValidationError
-
+export type GetUserApiV1UsersUserIdGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>
+>;
+export type GetUserApiV1UsersUserIdGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get User
  */
 
-export function createGetUserApiV1UsersUserIdGet<TData = Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>, TError = HTTPValidationError>(
- userId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetUserApiV1UsersUserIdGet<
+	TData = Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>,
+	TError = HTTPValidationError
+>(
+	userId: () => number,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<Awaited<ReturnType<typeof getUserApiV1UsersUserIdGet>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetUserApiV1UsersUserIdGetQueryOptions(userId(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetUserApiV1UsersUserIdGetQueryOptions(userId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type removeUserApiV1UsersUserIdDeleteResponse200 = {
-  data: unknown
-  status: 200
-}
+	data: unknown;
+	status: 200;
+};
 
 export type removeUserApiV1UsersUserIdDeleteResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type removeUserApiV1UsersUserIdDeleteResponseSuccess = (removeUserApiV1UsersUserIdDeleteResponse200) & {
-  headers: Headers;
-};
-export type removeUserApiV1UsersUserIdDeleteResponseError = (removeUserApiV1UsersUserIdDeleteResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type removeUserApiV1UsersUserIdDeleteResponse = (removeUserApiV1UsersUserIdDeleteResponseSuccess | removeUserApiV1UsersUserIdDeleteResponseError)
+export type removeUserApiV1UsersUserIdDeleteResponseSuccess =
+	removeUserApiV1UsersUserIdDeleteResponse200 & {
+		headers: Headers;
+	};
+export type removeUserApiV1UsersUserIdDeleteResponseError =
+	removeUserApiV1UsersUserIdDeleteResponse422 & {
+		headers: Headers;
+	};
 
-export const getRemoveUserApiV1UsersUserIdDeleteUrl = (userId: number,) => {
+export type removeUserApiV1UsersUserIdDeleteResponse =
+	| removeUserApiV1UsersUserIdDeleteResponseSuccess
+	| removeUserApiV1UsersUserIdDeleteResponseError;
 
-
-
-
-  return `/api/v1/users/${userId}`
-}
+export const getRemoveUserApiV1UsersUserIdDeleteUrl = (userId: number) => {
+	return `/api/v1/users/${userId}`;
+};
 
 /**
  * @summary Remove User
  */
-export const removeUserApiV1UsersUserIdDelete = async (userId: number, options?: RequestInit): Promise<removeUserApiV1UsersUserIdDeleteResponse> => {
+export const removeUserApiV1UsersUserIdDelete = async (
+	userId: number,
+	options?: RequestInit
+): Promise<removeUserApiV1UsersUserIdDeleteResponse> => {
+	return customInstance<removeUserApiV1UsersUserIdDeleteResponse>(
+		getRemoveUserApiV1UsersUserIdDeleteUrl(userId),
+		{
+			...options,
+			method: 'DELETE'
+		}
+	);
+};
 
-  return customInstance<removeUserApiV1UsersUserIdDeleteResponse>(getRemoveUserApiV1UsersUserIdDeleteUrl(userId),
-  {
-    ...options,
-    method: 'DELETE'
+export const getRemoveUserApiV1UsersUserIdDeleteMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>,
+		TError,
+		{ userId: number },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>,
+	TError,
+	{ userId: number },
+	TContext
+> => {
+	const mutationKey = ['removeUserApiV1UsersUserIdDelete'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>,
+		{ userId: number }
+	> = (props) => {
+		const { userId } = props ?? {};
 
-  }
-);}
+		return removeUserApiV1UsersUserIdDelete(userId, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
+export type RemoveUserApiV1UsersUserIdDeleteMutationResult = NonNullable<
+	Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>
+>;
 
+export type RemoveUserApiV1UsersUserIdDeleteMutationError = HTTPValidationError;
 
-export const getRemoveUserApiV1UsersUserIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>, TError,{userId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>, TError,{userId: number}, TContext> => {
-
-const mutationKey = ['removeUserApiV1UsersUserIdDelete'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>, {userId: number}> = (props) => {
-          const {userId} = props ?? {};
-
-          return  removeUserApiV1UsersUserIdDelete(userId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RemoveUserApiV1UsersUserIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>>
-
-    export type RemoveUserApiV1UsersUserIdDeleteMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Remove User
  */
-export const createRemoveUserApiV1UsersUserIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>, TError,{userId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>,
-        TError,
-        {userId: number},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getRemoveUserApiV1UsersUserIdDeleteMutationOptions(options?.()) }), queryClient);
-    }
+export const createRemoveUserApiV1UsersUserIdDelete = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>,
+			TError,
+			{ userId: number },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof removeUserApiV1UsersUserIdDelete>>,
+	TError,
+	{ userId: number },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getRemoveUserApiV1UsersUserIdDeleteMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type getUsersApiV1UsersGetResponse200 = {
-  data: UserRead[]
-  status: 200
-}
+	data: UserRead[];
+	status: 200;
+};
 
 export type getUsersApiV1UsersGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getUsersApiV1UsersGetResponseSuccess = (getUsersApiV1UsersGetResponse200) & {
-  headers: Headers;
-};
-export type getUsersApiV1UsersGetResponseError = (getUsersApiV1UsersGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getUsersApiV1UsersGetResponse = (getUsersApiV1UsersGetResponseSuccess | getUsersApiV1UsersGetResponseError)
+export type getUsersApiV1UsersGetResponseSuccess = getUsersApiV1UsersGetResponse200 & {
+	headers: Headers;
+};
+export type getUsersApiV1UsersGetResponseError = getUsersApiV1UsersGetResponse422 & {
+	headers: Headers;
+};
 
-export const getGetUsersApiV1UsersGetUrl = (params?: GetUsersApiV1UsersGetParams,) => {
-  const normalizedParams = new URLSearchParams();
+export type getUsersApiV1UsersGetResponse =
+	| getUsersApiV1UsersGetResponseSuccess
+	| getUsersApiV1UsersGetResponseError;
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+export const getGetUsersApiV1UsersGetUrl = (params?: GetUsersApiV1UsersGetParams) => {
+	const normalizedParams = new URLSearchParams();
 
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
 
-  const stringifiedParams = normalizedParams.toString();
+	const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/v1/users/?${stringifiedParams}` : `/api/v1/users/`
-}
+	return stringifiedParams.length > 0 ? `/api/v1/users/?${stringifiedParams}` : `/api/v1/users/`;
+};
 
 /**
  * @summary Get Users
  */
-export const getUsersApiV1UsersGet = async (params?: GetUsersApiV1UsersGetParams, options?: RequestInit): Promise<getUsersApiV1UsersGetResponse> => {
+export const getUsersApiV1UsersGet = async (
+	params?: GetUsersApiV1UsersGetParams,
+	options?: RequestInit
+): Promise<getUsersApiV1UsersGetResponse> => {
+	return customInstance<getUsersApiV1UsersGetResponse>(getGetUsersApiV1UsersGetUrl(params), {
+		...options,
+		method: 'GET'
+	});
+};
 
-  return customInstance<getUsersApiV1UsersGetResponse>(getGetUsersApiV1UsersGetUrl(params),
-  {
-    ...options,
-    method: 'GET'
+export const getGetUsersApiV1UsersGetQueryKey = (params?: GetUsersApiV1UsersGetParams) => {
+	return [`/api/v1/users/`, ...(params ? [params] : [])] as const;
+};
 
-
-  }
-);}
-
-
-
-
-
-export const getGetUsersApiV1UsersGetQueryKey = (params?: GetUsersApiV1UsersGetParams,) => {
-    return [
-    `/api/v1/users/`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getGetUsersApiV1UsersGetQueryOptions = <TData = Awaited<ReturnType<typeof getUsersApiV1UsersGet>>, TError = HTTPValidationError>(params?: GetUsersApiV1UsersGetParams, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetUsersApiV1UsersGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getUsersApiV1UsersGet>>,
+	TError = HTTPValidationError
+>(
+	params?: GetUsersApiV1UsersGetParams,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
 ) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	const queryKey = queryOptions?.queryKey ?? getGetUsersApiV1UsersGetQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetUsersApiV1UsersGetQueryKey(params);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>> = ({ signal }) =>
+		getUsersApiV1UsersGet(params, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getUsersApiV1UsersGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>> = ({ signal }) => getUsersApiV1UsersGet(params, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetUsersApiV1UsersGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>>
-export type GetUsersApiV1UsersGetQueryError = HTTPValidationError
-
+export type GetUsersApiV1UsersGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getUsersApiV1UsersGet>>
+>;
+export type GetUsersApiV1UsersGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get Users
  */
 
-export function createGetUsersApiV1UsersGet<TData = Awaited<ReturnType<typeof getUsersApiV1UsersGet>>, TError = HTTPValidationError>(
- params?: () =>  GetUsersApiV1UsersGetParams, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetUsersApiV1UsersGet<
+	TData = Awaited<ReturnType<typeof getUsersApiV1UsersGet>>,
+	TError = HTTPValidationError
+>(
+	params?: () => GetUsersApiV1UsersGetParams,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<Awaited<ReturnType<typeof getUsersApiV1UsersGet>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetUsersApiV1UsersGetQueryOptions(params?.(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetUsersApiV1UsersGetQueryOptions(params?.(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type verifyAccountApiV1UsersVerifyPostResponse200 = {
-  data: VerifyAccountApiV1UsersVerifyPost200
-  status: 200
-}
-
-export type verifyAccountApiV1UsersVerifyPostResponseSuccess = (verifyAccountApiV1UsersVerifyPostResponse200) & {
-  headers: Headers;
+	data: VerifyAccountApiV1UsersVerifyPost200;
+	status: 200;
 };
-;
 
-export type verifyAccountApiV1UsersVerifyPostResponse = (verifyAccountApiV1UsersVerifyPostResponseSuccess)
+export type verifyAccountApiV1UsersVerifyPostResponseSuccess =
+	verifyAccountApiV1UsersVerifyPostResponse200 & {
+		headers: Headers;
+	};
+export type verifyAccountApiV1UsersVerifyPostResponse =
+	verifyAccountApiV1UsersVerifyPostResponseSuccess;
 
 export const getVerifyAccountApiV1UsersVerifyPostUrl = () => {
-
-
-
-
-  return `/api/v1/users/verify`
-}
+	return `/api/v1/users/verify`;
+};
 
 /**
  * @summary Verify Account
  */
-export const verifyAccountApiV1UsersVerifyPost = async ( options?: RequestInit): Promise<verifyAccountApiV1UsersVerifyPostResponse> => {
+export const verifyAccountApiV1UsersVerifyPost = async (
+	options?: RequestInit
+): Promise<verifyAccountApiV1UsersVerifyPostResponse> => {
+	return customInstance<verifyAccountApiV1UsersVerifyPostResponse>(
+		getVerifyAccountApiV1UsersVerifyPostUrl(),
+		{
+			...options,
+			method: 'POST'
+		}
+	);
+};
 
-  return customInstance<verifyAccountApiV1UsersVerifyPostResponse>(getVerifyAccountApiV1UsersVerifyPostUrl(),
-  {
-    ...options,
-    method: 'POST'
+export const getVerifyAccountApiV1UsersVerifyPostMutationOptions = <
+	TError = unknown,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>,
+		TError,
+		void,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>,
+	TError,
+	void,
+	TContext
+> => {
+	const mutationKey = ['verifyAccountApiV1UsersVerifyPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>,
+		void
+	> = () => {
+		return verifyAccountApiV1UsersVerifyPost(requestOptions);
+	};
 
-  }
-);}
+	return { mutationFn, ...mutationOptions };
+};
 
+export type VerifyAccountApiV1UsersVerifyPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>
+>;
 
+export type VerifyAccountApiV1UsersVerifyPostMutationError = unknown;
 
-
-export const getVerifyAccountApiV1UsersVerifyPostMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, TError,void, TContext> => {
-
-const mutationKey = ['verifyAccountApiV1UsersVerifyPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, void> = () => {
-
-
-          return  verifyAccountApiV1UsersVerifyPost(requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type VerifyAccountApiV1UsersVerifyPostMutationResult = NonNullable<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>>
-
-    export type VerifyAccountApiV1UsersVerifyPostMutationError = unknown
-
-    /**
+/**
  * @summary Verify Account
  */
-export const createVerifyAccountApiV1UsersVerifyPost = <TError = unknown,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>,
-        TError,
-        void,
-        TContext
-      > => {
-      return createMutation(() => ({ ...getVerifyAccountApiV1UsersVerifyPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createVerifyAccountApiV1UsersVerifyPost = <TError = unknown, TContext = unknown>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>,
+			TError,
+			void,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>,
+	TError,
+	void,
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getVerifyAccountApiV1UsersVerifyPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type createCampaignApiV1CampaignsPostResponse201 = {
-  data: unknown
-  status: 201
-}
+	data: unknown;
+	status: 201;
+};
 
 export type createCampaignApiV1CampaignsPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type createCampaignApiV1CampaignsPostResponseSuccess = (createCampaignApiV1CampaignsPostResponse201) & {
-  headers: Headers;
-};
-export type createCampaignApiV1CampaignsPostResponseError = (createCampaignApiV1CampaignsPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type createCampaignApiV1CampaignsPostResponse = (createCampaignApiV1CampaignsPostResponseSuccess | createCampaignApiV1CampaignsPostResponseError)
+export type createCampaignApiV1CampaignsPostResponseSuccess =
+	createCampaignApiV1CampaignsPostResponse201 & {
+		headers: Headers;
+	};
+export type createCampaignApiV1CampaignsPostResponseError =
+	createCampaignApiV1CampaignsPostResponse422 & {
+		headers: Headers;
+	};
+
+export type createCampaignApiV1CampaignsPostResponse =
+	| createCampaignApiV1CampaignsPostResponseSuccess
+	| createCampaignApiV1CampaignsPostResponseError;
 
 export const getCreateCampaignApiV1CampaignsPostUrl = () => {
-
-
-
-
-  return `/api/v1/campaigns/`
-}
+	return `/api/v1/campaigns/`;
+};
 
 /**
  * @summary Create Campaign
  */
-export const createCampaignApiV1CampaignsPost = async (campaignCreate: CampaignCreate, options?: RequestInit): Promise<createCampaignApiV1CampaignsPostResponse> => {
+export const createCampaignApiV1CampaignsPost = async (
+	campaignCreate: CampaignCreate,
+	options?: RequestInit
+): Promise<createCampaignApiV1CampaignsPostResponse> => {
+	return customInstance<createCampaignApiV1CampaignsPostResponse>(
+		getCreateCampaignApiV1CampaignsPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(campaignCreate)
+		}
+	);
+};
 
-  return customInstance<createCampaignApiV1CampaignsPostResponse>(getCreateCampaignApiV1CampaignsPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      campaignCreate,)
-  }
-);}
+export const getCreateCampaignApiV1CampaignsPostMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>,
+		TError,
+		{ data: CampaignCreate },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>,
+	TError,
+	{ data: CampaignCreate },
+	TContext
+> => {
+	const mutationKey = ['createCampaignApiV1CampaignsPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>,
+		{ data: CampaignCreate }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return createCampaignApiV1CampaignsPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getCreateCampaignApiV1CampaignsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>, TError,{data: CampaignCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>, TError,{data: CampaignCreate}, TContext> => {
+export type CreateCampaignApiV1CampaignsPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>
+>;
+export type CreateCampaignApiV1CampaignsPostMutationBody = CampaignCreate;
+export type CreateCampaignApiV1CampaignsPostMutationError = HTTPValidationError;
 
-const mutationKey = ['createCampaignApiV1CampaignsPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>, {data: CampaignCreate}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createCampaignApiV1CampaignsPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateCampaignApiV1CampaignsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>>
-    export type CreateCampaignApiV1CampaignsPostMutationBody = CampaignCreate
-    export type CreateCampaignApiV1CampaignsPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Create Campaign
  */
-export const createCreateCampaignApiV1CampaignsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>, TError,{data: CampaignCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>,
-        TError,
-        {data: CampaignCreate},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getCreateCampaignApiV1CampaignsPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createCreateCampaignApiV1CampaignsPost = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>,
+			TError,
+			{ data: CampaignCreate },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof createCampaignApiV1CampaignsPost>>,
+	TError,
+	{ data: CampaignCreate },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getCreateCampaignApiV1CampaignsPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type getTopCampaignsApiV1CampaignsTopGetResponse200 = {
-  data: CampaignResponse[]
-  status: 200
-}
+	data: CampaignResponse[];
+	status: 200;
+};
 
 export type getTopCampaignsApiV1CampaignsTopGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getTopCampaignsApiV1CampaignsTopGetResponseSuccess = (getTopCampaignsApiV1CampaignsTopGetResponse200) & {
-  headers: Headers;
-};
-export type getTopCampaignsApiV1CampaignsTopGetResponseError = (getTopCampaignsApiV1CampaignsTopGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getTopCampaignsApiV1CampaignsTopGetResponse = (getTopCampaignsApiV1CampaignsTopGetResponseSuccess | getTopCampaignsApiV1CampaignsTopGetResponseError)
+export type getTopCampaignsApiV1CampaignsTopGetResponseSuccess =
+	getTopCampaignsApiV1CampaignsTopGetResponse200 & {
+		headers: Headers;
+	};
+export type getTopCampaignsApiV1CampaignsTopGetResponseError =
+	getTopCampaignsApiV1CampaignsTopGetResponse422 & {
+		headers: Headers;
+	};
 
-export const getGetTopCampaignsApiV1CampaignsTopGetUrl = (params?: GetTopCampaignsApiV1CampaignsTopGetParams,) => {
-  const normalizedParams = new URLSearchParams();
+export type getTopCampaignsApiV1CampaignsTopGetResponse =
+	| getTopCampaignsApiV1CampaignsTopGetResponseSuccess
+	| getTopCampaignsApiV1CampaignsTopGetResponseError;
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/v1/campaigns/top?${stringifiedParams}` : `/api/v1/campaigns/top`
-}
-
-/**
- * @summary Get Top Campaigns
- */
-export const getTopCampaignsApiV1CampaignsTopGet = async (params?: GetTopCampaignsApiV1CampaignsTopGetParams, options?: RequestInit): Promise<getTopCampaignsApiV1CampaignsTopGetResponse> => {
-
-  return customInstance<getTopCampaignsApiV1CampaignsTopGetResponse>(getGetTopCampaignsApiV1CampaignsTopGetUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetTopCampaignsApiV1CampaignsTopGetQueryKey = (params?: GetTopCampaignsApiV1CampaignsTopGetParams,) => {
-    return [
-    `/api/v1/campaigns/top`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getGetTopCampaignsApiV1CampaignsTopGetQueryOptions = <TData = Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>, TError = HTTPValidationError>(params?: GetTopCampaignsApiV1CampaignsTopGetParams, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetTopCampaignsApiV1CampaignsTopGetUrl = (
+	params?: GetTopCampaignsApiV1CampaignsTopGetParams
 ) => {
+	const normalizedParams = new URLSearchParams();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
 
-  const queryKey =  queryOptions?.queryKey ?? getGetTopCampaignsApiV1CampaignsTopGetQueryKey(params);
+	const stringifiedParams = normalizedParams.toString();
 
+	return stringifiedParams.length > 0
+		? `/api/v1/campaigns/top?${stringifiedParams}`
+		: `/api/v1/campaigns/top`;
+};
 
+/**
+ * @summary Get Top Campaigns
+ */
+export const getTopCampaignsApiV1CampaignsTopGet = async (
+	params?: GetTopCampaignsApiV1CampaignsTopGetParams,
+	options?: RequestInit
+): Promise<getTopCampaignsApiV1CampaignsTopGetResponse> => {
+	return customInstance<getTopCampaignsApiV1CampaignsTopGetResponse>(
+		getGetTopCampaignsApiV1CampaignsTopGetUrl(params),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>> = ({ signal }) => getTopCampaignsApiV1CampaignsTopGet(params, { signal, ...requestOptions });
+export const getGetTopCampaignsApiV1CampaignsTopGetQueryKey = (
+	params?: GetTopCampaignsApiV1CampaignsTopGetParams
+) => {
+	return [`/api/v1/campaigns/top`, ...(params ? [params] : [])] as const;
+};
 
+export const getGetTopCampaignsApiV1CampaignsTopGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>,
+	TError = HTTPValidationError
+>(
+	params?: GetTopCampaignsApiV1CampaignsTopGetParams,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
+	const queryKey = queryOptions?.queryKey ?? getGetTopCampaignsApiV1CampaignsTopGetQueryKey(params);
 
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>> = ({
+		signal
+	}) => getTopCampaignsApiV1CampaignsTopGet(params, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetTopCampaignsApiV1CampaignsTopGetQueryResult = NonNullable<Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>>
-export type GetTopCampaignsApiV1CampaignsTopGetQueryError = HTTPValidationError
-
+export type GetTopCampaignsApiV1CampaignsTopGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>
+>;
+export type GetTopCampaignsApiV1CampaignsTopGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get Top Campaigns
  */
 
-export function createGetTopCampaignsApiV1CampaignsTopGet<TData = Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>, TError = HTTPValidationError>(
- params?: () =>  GetTopCampaignsApiV1CampaignsTopGetParams, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetTopCampaignsApiV1CampaignsTopGet<
+	TData = Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>,
+	TError = HTTPValidationError
+>(
+	params?: () => GetTopCampaignsApiV1CampaignsTopGetParams,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getTopCampaignsApiV1CampaignsTopGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetTopCampaignsApiV1CampaignsTopGetQueryOptions(params?.(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetTopCampaignsApiV1CampaignsTopGetQueryOptions(params?.(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponse204 = {
-  data: void
-  status: 204
-}
+	data: void;
+	status: 204;
+};
 
 export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponseSuccess = (deleteCampaignApiV1CampaignsCampaignIdDeleteResponse204) & {
-  headers: Headers;
-};
-export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponseError = (deleteCampaignApiV1CampaignsCampaignIdDeleteResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponse = (deleteCampaignApiV1CampaignsCampaignIdDeleteResponseSuccess | deleteCampaignApiV1CampaignsCampaignIdDeleteResponseError)
+export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponseSuccess =
+	deleteCampaignApiV1CampaignsCampaignIdDeleteResponse204 & {
+		headers: Headers;
+	};
+export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponseError =
+	deleteCampaignApiV1CampaignsCampaignIdDeleteResponse422 & {
+		headers: Headers;
+	};
 
-export const getDeleteCampaignApiV1CampaignsCampaignIdDeleteUrl = (campaignId: number,) => {
+export type deleteCampaignApiV1CampaignsCampaignIdDeleteResponse =
+	| deleteCampaignApiV1CampaignsCampaignIdDeleteResponseSuccess
+	| deleteCampaignApiV1CampaignsCampaignIdDeleteResponseError;
 
-
-
-
-  return `/api/v1/campaigns/${campaignId}`
-}
+export const getDeleteCampaignApiV1CampaignsCampaignIdDeleteUrl = (campaignId: number) => {
+	return `/api/v1/campaigns/${campaignId}`;
+};
 
 /**
  * @summary Delete Campaign
  */
-export const deleteCampaignApiV1CampaignsCampaignIdDelete = async (campaignId: number, options?: RequestInit): Promise<deleteCampaignApiV1CampaignsCampaignIdDeleteResponse> => {
+export const deleteCampaignApiV1CampaignsCampaignIdDelete = async (
+	campaignId: number,
+	options?: RequestInit
+): Promise<deleteCampaignApiV1CampaignsCampaignIdDeleteResponse> => {
+	return customInstance<deleteCampaignApiV1CampaignsCampaignIdDeleteResponse>(
+		getDeleteCampaignApiV1CampaignsCampaignIdDeleteUrl(campaignId),
+		{
+			...options,
+			method: 'DELETE'
+		}
+	);
+};
 
-  return customInstance<deleteCampaignApiV1CampaignsCampaignIdDeleteResponse>(getDeleteCampaignApiV1CampaignsCampaignIdDeleteUrl(campaignId),
-  {
-    ...options,
-    method: 'DELETE'
+export const getDeleteCampaignApiV1CampaignsCampaignIdDeleteMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>,
+		TError,
+		{ campaignId: number },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>,
+	TError,
+	{ campaignId: number },
+	TContext
+> => {
+	const mutationKey = ['deleteCampaignApiV1CampaignsCampaignIdDelete'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>,
+		{ campaignId: number }
+	> = (props) => {
+		const { campaignId } = props ?? {};
 
-  }
-);}
+		return deleteCampaignApiV1CampaignsCampaignIdDelete(campaignId, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
+export type DeleteCampaignApiV1CampaignsCampaignIdDeleteMutationResult = NonNullable<
+	Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>
+>;
 
+export type DeleteCampaignApiV1CampaignsCampaignIdDeleteMutationError = HTTPValidationError;
 
-export const getDeleteCampaignApiV1CampaignsCampaignIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>, TError,{campaignId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>, TError,{campaignId: number}, TContext> => {
-
-const mutationKey = ['deleteCampaignApiV1CampaignsCampaignIdDelete'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>, {campaignId: number}> = (props) => {
-          const {campaignId} = props ?? {};
-
-          return  deleteCampaignApiV1CampaignsCampaignIdDelete(campaignId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteCampaignApiV1CampaignsCampaignIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>>
-
-    export type DeleteCampaignApiV1CampaignsCampaignIdDeleteMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Delete Campaign
  */
-export const createDeleteCampaignApiV1CampaignsCampaignIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>, TError,{campaignId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>,
-        TError,
-        {campaignId: number},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getDeleteCampaignApiV1CampaignsCampaignIdDeleteMutationOptions(options?.()) }), queryClient);
-    }
+export const createDeleteCampaignApiV1CampaignsCampaignIdDelete = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>,
+			TError,
+			{ campaignId: number },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof deleteCampaignApiV1CampaignsCampaignIdDelete>>,
+	TError,
+	{ campaignId: number },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getDeleteCampaignApiV1CampaignsCampaignIdDeleteMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type updateCampaignApiV1CampaignsCampaignIdPatchResponse200 = {
-  data: CampaignResponse
-  status: 200
-}
+	data: CampaignResponse;
+	status: 200;
+};
 
 export type updateCampaignApiV1CampaignsCampaignIdPatchResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type updateCampaignApiV1CampaignsCampaignIdPatchResponseSuccess = (updateCampaignApiV1CampaignsCampaignIdPatchResponse200) & {
-  headers: Headers;
-};
-export type updateCampaignApiV1CampaignsCampaignIdPatchResponseError = (updateCampaignApiV1CampaignsCampaignIdPatchResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type updateCampaignApiV1CampaignsCampaignIdPatchResponse = (updateCampaignApiV1CampaignsCampaignIdPatchResponseSuccess | updateCampaignApiV1CampaignsCampaignIdPatchResponseError)
+export type updateCampaignApiV1CampaignsCampaignIdPatchResponseSuccess =
+	updateCampaignApiV1CampaignsCampaignIdPatchResponse200 & {
+		headers: Headers;
+	};
+export type updateCampaignApiV1CampaignsCampaignIdPatchResponseError =
+	updateCampaignApiV1CampaignsCampaignIdPatchResponse422 & {
+		headers: Headers;
+	};
 
-export const getUpdateCampaignApiV1CampaignsCampaignIdPatchUrl = (campaignId: number,) => {
+export type updateCampaignApiV1CampaignsCampaignIdPatchResponse =
+	| updateCampaignApiV1CampaignsCampaignIdPatchResponseSuccess
+	| updateCampaignApiV1CampaignsCampaignIdPatchResponseError;
 
-
-
-
-  return `/api/v1/campaigns/${campaignId}`
-}
+export const getUpdateCampaignApiV1CampaignsCampaignIdPatchUrl = (campaignId: number) => {
+	return `/api/v1/campaigns/${campaignId}`;
+};
 
 /**
  * @summary Update Campaign
  */
-export const updateCampaignApiV1CampaignsCampaignIdPatch = async (campaignId: number,
-    campaignUpdate: CampaignUpdate, options?: RequestInit): Promise<updateCampaignApiV1CampaignsCampaignIdPatchResponse> => {
+export const updateCampaignApiV1CampaignsCampaignIdPatch = async (
+	campaignId: number,
+	campaignUpdate: CampaignUpdate,
+	options?: RequestInit
+): Promise<updateCampaignApiV1CampaignsCampaignIdPatchResponse> => {
+	return customInstance<updateCampaignApiV1CampaignsCampaignIdPatchResponse>(
+		getUpdateCampaignApiV1CampaignsCampaignIdPatchUrl(campaignId),
+		{
+			...options,
+			method: 'PATCH',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(campaignUpdate)
+		}
+	);
+};
 
-  return customInstance<updateCampaignApiV1CampaignsCampaignIdPatchResponse>(getUpdateCampaignApiV1CampaignsCampaignIdPatchUrl(campaignId),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      campaignUpdate,)
-  }
-);}
+export const getUpdateCampaignApiV1CampaignsCampaignIdPatchMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>,
+		TError,
+		{ campaignId: number; data: CampaignUpdate },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>,
+	TError,
+	{ campaignId: number; data: CampaignUpdate },
+	TContext
+> => {
+	const mutationKey = ['updateCampaignApiV1CampaignsCampaignIdPatch'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>,
+		{ campaignId: number; data: CampaignUpdate }
+	> = (props) => {
+		const { campaignId, data } = props ?? {};
 
+		return updateCampaignApiV1CampaignsCampaignIdPatch(campaignId, data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getUpdateCampaignApiV1CampaignsCampaignIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>, TError,{campaignId: number;data: CampaignUpdate}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>, TError,{campaignId: number;data: CampaignUpdate}, TContext> => {
+export type UpdateCampaignApiV1CampaignsCampaignIdPatchMutationResult = NonNullable<
+	Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>
+>;
+export type UpdateCampaignApiV1CampaignsCampaignIdPatchMutationBody = CampaignUpdate;
+export type UpdateCampaignApiV1CampaignsCampaignIdPatchMutationError = HTTPValidationError;
 
-const mutationKey = ['updateCampaignApiV1CampaignsCampaignIdPatch'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>, {campaignId: number;data: CampaignUpdate}> = (props) => {
-          const {campaignId,data} = props ?? {};
-
-          return  updateCampaignApiV1CampaignsCampaignIdPatch(campaignId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UpdateCampaignApiV1CampaignsCampaignIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>>
-    export type UpdateCampaignApiV1CampaignsCampaignIdPatchMutationBody = CampaignUpdate
-    export type UpdateCampaignApiV1CampaignsCampaignIdPatchMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Update Campaign
  */
-export const createUpdateCampaignApiV1CampaignsCampaignIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>, TError,{campaignId: number;data: CampaignUpdate}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>,
-        TError,
-        {campaignId: number;data: CampaignUpdate},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getUpdateCampaignApiV1CampaignsCampaignIdPatchMutationOptions(options?.()) }), queryClient);
-    }
+export const createUpdateCampaignApiV1CampaignsCampaignIdPatch = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>,
+			TError,
+			{ campaignId: number; data: CampaignUpdate },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof updateCampaignApiV1CampaignsCampaignIdPatch>>,
+	TError,
+	{ campaignId: number; data: CampaignUpdate },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getUpdateCampaignApiV1CampaignsCampaignIdPatchMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type getCampaignApiV1CampaignsCampaignIdGetResponse200 = {
-  data: CampaignResponse
-  status: 200
-}
+	data: CampaignResponse;
+	status: 200;
+};
 
 export type getCampaignApiV1CampaignsCampaignIdGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getCampaignApiV1CampaignsCampaignIdGetResponseSuccess = (getCampaignApiV1CampaignsCampaignIdGetResponse200) & {
-  headers: Headers;
-};
-export type getCampaignApiV1CampaignsCampaignIdGetResponseError = (getCampaignApiV1CampaignsCampaignIdGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getCampaignApiV1CampaignsCampaignIdGetResponse = (getCampaignApiV1CampaignsCampaignIdGetResponseSuccess | getCampaignApiV1CampaignsCampaignIdGetResponseError)
+export type getCampaignApiV1CampaignsCampaignIdGetResponseSuccess =
+	getCampaignApiV1CampaignsCampaignIdGetResponse200 & {
+		headers: Headers;
+	};
+export type getCampaignApiV1CampaignsCampaignIdGetResponseError =
+	getCampaignApiV1CampaignsCampaignIdGetResponse422 & {
+		headers: Headers;
+	};
 
-export const getGetCampaignApiV1CampaignsCampaignIdGetUrl = (campaignId: number,) => {
+export type getCampaignApiV1CampaignsCampaignIdGetResponse =
+	| getCampaignApiV1CampaignsCampaignIdGetResponseSuccess
+	| getCampaignApiV1CampaignsCampaignIdGetResponseError;
 
-
-
-
-  return `/api/v1/campaigns/${campaignId}`
-}
+export const getGetCampaignApiV1CampaignsCampaignIdGetUrl = (campaignId: number) => {
+	return `/api/v1/campaigns/${campaignId}`;
+};
 
 /**
  * @summary Get Campaign
  */
-export const getCampaignApiV1CampaignsCampaignIdGet = async (campaignId: number, options?: RequestInit): Promise<getCampaignApiV1CampaignsCampaignIdGetResponse> => {
+export const getCampaignApiV1CampaignsCampaignIdGet = async (
+	campaignId: number,
+	options?: RequestInit
+): Promise<getCampaignApiV1CampaignsCampaignIdGetResponse> => {
+	return customInstance<getCampaignApiV1CampaignsCampaignIdGetResponse>(
+		getGetCampaignApiV1CampaignsCampaignIdGetUrl(campaignId),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-  return customInstance<getCampaignApiV1CampaignsCampaignIdGetResponse>(getGetCampaignApiV1CampaignsCampaignIdGetUrl(campaignId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetCampaignApiV1CampaignsCampaignIdGetQueryKey = (campaignId: number) => {
+	return [`/api/v1/campaigns/${campaignId}`] as const;
+};
 
-
-  }
-);}
-
-
-
-
-
-export const getGetCampaignApiV1CampaignsCampaignIdGetQueryKey = (campaignId: number,) => {
-    return [
-    `/api/v1/campaigns/${campaignId}`
-    ] as const;
-    }
-
-
-export const getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError = HTTPValidationError>(campaignId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>,
+	TError = HTTPValidationError
+>(
+	campaignId: number,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
 ) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	const queryKey =
+		queryOptions?.queryKey ?? getGetCampaignApiV1CampaignsCampaignIdGetQueryKey(campaignId);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetCampaignApiV1CampaignsCampaignIdGetQueryKey(campaignId);
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>
+	> = ({ signal }) =>
+		getCampaignApiV1CampaignsCampaignIdGet(campaignId, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, enabled: !!campaignId, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>> = ({ signal }) => getCampaignApiV1CampaignsCampaignIdGet(campaignId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: !!(campaignId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetCampaignApiV1CampaignsCampaignIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>>
-export type GetCampaignApiV1CampaignsCampaignIdGetQueryError = HTTPValidationError
-
+export type GetCampaignApiV1CampaignsCampaignIdGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>
+>;
+export type GetCampaignApiV1CampaignsCampaignIdGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get Campaign
  */
 
-export function createGetCampaignApiV1CampaignsCampaignIdGet<TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError = HTTPValidationError>(
- campaignId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetCampaignApiV1CampaignsCampaignIdGet<
+	TData = Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>,
+	TError = HTTPValidationError
+>(
+	campaignId: () => number,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getCampaignApiV1CampaignsCampaignIdGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions(campaignId(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetCampaignApiV1CampaignsCampaignIdGetQueryOptions(campaignId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type getMyCampaignsApiV1CampaignsMyGetResponse200 = {
-  data: CampaignResponse[]
-  status: 200
-}
+	data: CampaignResponse[];
+	status: 200;
+};
 
 export type getMyCampaignsApiV1CampaignsMyGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getMyCampaignsApiV1CampaignsMyGetResponseSuccess = (getMyCampaignsApiV1CampaignsMyGetResponse200) & {
-  headers: Headers;
-};
-export type getMyCampaignsApiV1CampaignsMyGetResponseError = (getMyCampaignsApiV1CampaignsMyGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getMyCampaignsApiV1CampaignsMyGetResponse = (getMyCampaignsApiV1CampaignsMyGetResponseSuccess | getMyCampaignsApiV1CampaignsMyGetResponseError)
+export type getMyCampaignsApiV1CampaignsMyGetResponseSuccess =
+	getMyCampaignsApiV1CampaignsMyGetResponse200 & {
+		headers: Headers;
+	};
+export type getMyCampaignsApiV1CampaignsMyGetResponseError =
+	getMyCampaignsApiV1CampaignsMyGetResponse422 & {
+		headers: Headers;
+	};
 
-export const getGetMyCampaignsApiV1CampaignsMyGetUrl = (params?: GetMyCampaignsApiV1CampaignsMyGetParams,) => {
-  const normalizedParams = new URLSearchParams();
+export type getMyCampaignsApiV1CampaignsMyGetResponse =
+	| getMyCampaignsApiV1CampaignsMyGetResponseSuccess
+	| getMyCampaignsApiV1CampaignsMyGetResponseError;
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/v1/campaigns/my?${stringifiedParams}` : `/api/v1/campaigns/my`
-}
-
-/**
- * @summary Get My Campaigns
- */
-export const getMyCampaignsApiV1CampaignsMyGet = async (params?: GetMyCampaignsApiV1CampaignsMyGetParams, options?: RequestInit): Promise<getMyCampaignsApiV1CampaignsMyGetResponse> => {
-
-  return customInstance<getMyCampaignsApiV1CampaignsMyGetResponse>(getGetMyCampaignsApiV1CampaignsMyGetUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetMyCampaignsApiV1CampaignsMyGetQueryKey = (params?: GetMyCampaignsApiV1CampaignsMyGetParams,) => {
-    return [
-    `/api/v1/campaigns/my`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getGetMyCampaignsApiV1CampaignsMyGetQueryOptions = <TData = Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>, TError = HTTPValidationError>(params?: GetMyCampaignsApiV1CampaignsMyGetParams, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetMyCampaignsApiV1CampaignsMyGetUrl = (
+	params?: GetMyCampaignsApiV1CampaignsMyGetParams
 ) => {
+	const normalizedParams = new URLSearchParams();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMyCampaignsApiV1CampaignsMyGetQueryKey(params);
+	const stringifiedParams = normalizedParams.toString();
 
+	return stringifiedParams.length > 0
+		? `/api/v1/campaigns/my?${stringifiedParams}`
+		: `/api/v1/campaigns/my`;
+};
 
+/**
+ * @summary Get My Campaigns
+ */
+export const getMyCampaignsApiV1CampaignsMyGet = async (
+	params?: GetMyCampaignsApiV1CampaignsMyGetParams,
+	options?: RequestInit
+): Promise<getMyCampaignsApiV1CampaignsMyGetResponse> => {
+	return customInstance<getMyCampaignsApiV1CampaignsMyGetResponse>(
+		getGetMyCampaignsApiV1CampaignsMyGetUrl(params),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>> = ({ signal }) => getMyCampaignsApiV1CampaignsMyGet(params, { signal, ...requestOptions });
+export const getGetMyCampaignsApiV1CampaignsMyGetQueryKey = (
+	params?: GetMyCampaignsApiV1CampaignsMyGetParams
+) => {
+	return [`/api/v1/campaigns/my`, ...(params ? [params] : [])] as const;
+};
 
+export const getGetMyCampaignsApiV1CampaignsMyGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>,
+	TError = HTTPValidationError
+>(
+	params?: GetMyCampaignsApiV1CampaignsMyGetParams,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
+	const queryKey = queryOptions?.queryKey ?? getGetMyCampaignsApiV1CampaignsMyGetQueryKey(params);
 
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>> = ({
+		signal
+	}) => getMyCampaignsApiV1CampaignsMyGet(params, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMyCampaignsApiV1CampaignsMyGetQueryResult = NonNullable<Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>>
-export type GetMyCampaignsApiV1CampaignsMyGetQueryError = HTTPValidationError
-
+export type GetMyCampaignsApiV1CampaignsMyGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>
+>;
+export type GetMyCampaignsApiV1CampaignsMyGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get My Campaigns
  */
 
-export function createGetMyCampaignsApiV1CampaignsMyGet<TData = Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>, TError = HTTPValidationError>(
- params?: () =>  GetMyCampaignsApiV1CampaignsMyGetParams, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetMyCampaignsApiV1CampaignsMyGet<
+	TData = Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>,
+	TError = HTTPValidationError
+>(
+	params?: () => GetMyCampaignsApiV1CampaignsMyGetParams,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getMyCampaignsApiV1CampaignsMyGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetMyCampaignsApiV1CampaignsMyGetQueryOptions(params?.(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetMyCampaignsApiV1CampaignsMyGetQueryOptions(params?.(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type createReportApiV1CampaignsCampaignIdReportsPostResponse201 = {
-  data: unknown
-  status: 201
-}
+	data: unknown;
+	status: 201;
+};
 
 export type createReportApiV1CampaignsCampaignIdReportsPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type createReportApiV1CampaignsCampaignIdReportsPostResponseSuccess = (createReportApiV1CampaignsCampaignIdReportsPostResponse201) & {
-  headers: Headers;
-};
-export type createReportApiV1CampaignsCampaignIdReportsPostResponseError = (createReportApiV1CampaignsCampaignIdReportsPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type createReportApiV1CampaignsCampaignIdReportsPostResponse = (createReportApiV1CampaignsCampaignIdReportsPostResponseSuccess | createReportApiV1CampaignsCampaignIdReportsPostResponseError)
+export type createReportApiV1CampaignsCampaignIdReportsPostResponseSuccess =
+	createReportApiV1CampaignsCampaignIdReportsPostResponse201 & {
+		headers: Headers;
+	};
+export type createReportApiV1CampaignsCampaignIdReportsPostResponseError =
+	createReportApiV1CampaignsCampaignIdReportsPostResponse422 & {
+		headers: Headers;
+	};
 
-export const getCreateReportApiV1CampaignsCampaignIdReportsPostUrl = (campaignId: number,) => {
+export type createReportApiV1CampaignsCampaignIdReportsPostResponse =
+	| createReportApiV1CampaignsCampaignIdReportsPostResponseSuccess
+	| createReportApiV1CampaignsCampaignIdReportsPostResponseError;
 
-
-
-
-  return `/api/v1/campaigns/${campaignId}/reports`
-}
+export const getCreateReportApiV1CampaignsCampaignIdReportsPostUrl = (campaignId: number) => {
+	return `/api/v1/campaigns/${campaignId}/reports`;
+};
 
 /**
  * @summary Create Report
  */
-export const createReportApiV1CampaignsCampaignIdReportsPost = async (campaignId: number,
-    campaignReportCreate: CampaignReportCreate, options?: RequestInit): Promise<createReportApiV1CampaignsCampaignIdReportsPostResponse> => {
+export const createReportApiV1CampaignsCampaignIdReportsPost = async (
+	campaignId: number,
+	campaignReportCreate: CampaignReportCreate,
+	options?: RequestInit
+): Promise<createReportApiV1CampaignsCampaignIdReportsPostResponse> => {
+	return customInstance<createReportApiV1CampaignsCampaignIdReportsPostResponse>(
+		getCreateReportApiV1CampaignsCampaignIdReportsPostUrl(campaignId),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(campaignReportCreate)
+		}
+	);
+};
 
-  return customInstance<createReportApiV1CampaignsCampaignIdReportsPostResponse>(getCreateReportApiV1CampaignsCampaignIdReportsPostUrl(campaignId),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      campaignReportCreate,)
-  }
-);}
+export const getCreateReportApiV1CampaignsCampaignIdReportsPostMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>,
+		TError,
+		{ campaignId: number; data: CampaignReportCreate },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>,
+	TError,
+	{ campaignId: number; data: CampaignReportCreate },
+	TContext
+> => {
+	const mutationKey = ['createReportApiV1CampaignsCampaignIdReportsPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>,
+		{ campaignId: number; data: CampaignReportCreate }
+	> = (props) => {
+		const { campaignId, data } = props ?? {};
 
+		return createReportApiV1CampaignsCampaignIdReportsPost(campaignId, data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getCreateReportApiV1CampaignsCampaignIdReportsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>, TError,{campaignId: number;data: CampaignReportCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>, TError,{campaignId: number;data: CampaignReportCreate}, TContext> => {
+export type CreateReportApiV1CampaignsCampaignIdReportsPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>
+>;
+export type CreateReportApiV1CampaignsCampaignIdReportsPostMutationBody = CampaignReportCreate;
+export type CreateReportApiV1CampaignsCampaignIdReportsPostMutationError = HTTPValidationError;
 
-const mutationKey = ['createReportApiV1CampaignsCampaignIdReportsPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>, {campaignId: number;data: CampaignReportCreate}> = (props) => {
-          const {campaignId,data} = props ?? {};
-
-          return  createReportApiV1CampaignsCampaignIdReportsPost(campaignId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateReportApiV1CampaignsCampaignIdReportsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>>
-    export type CreateReportApiV1CampaignsCampaignIdReportsPostMutationBody = CampaignReportCreate
-    export type CreateReportApiV1CampaignsCampaignIdReportsPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Create Report
  */
-export const createCreateReportApiV1CampaignsCampaignIdReportsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>, TError,{campaignId: number;data: CampaignReportCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>,
-        TError,
-        {campaignId: number;data: CampaignReportCreate},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getCreateReportApiV1CampaignsCampaignIdReportsPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createCreateReportApiV1CampaignsCampaignIdReportsPost = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>,
+			TError,
+			{ campaignId: number; data: CampaignReportCreate },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof createReportApiV1CampaignsCampaignIdReportsPost>>,
+	TError,
+	{ campaignId: number; data: CampaignReportCreate },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getCreateReportApiV1CampaignsCampaignIdReportsPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type getReportsApiV1CampaignsCampaignIdReportsGetResponse200 = {
-  data: CampaignReportResponse[]
-  status: 200
-}
+	data: CampaignReportResponse[];
+	status: 200;
+};
 
 export type getReportsApiV1CampaignsCampaignIdReportsGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getReportsApiV1CampaignsCampaignIdReportsGetResponseSuccess = (getReportsApiV1CampaignsCampaignIdReportsGetResponse200) & {
-  headers: Headers;
-};
-export type getReportsApiV1CampaignsCampaignIdReportsGetResponseError = (getReportsApiV1CampaignsCampaignIdReportsGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getReportsApiV1CampaignsCampaignIdReportsGetResponse = (getReportsApiV1CampaignsCampaignIdReportsGetResponseSuccess | getReportsApiV1CampaignsCampaignIdReportsGetResponseError)
+export type getReportsApiV1CampaignsCampaignIdReportsGetResponseSuccess =
+	getReportsApiV1CampaignsCampaignIdReportsGetResponse200 & {
+		headers: Headers;
+	};
+export type getReportsApiV1CampaignsCampaignIdReportsGetResponseError =
+	getReportsApiV1CampaignsCampaignIdReportsGetResponse422 & {
+		headers: Headers;
+	};
 
-export const getGetReportsApiV1CampaignsCampaignIdReportsGetUrl = (campaignId: number,) => {
+export type getReportsApiV1CampaignsCampaignIdReportsGetResponse =
+	| getReportsApiV1CampaignsCampaignIdReportsGetResponseSuccess
+	| getReportsApiV1CampaignsCampaignIdReportsGetResponseError;
 
-
-
-
-  return `/api/v1/campaigns/${campaignId}/reports`
-}
+export const getGetReportsApiV1CampaignsCampaignIdReportsGetUrl = (campaignId: number) => {
+	return `/api/v1/campaigns/${campaignId}/reports`;
+};
 
 /**
  * @summary Get Reports
  */
-export const getReportsApiV1CampaignsCampaignIdReportsGet = async (campaignId: number, options?: RequestInit): Promise<getReportsApiV1CampaignsCampaignIdReportsGetResponse> => {
+export const getReportsApiV1CampaignsCampaignIdReportsGet = async (
+	campaignId: number,
+	options?: RequestInit
+): Promise<getReportsApiV1CampaignsCampaignIdReportsGetResponse> => {
+	return customInstance<getReportsApiV1CampaignsCampaignIdReportsGetResponse>(
+		getGetReportsApiV1CampaignsCampaignIdReportsGetUrl(campaignId),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-  return customInstance<getReportsApiV1CampaignsCampaignIdReportsGetResponse>(getGetReportsApiV1CampaignsCampaignIdReportsGetUrl(campaignId),
-  {
-    ...options,
-    method: 'GET'
+export const getGetReportsApiV1CampaignsCampaignIdReportsGetQueryKey = (campaignId: number) => {
+	return [`/api/v1/campaigns/${campaignId}/reports`] as const;
+};
 
-
-  }
-);}
-
-
-
-
-
-export const getGetReportsApiV1CampaignsCampaignIdReportsGetQueryKey = (campaignId: number,) => {
-    return [
-    `/api/v1/campaigns/${campaignId}/reports`
-    ] as const;
-    }
-
-
-export const getGetReportsApiV1CampaignsCampaignIdReportsGetQueryOptions = <TData = Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>, TError = HTTPValidationError>(campaignId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetReportsApiV1CampaignsCampaignIdReportsGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>,
+	TError = HTTPValidationError
+>(
+	campaignId: number,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
 ) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	const queryKey =
+		queryOptions?.queryKey ?? getGetReportsApiV1CampaignsCampaignIdReportsGetQueryKey(campaignId);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetReportsApiV1CampaignsCampaignIdReportsGetQueryKey(campaignId);
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>
+	> = ({ signal }) =>
+		getReportsApiV1CampaignsCampaignIdReportsGet(campaignId, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, enabled: !!campaignId, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>> = ({ signal }) => getReportsApiV1CampaignsCampaignIdReportsGet(campaignId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: !!(campaignId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetReportsApiV1CampaignsCampaignIdReportsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>>
-export type GetReportsApiV1CampaignsCampaignIdReportsGetQueryError = HTTPValidationError
-
+export type GetReportsApiV1CampaignsCampaignIdReportsGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>
+>;
+export type GetReportsApiV1CampaignsCampaignIdReportsGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get Reports
  */
 
-export function createGetReportsApiV1CampaignsCampaignIdReportsGet<TData = Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>, TError = HTTPValidationError>(
- campaignId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetReportsApiV1CampaignsCampaignIdReportsGet<
+	TData = Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>,
+	TError = HTTPValidationError
+>(
+	campaignId: () => number,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getReportsApiV1CampaignsCampaignIdReportsGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetReportsApiV1CampaignsCampaignIdReportsGetQueryOptions(campaignId(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetReportsApiV1CampaignsCampaignIdReportsGetQueryOptions(campaignId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse201 = {
-  data: unknown
-  status: 201
-}
+	data: unknown;
+	status: 201;
+};
 
 export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseSuccess = (createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse201) & {
-  headers: Headers;
-};
-export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseError = (createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse = (createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseSuccess | createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseError)
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseSuccess =
+	createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse201 & {
+		headers: Headers;
+	};
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseError =
+	createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse422 & {
+		headers: Headers;
+	};
 
-export const getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostUrl = (campaignId: number,) => {
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse =
+	| createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseSuccess
+	| createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseError;
 
-
-
-
-  return `/api/v1/campaigns/${campaignId}/complaints`
-}
+export const getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostUrl = (campaignId: number) => {
+	return `/api/v1/campaigns/${campaignId}/complaints`;
+};
 
 /**
  * @summary Create Complaint
  */
-export const createComplaintApiV1CampaignsCampaignIdComplaintsPost = async (campaignId: number,
-    complaintCreate: ComplaintCreate, options?: RequestInit): Promise<createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse> => {
+export const createComplaintApiV1CampaignsCampaignIdComplaintsPost = async (
+	campaignId: number,
+	complaintCreate: ComplaintCreate,
+	options?: RequestInit
+): Promise<createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse> => {
+	return customInstance<createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse>(
+		getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostUrl(campaignId),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(complaintCreate)
+		}
+	);
+};
 
-  return customInstance<createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse>(getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostUrl(campaignId),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      complaintCreate,)
-  }
-);}
+export const getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>,
+		TError,
+		{ campaignId: number; data: ComplaintCreate },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>,
+	TError,
+	{ campaignId: number; data: ComplaintCreate },
+	TContext
+> => {
+	const mutationKey = ['createComplaintApiV1CampaignsCampaignIdComplaintsPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>,
+		{ campaignId: number; data: ComplaintCreate }
+	> = (props) => {
+		const { campaignId, data } = props ?? {};
 
+		return createComplaintApiV1CampaignsCampaignIdComplaintsPost(campaignId, data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, TError,{campaignId: number;data: ComplaintCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, TError,{campaignId: number;data: ComplaintCreate}, TContext> => {
+export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>
+>;
+export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationBody = ComplaintCreate;
+export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationError =
+	HTTPValidationError;
 
-const mutationKey = ['createComplaintApiV1CampaignsCampaignIdComplaintsPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, {campaignId: number;data: ComplaintCreate}> = (props) => {
-          const {campaignId,data} = props ?? {};
-
-          return  createComplaintApiV1CampaignsCampaignIdComplaintsPost(campaignId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>>
-    export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationBody = ComplaintCreate
-    export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Create Complaint
  */
-export const createCreateComplaintApiV1CampaignsCampaignIdComplaintsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, TError,{campaignId: number;data: ComplaintCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>,
-        TError,
-        {campaignId: number;data: ComplaintCreate},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createCreateComplaintApiV1CampaignsCampaignIdComplaintsPost = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>,
+			TError,
+			{ campaignId: number; data: ComplaintCreate },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>,
+	TError,
+	{ campaignId: number; data: ComplaintCreate },
+	TContext
+> => {
+	return createMutation(
+		() => ({
+			...getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationOptions(options?.())
+		}),
+		queryClient
+	);
+};
 
 export type createTransactionApiV1TransactionsPostResponse201 = {
-  data: unknown
-  status: 201
-}
+	data: unknown;
+	status: 201;
+};
 
 export type createTransactionApiV1TransactionsPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type createTransactionApiV1TransactionsPostResponseSuccess = (createTransactionApiV1TransactionsPostResponse201) & {
-  headers: Headers;
-};
-export type createTransactionApiV1TransactionsPostResponseError = (createTransactionApiV1TransactionsPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type createTransactionApiV1TransactionsPostResponse = (createTransactionApiV1TransactionsPostResponseSuccess | createTransactionApiV1TransactionsPostResponseError)
+export type createTransactionApiV1TransactionsPostResponseSuccess =
+	createTransactionApiV1TransactionsPostResponse201 & {
+		headers: Headers;
+	};
+export type createTransactionApiV1TransactionsPostResponseError =
+	createTransactionApiV1TransactionsPostResponse422 & {
+		headers: Headers;
+	};
+
+export type createTransactionApiV1TransactionsPostResponse =
+	| createTransactionApiV1TransactionsPostResponseSuccess
+	| createTransactionApiV1TransactionsPostResponseError;
 
 export const getCreateTransactionApiV1TransactionsPostUrl = () => {
-
-
-
-
-  return `/api/v1/transactions/`
-}
+	return `/api/v1/transactions/`;
+};
 
 /**
  * @summary Create Transaction
  */
-export const createTransactionApiV1TransactionsPost = async (transactionCreate: TransactionCreate, options?: RequestInit): Promise<createTransactionApiV1TransactionsPostResponse> => {
+export const createTransactionApiV1TransactionsPost = async (
+	transactionCreate: TransactionCreate,
+	options?: RequestInit
+): Promise<createTransactionApiV1TransactionsPostResponse> => {
+	return customInstance<createTransactionApiV1TransactionsPostResponse>(
+		getCreateTransactionApiV1TransactionsPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(transactionCreate)
+		}
+	);
+};
 
-  return customInstance<createTransactionApiV1TransactionsPostResponse>(getCreateTransactionApiV1TransactionsPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      transactionCreate,)
-  }
-);}
+export const getCreateTransactionApiV1TransactionsPostMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>,
+		TError,
+		{ data: TransactionCreate },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>,
+	TError,
+	{ data: TransactionCreate },
+	TContext
+> => {
+	const mutationKey = ['createTransactionApiV1TransactionsPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>,
+		{ data: TransactionCreate }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return createTransactionApiV1TransactionsPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getCreateTransactionApiV1TransactionsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>, TError,{data: TransactionCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>, TError,{data: TransactionCreate}, TContext> => {
+export type CreateTransactionApiV1TransactionsPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>
+>;
+export type CreateTransactionApiV1TransactionsPostMutationBody = TransactionCreate;
+export type CreateTransactionApiV1TransactionsPostMutationError = HTTPValidationError;
 
-const mutationKey = ['createTransactionApiV1TransactionsPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>, {data: TransactionCreate}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createTransactionApiV1TransactionsPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateTransactionApiV1TransactionsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>>
-    export type CreateTransactionApiV1TransactionsPostMutationBody = TransactionCreate
-    export type CreateTransactionApiV1TransactionsPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Create Transaction
  */
-export const createCreateTransactionApiV1TransactionsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>, TError,{data: TransactionCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>,
-        TError,
-        {data: TransactionCreate},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getCreateTransactionApiV1TransactionsPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createCreateTransactionApiV1TransactionsPost = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>,
+			TError,
+			{ data: TransactionCreate },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof createTransactionApiV1TransactionsPost>>,
+	TError,
+	{ data: TransactionCreate },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getCreateTransactionApiV1TransactionsPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type getMyTransactionsApiV1TransactionsMyGetResponse200 = {
-  data: TransactionResponse[]
-  status: 200
-}
+	data: TransactionResponse[];
+	status: 200;
+};
 
 export type getMyTransactionsApiV1TransactionsMyGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getMyTransactionsApiV1TransactionsMyGetResponseSuccess = (getMyTransactionsApiV1TransactionsMyGetResponse200) & {
-  headers: Headers;
-};
-export type getMyTransactionsApiV1TransactionsMyGetResponseError = (getMyTransactionsApiV1TransactionsMyGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getMyTransactionsApiV1TransactionsMyGetResponse = (getMyTransactionsApiV1TransactionsMyGetResponseSuccess | getMyTransactionsApiV1TransactionsMyGetResponseError)
+export type getMyTransactionsApiV1TransactionsMyGetResponseSuccess =
+	getMyTransactionsApiV1TransactionsMyGetResponse200 & {
+		headers: Headers;
+	};
+export type getMyTransactionsApiV1TransactionsMyGetResponseError =
+	getMyTransactionsApiV1TransactionsMyGetResponse422 & {
+		headers: Headers;
+	};
 
-export const getGetMyTransactionsApiV1TransactionsMyGetUrl = (params?: GetMyTransactionsApiV1TransactionsMyGetParams,) => {
-  const normalizedParams = new URLSearchParams();
+export type getMyTransactionsApiV1TransactionsMyGetResponse =
+	| getMyTransactionsApiV1TransactionsMyGetResponseSuccess
+	| getMyTransactionsApiV1TransactionsMyGetResponseError;
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/v1/transactions/my?${stringifiedParams}` : `/api/v1/transactions/my`
-}
-
-/**
- * @summary Get My Transactions
- */
-export const getMyTransactionsApiV1TransactionsMyGet = async (params?: GetMyTransactionsApiV1TransactionsMyGetParams, options?: RequestInit): Promise<getMyTransactionsApiV1TransactionsMyGetResponse> => {
-
-  return customInstance<getMyTransactionsApiV1TransactionsMyGetResponse>(getGetMyTransactionsApiV1TransactionsMyGetUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetMyTransactionsApiV1TransactionsMyGetQueryKey = (params?: GetMyTransactionsApiV1TransactionsMyGetParams,) => {
-    return [
-    `/api/v1/transactions/my`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getGetMyTransactionsApiV1TransactionsMyGetQueryOptions = <TData = Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>, TError = HTTPValidationError>(params?: GetMyTransactionsApiV1TransactionsMyGetParams, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetMyTransactionsApiV1TransactionsMyGetUrl = (
+	params?: GetMyTransactionsApiV1TransactionsMyGetParams
 ) => {
+	const normalizedParams = new URLSearchParams();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMyTransactionsApiV1TransactionsMyGetQueryKey(params);
+	const stringifiedParams = normalizedParams.toString();
 
+	return stringifiedParams.length > 0
+		? `/api/v1/transactions/my?${stringifiedParams}`
+		: `/api/v1/transactions/my`;
+};
 
+/**
+ * @summary Get My Transactions
+ */
+export const getMyTransactionsApiV1TransactionsMyGet = async (
+	params?: GetMyTransactionsApiV1TransactionsMyGetParams,
+	options?: RequestInit
+): Promise<getMyTransactionsApiV1TransactionsMyGetResponse> => {
+	return customInstance<getMyTransactionsApiV1TransactionsMyGetResponse>(
+		getGetMyTransactionsApiV1TransactionsMyGetUrl(params),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>> = ({ signal }) => getMyTransactionsApiV1TransactionsMyGet(params, { signal, ...requestOptions });
+export const getGetMyTransactionsApiV1TransactionsMyGetQueryKey = (
+	params?: GetMyTransactionsApiV1TransactionsMyGetParams
+) => {
+	return [`/api/v1/transactions/my`, ...(params ? [params] : [])] as const;
+};
 
+export const getGetMyTransactionsApiV1TransactionsMyGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>,
+	TError = HTTPValidationError
+>(
+	params?: GetMyTransactionsApiV1TransactionsMyGetParams,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
+	const queryKey =
+		queryOptions?.queryKey ?? getGetMyTransactionsApiV1TransactionsMyGetQueryKey(params);
 
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>
+	> = ({ signal }) =>
+		getMyTransactionsApiV1TransactionsMyGet(params, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMyTransactionsApiV1TransactionsMyGetQueryResult = NonNullable<Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>>
-export type GetMyTransactionsApiV1TransactionsMyGetQueryError = HTTPValidationError
-
+export type GetMyTransactionsApiV1TransactionsMyGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>
+>;
+export type GetMyTransactionsApiV1TransactionsMyGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get My Transactions
  */
 
-export function createGetMyTransactionsApiV1TransactionsMyGet<TData = Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>, TError = HTTPValidationError>(
- params?: () =>  GetMyTransactionsApiV1TransactionsMyGetParams, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetMyTransactionsApiV1TransactionsMyGet<
+	TData = Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>,
+	TError = HTTPValidationError
+>(
+	params?: () => GetMyTransactionsApiV1TransactionsMyGetParams,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getMyTransactionsApiV1TransactionsMyGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetMyTransactionsApiV1TransactionsMyGetQueryOptions(params?.(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetMyTransactionsApiV1TransactionsMyGetQueryOptions(params?.(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse204 = {
-  data: void
-  status: 204
-}
+	data: void;
+	status: 204;
+};
 
 export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponse204) & {
-  headers: Headers;
-};
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse = (deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess | deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError)
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess =
+	deleteTransactionApiV1TransactionsTransactionIdDeleteResponse204 & {
+		headers: Headers;
+	};
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError =
+	deleteTransactionApiV1TransactionsTransactionIdDeleteResponse422 & {
+		headers: Headers;
+	};
 
-export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl = (transactionId: number,) => {
+export type deleteTransactionApiV1TransactionsTransactionIdDeleteResponse =
+	| deleteTransactionApiV1TransactionsTransactionIdDeleteResponseSuccess
+	| deleteTransactionApiV1TransactionsTransactionIdDeleteResponseError;
 
-
-
-
-  return `/api/v1/transactions/${transactionId}`
-}
+export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl = (
+	transactionId: number
+) => {
+	return `/api/v1/transactions/${transactionId}`;
+};
 
 /**
  * @summary Delete Transaction
  */
-export const deleteTransactionApiV1TransactionsTransactionIdDelete = async (transactionId: number, options?: RequestInit): Promise<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse> => {
+export const deleteTransactionApiV1TransactionsTransactionIdDelete = async (
+	transactionId: number,
+	options?: RequestInit
+): Promise<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse> => {
+	return customInstance<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse>(
+		getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl(transactionId),
+		{
+			...options,
+			method: 'DELETE'
+		}
+	);
+};
 
-  return customInstance<deleteTransactionApiV1TransactionsTransactionIdDeleteResponse>(getDeleteTransactionApiV1TransactionsTransactionIdDeleteUrl(transactionId),
-  {
-    ...options,
-    method: 'DELETE'
+export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
+		TError,
+		{ transactionId: number },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
+	TError,
+	{ transactionId: number },
+	TContext
+> => {
+	const mutationKey = ['deleteTransactionApiV1TransactionsTransactionIdDelete'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
+		{ transactionId: number }
+	> = (props) => {
+		const { transactionId } = props ?? {};
 
-  }
-);}
+		return deleteTransactionApiV1TransactionsTransactionIdDelete(transactionId, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
+export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationResult = NonNullable<
+	Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>
+>;
 
+export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationError =
+	HTTPValidationError;
 
-export const getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext> => {
-
-const mutationKey = ['deleteTransactionApiV1TransactionsTransactionIdDelete'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, {transactionId: number}> = (props) => {
-          const {transactionId} = props ?? {};
-
-          return  deleteTransactionApiV1TransactionsTransactionIdDelete(transactionId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>>
-
-    export type DeleteTransactionApiV1TransactionsTransactionIdDeleteMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Delete Transaction
  */
-export const createDeleteTransactionApiV1TransactionsTransactionIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>, TError,{transactionId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
-        TError,
-        {transactionId: number},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions(options?.()) }), queryClient);
-    }
+export const createDeleteTransactionApiV1TransactionsTransactionIdDelete = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
+			TError,
+			{ transactionId: number },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof deleteTransactionApiV1TransactionsTransactionIdDelete>>,
+	TError,
+	{ transactionId: number },
+	TContext
+> => {
+	return createMutation(
+		() => ({
+			...getDeleteTransactionApiV1TransactionsTransactionIdDeleteMutationOptions(options?.())
+		}),
+		queryClient
+	);
+};
 
 export type getTransactionApiV1TransactionsTransactionIdGetResponse200 = {
-  data: TransactionResponse
-  status: 200
-}
+	data: TransactionResponse;
+	status: 200;
+};
 
 export type getTransactionApiV1TransactionsTransactionIdGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getTransactionApiV1TransactionsTransactionIdGetResponseSuccess = (getTransactionApiV1TransactionsTransactionIdGetResponse200) & {
-  headers: Headers;
-};
-export type getTransactionApiV1TransactionsTransactionIdGetResponseError = (getTransactionApiV1TransactionsTransactionIdGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getTransactionApiV1TransactionsTransactionIdGetResponse = (getTransactionApiV1TransactionsTransactionIdGetResponseSuccess | getTransactionApiV1TransactionsTransactionIdGetResponseError)
+export type getTransactionApiV1TransactionsTransactionIdGetResponseSuccess =
+	getTransactionApiV1TransactionsTransactionIdGetResponse200 & {
+		headers: Headers;
+	};
+export type getTransactionApiV1TransactionsTransactionIdGetResponseError =
+	getTransactionApiV1TransactionsTransactionIdGetResponse422 & {
+		headers: Headers;
+	};
 
-export const getGetTransactionApiV1TransactionsTransactionIdGetUrl = (transactionId: number,) => {
+export type getTransactionApiV1TransactionsTransactionIdGetResponse =
+	| getTransactionApiV1TransactionsTransactionIdGetResponseSuccess
+	| getTransactionApiV1TransactionsTransactionIdGetResponseError;
 
-
-
-
-  return `/api/v1/transactions/${transactionId}`
-}
+export const getGetTransactionApiV1TransactionsTransactionIdGetUrl = (transactionId: number) => {
+	return `/api/v1/transactions/${transactionId}`;
+};
 
 /**
  * @summary Get Transaction
  */
-export const getTransactionApiV1TransactionsTransactionIdGet = async (transactionId: number, options?: RequestInit): Promise<getTransactionApiV1TransactionsTransactionIdGetResponse> => {
+export const getTransactionApiV1TransactionsTransactionIdGet = async (
+	transactionId: number,
+	options?: RequestInit
+): Promise<getTransactionApiV1TransactionsTransactionIdGetResponse> => {
+	return customInstance<getTransactionApiV1TransactionsTransactionIdGetResponse>(
+		getGetTransactionApiV1TransactionsTransactionIdGetUrl(transactionId),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-  return customInstance<getTransactionApiV1TransactionsTransactionIdGetResponse>(getGetTransactionApiV1TransactionsTransactionIdGetUrl(transactionId),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetTransactionApiV1TransactionsTransactionIdGetQueryKey = (transactionId: number,) => {
-    return [
-    `/api/v1/transactions/${transactionId}`
-    ] as const;
-    }
-
-
-export const getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError = HTTPValidationError>(transactionId: number, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetTransactionApiV1TransactionsTransactionIdGetQueryKey = (
+	transactionId: number
 ) => {
+	return [`/api/v1/transactions/${transactionId}`] as const;
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export const getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>,
+	TError = HTTPValidationError
+>(
+	transactionId: number,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetTransactionApiV1TransactionsTransactionIdGetQueryKey(transactionId);
+	const queryKey =
+		queryOptions?.queryKey ??
+		getGetTransactionApiV1TransactionsTransactionIdGetQueryKey(transactionId);
 
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>
+	> = ({ signal }) =>
+		getTransactionApiV1TransactionsTransactionIdGet(transactionId, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, enabled: !!transactionId, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>> = ({ signal }) => getTransactionApiV1TransactionsTransactionIdGet(transactionId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: !!(transactionId), ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetTransactionApiV1TransactionsTransactionIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>>
-export type GetTransactionApiV1TransactionsTransactionIdGetQueryError = HTTPValidationError
-
+export type GetTransactionApiV1TransactionsTransactionIdGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>
+>;
+export type GetTransactionApiV1TransactionsTransactionIdGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get Transaction
  */
 
-export function createGetTransactionApiV1TransactionsTransactionIdGet<TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError = HTTPValidationError>(
- transactionId: () =>  number, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetTransactionApiV1TransactionsTransactionIdGet<
+	TData = Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>,
+	TError = HTTPValidationError
+>(
+	transactionId: () => number,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getTransactionApiV1TransactionsTransactionIdGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() =>
+			getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions(transactionId(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetTransactionApiV1TransactionsTransactionIdGetQueryOptions(transactionId(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type createVisitApiV1VisitsPostResponse200 = {
-  data: unknown
-  status: 200
-}
+	data: unknown;
+	status: 200;
+};
 
 export type createVisitApiV1VisitsPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type createVisitApiV1VisitsPostResponseSuccess = (createVisitApiV1VisitsPostResponse200) & {
-  headers: Headers;
-};
-export type createVisitApiV1VisitsPostResponseError = (createVisitApiV1VisitsPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type createVisitApiV1VisitsPostResponse = (createVisitApiV1VisitsPostResponseSuccess | createVisitApiV1VisitsPostResponseError)
+export type createVisitApiV1VisitsPostResponseSuccess = createVisitApiV1VisitsPostResponse200 & {
+	headers: Headers;
+};
+export type createVisitApiV1VisitsPostResponseError = createVisitApiV1VisitsPostResponse422 & {
+	headers: Headers;
+};
+
+export type createVisitApiV1VisitsPostResponse =
+	| createVisitApiV1VisitsPostResponseSuccess
+	| createVisitApiV1VisitsPostResponseError;
 
 export const getCreateVisitApiV1VisitsPostUrl = () => {
-
-
-
-
-  return `/api/v1/visits/`
-}
+	return `/api/v1/visits/`;
+};
 
 /**
  * @summary Create Visit
  */
-export const createVisitApiV1VisitsPost = async (visitCreate: VisitCreate, options?: RequestInit): Promise<createVisitApiV1VisitsPostResponse> => {
+export const createVisitApiV1VisitsPost = async (
+	visitCreate: VisitCreate,
+	options?: RequestInit
+): Promise<createVisitApiV1VisitsPostResponse> => {
+	return customInstance<createVisitApiV1VisitsPostResponse>(getCreateVisitApiV1VisitsPostUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(visitCreate)
+	});
+};
 
-  return customInstance<createVisitApiV1VisitsPostResponse>(getCreateVisitApiV1VisitsPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      visitCreate,)
-  }
-);}
+export const getCreateVisitApiV1VisitsPostMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>,
+		TError,
+		{ data: VisitCreate },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>,
+	TError,
+	{ data: VisitCreate },
+	TContext
+> => {
+	const mutationKey = ['createVisitApiV1VisitsPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>,
+		{ data: VisitCreate }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return createVisitApiV1VisitsPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getCreateVisitApiV1VisitsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, TError,{data: VisitCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, TError,{data: VisitCreate}, TContext> => {
+export type CreateVisitApiV1VisitsPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>
+>;
+export type CreateVisitApiV1VisitsPostMutationBody = VisitCreate;
+export type CreateVisitApiV1VisitsPostMutationError = HTTPValidationError;
 
-const mutationKey = ['createVisitApiV1VisitsPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, {data: VisitCreate}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createVisitApiV1VisitsPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateVisitApiV1VisitsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>>
-    export type CreateVisitApiV1VisitsPostMutationBody = VisitCreate
-    export type CreateVisitApiV1VisitsPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Create Visit
  */
-export const createCreateVisitApiV1VisitsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>, TError,{data: VisitCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>,
-        TError,
-        {data: VisitCreate},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getCreateVisitApiV1VisitsPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createCreateVisitApiV1VisitsPost = <TError = HTTPValidationError, TContext = unknown>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>,
+			TError,
+			{ data: VisitCreate },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof createVisitApiV1VisitsPost>>,
+	TError,
+	{ data: VisitCreate },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getCreateVisitApiV1VisitsPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type getVisitStatsApiV1VisitsStatsGetResponse200 = {
-  data: VisitStatsResponse
-  status: 200
-}
+	data: VisitStatsResponse;
+	status: 200;
+};
 
 export type getVisitStatsApiV1VisitsStatsGetResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type getVisitStatsApiV1VisitsStatsGetResponseSuccess = (getVisitStatsApiV1VisitsStatsGetResponse200) & {
-  headers: Headers;
-};
-export type getVisitStatsApiV1VisitsStatsGetResponseError = (getVisitStatsApiV1VisitsStatsGetResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type getVisitStatsApiV1VisitsStatsGetResponse = (getVisitStatsApiV1VisitsStatsGetResponseSuccess | getVisitStatsApiV1VisitsStatsGetResponseError)
+export type getVisitStatsApiV1VisitsStatsGetResponseSuccess =
+	getVisitStatsApiV1VisitsStatsGetResponse200 & {
+		headers: Headers;
+	};
+export type getVisitStatsApiV1VisitsStatsGetResponseError =
+	getVisitStatsApiV1VisitsStatsGetResponse422 & {
+		headers: Headers;
+	};
 
-export const getGetVisitStatsApiV1VisitsStatsGetUrl = (params: GetVisitStatsApiV1VisitsStatsGetParams,) => {
-  const normalizedParams = new URLSearchParams();
+export type getVisitStatsApiV1VisitsStatsGetResponse =
+	| getVisitStatsApiV1VisitsStatsGetResponseSuccess
+	| getVisitStatsApiV1VisitsStatsGetResponseError;
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/v1/visits/stats?${stringifiedParams}` : `/api/v1/visits/stats`
-}
-
-/**
- * @summary Get Visit Stats
- */
-export const getVisitStatsApiV1VisitsStatsGet = async (params: GetVisitStatsApiV1VisitsStatsGetParams, options?: RequestInit): Promise<getVisitStatsApiV1VisitsStatsGetResponse> => {
-
-  return customInstance<getVisitStatsApiV1VisitsStatsGetResponse>(getGetVisitStatsApiV1VisitsStatsGetUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetVisitStatsApiV1VisitsStatsGetQueryKey = (params?: GetVisitStatsApiV1VisitsStatsGetParams,) => {
-    return [
-    `/api/v1/visits/stats`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getGetVisitStatsApiV1VisitsStatsGetQueryOptions = <TData = Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError = HTTPValidationError>(params: GetVisitStatsApiV1VisitsStatsGetParams, options?: { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetVisitStatsApiV1VisitsStatsGetUrl = (
+	params: GetVisitStatsApiV1VisitsStatsGetParams
 ) => {
+	const normalizedParams = new URLSearchParams();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
 
-  const queryKey =  queryOptions?.queryKey ?? getGetVisitStatsApiV1VisitsStatsGetQueryKey(params);
+	const stringifiedParams = normalizedParams.toString();
 
+	return stringifiedParams.length > 0
+		? `/api/v1/visits/stats?${stringifiedParams}`
+		: `/api/v1/visits/stats`;
+};
 
+/**
+ * @summary Get Visit Stats
+ */
+export const getVisitStatsApiV1VisitsStatsGet = async (
+	params: GetVisitStatsApiV1VisitsStatsGetParams,
+	options?: RequestInit
+): Promise<getVisitStatsApiV1VisitsStatsGetResponse> => {
+	return customInstance<getVisitStatsApiV1VisitsStatsGetResponse>(
+		getGetVisitStatsApiV1VisitsStatsGetUrl(params),
+		{
+			...options,
+			method: 'GET'
+		}
+	);
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>> = ({ signal }) => getVisitStatsApiV1VisitsStatsGet(params, { signal, ...requestOptions });
+export const getGetVisitStatsApiV1VisitsStatsGetQueryKey = (
+	params?: GetVisitStatsApiV1VisitsStatsGetParams
+) => {
+	return [`/api/v1/visits/stats`, ...(params ? [params] : [])] as const;
+};
 
+export const getGetVisitStatsApiV1VisitsStatsGetQueryOptions = <
+	TData = Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>,
+	TError = HTTPValidationError
+>(
+	params: GetVisitStatsApiV1VisitsStatsGetParams,
+	options?: {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
+	const queryKey = queryOptions?.queryKey ?? getGetVisitStatsApiV1VisitsStatsGetQueryKey(params);
 
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>> = ({
+		signal
+	}) => getVisitStatsApiV1VisitsStatsGet(params, { signal, ...requestOptions });
 
+	return { queryKey, queryFn, ...queryOptions } as CreateQueryOptions<
+		Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-   return  { queryKey, queryFn, ...queryOptions} as CreateQueryOptions<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetVisitStatsApiV1VisitsStatsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>>
-export type GetVisitStatsApiV1VisitsStatsGetQueryError = HTTPValidationError
-
+export type GetVisitStatsApiV1VisitsStatsGetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>
+>;
+export type GetVisitStatsApiV1VisitsStatsGetQueryError = HTTPValidationError;
 
 /**
  * @summary Get Visit Stats
  */
 
-export function createGetVisitStatsApiV1VisitsStatsGet<TData = Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError = HTTPValidationError>(
- params: () =>  GetVisitStatsApiV1VisitsStatsGetParams, options?: () => { query?:Partial<CreateQueryOptions<Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient
- ): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function createGetVisitStatsApiV1VisitsStatsGet<
+	TData = Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>,
+	TError = HTTPValidationError
+>(
+	params: () => GetVisitStatsApiV1VisitsStatsGetParams,
+	options?: () => {
+		query?: Partial<
+			CreateQueryOptions<
+				Awaited<ReturnType<typeof getVisitStatsApiV1VisitsStatsGet>>,
+				TError,
+				TData
+			>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const query = createQuery(
+		() => getGetVisitStatsApiV1VisitsStatsGetQueryOptions(params(), options?.()),
+		queryClient
+	) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-
-
-  const query = createQuery(() => getGetVisitStatsApiV1VisitsStatsGetQueryOptions(params(),options?.()), queryClient) as CreateQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return query
+	return query;
 }
-
-
-
-
-
-
 
 export type authJwtLoginApiAuthJwtLoginPostResponse200 = {
-  data: BearerResponse
-  status: 200
-}
+	data: BearerResponse;
+	status: 200;
+};
 
 export type authJwtLoginApiAuthJwtLoginPostResponse400 = {
-  data: ErrorModel
-  status: 400
-}
+	data: ErrorModel;
+	status: 400;
+};
 
 export type authJwtLoginApiAuthJwtLoginPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type authJwtLoginApiAuthJwtLoginPostResponseSuccess = (authJwtLoginApiAuthJwtLoginPostResponse200) & {
-  headers: Headers;
-};
-export type authJwtLoginApiAuthJwtLoginPostResponseError = (authJwtLoginApiAuthJwtLoginPostResponse400 | authJwtLoginApiAuthJwtLoginPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type authJwtLoginApiAuthJwtLoginPostResponse = (authJwtLoginApiAuthJwtLoginPostResponseSuccess | authJwtLoginApiAuthJwtLoginPostResponseError)
+export type authJwtLoginApiAuthJwtLoginPostResponseSuccess =
+	authJwtLoginApiAuthJwtLoginPostResponse200 & {
+		headers: Headers;
+	};
+export type authJwtLoginApiAuthJwtLoginPostResponseError = (
+	| authJwtLoginApiAuthJwtLoginPostResponse400
+	| authJwtLoginApiAuthJwtLoginPostResponse422
+) & {
+	headers: Headers;
+};
+
+export type authJwtLoginApiAuthJwtLoginPostResponse =
+	| authJwtLoginApiAuthJwtLoginPostResponseSuccess
+	| authJwtLoginApiAuthJwtLoginPostResponseError;
 
 export const getAuthJwtLoginApiAuthJwtLoginPostUrl = () => {
-
-
-
-
-  return `/api/auth/jwt/login`
-}
+	return `/api/auth/jwt/login`;
+};
 
 /**
  * @summary Auth:Jwt.Login
  */
-export const authJwtLoginApiAuthJwtLoginPost = async (bodyAuthJwtLoginApiAuthJwtLoginPost: BodyAuthJwtLoginApiAuthJwtLoginPost, options?: RequestInit): Promise<authJwtLoginApiAuthJwtLoginPostResponse> => {
-    const formUrlEncoded = new URLSearchParams();
-if(bodyAuthJwtLoginApiAuthJwtLoginPost.grant_type !== undefined && bodyAuthJwtLoginApiAuthJwtLoginPost.grant_type !== null) {
- formUrlEncoded.append(`grant_type`, bodyAuthJwtLoginApiAuthJwtLoginPost.grant_type);
- }
-formUrlEncoded.append(`username`, bodyAuthJwtLoginApiAuthJwtLoginPost.username);
-formUrlEncoded.append(`password`, bodyAuthJwtLoginApiAuthJwtLoginPost.password);
-if(bodyAuthJwtLoginApiAuthJwtLoginPost.scope !== undefined) {
- formUrlEncoded.append(`scope`, bodyAuthJwtLoginApiAuthJwtLoginPost.scope);
- }
-if(bodyAuthJwtLoginApiAuthJwtLoginPost.client_id !== undefined && bodyAuthJwtLoginApiAuthJwtLoginPost.client_id !== null) {
- formUrlEncoded.append(`client_id`, bodyAuthJwtLoginApiAuthJwtLoginPost.client_id);
- }
-if(bodyAuthJwtLoginApiAuthJwtLoginPost.client_secret !== undefined && bodyAuthJwtLoginApiAuthJwtLoginPost.client_secret !== null) {
- formUrlEncoded.append(`client_secret`, bodyAuthJwtLoginApiAuthJwtLoginPost.client_secret);
- }
+export const authJwtLoginApiAuthJwtLoginPost = async (
+	bodyAuthJwtLoginApiAuthJwtLoginPost: BodyAuthJwtLoginApiAuthJwtLoginPost,
+	options?: RequestInit
+): Promise<authJwtLoginApiAuthJwtLoginPostResponse> => {
+	const formUrlEncoded = new URLSearchParams();
+	if (
+		bodyAuthJwtLoginApiAuthJwtLoginPost.grant_type !== undefined &&
+		bodyAuthJwtLoginApiAuthJwtLoginPost.grant_type !== null
+	) {
+		formUrlEncoded.append(`grant_type`, bodyAuthJwtLoginApiAuthJwtLoginPost.grant_type);
+	}
+	formUrlEncoded.append(`username`, bodyAuthJwtLoginApiAuthJwtLoginPost.username);
+	formUrlEncoded.append(`password`, bodyAuthJwtLoginApiAuthJwtLoginPost.password);
+	if (bodyAuthJwtLoginApiAuthJwtLoginPost.scope !== undefined) {
+		formUrlEncoded.append(`scope`, bodyAuthJwtLoginApiAuthJwtLoginPost.scope);
+	}
+	if (
+		bodyAuthJwtLoginApiAuthJwtLoginPost.client_id !== undefined &&
+		bodyAuthJwtLoginApiAuthJwtLoginPost.client_id !== null
+	) {
+		formUrlEncoded.append(`client_id`, bodyAuthJwtLoginApiAuthJwtLoginPost.client_id);
+	}
+	if (
+		bodyAuthJwtLoginApiAuthJwtLoginPost.client_secret !== undefined &&
+		bodyAuthJwtLoginApiAuthJwtLoginPost.client_secret !== null
+	) {
+		formUrlEncoded.append(`client_secret`, bodyAuthJwtLoginApiAuthJwtLoginPost.client_secret);
+	}
 
-  return customInstance<authJwtLoginApiAuthJwtLoginPostResponse>(getAuthJwtLoginApiAuthJwtLoginPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...options?.headers },
-    body:
-      formUrlEncoded,
-  }
-);}
+	return customInstance<authJwtLoginApiAuthJwtLoginPostResponse>(
+		getAuthJwtLoginApiAuthJwtLoginPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...options?.headers },
+			body: formUrlEncoded
+		}
+	);
+};
 
+export const getAuthJwtLoginApiAuthJwtLoginPostMutationOptions = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>,
+		TError,
+		{ data: BodyAuthJwtLoginApiAuthJwtLoginPost },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>,
+	TError,
+	{ data: BodyAuthJwtLoginApiAuthJwtLoginPost },
+	TContext
+> => {
+	const mutationKey = ['authJwtLoginApiAuthJwtLoginPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>,
+		{ data: BodyAuthJwtLoginApiAuthJwtLoginPost }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return authJwtLoginApiAuthJwtLoginPost(data, requestOptions);
+	};
 
-export const getAuthJwtLoginApiAuthJwtLoginPostMutationOptions = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>, TError,{data: BodyAuthJwtLoginApiAuthJwtLoginPost}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>, TError,{data: BodyAuthJwtLoginApiAuthJwtLoginPost}, TContext> => {
+	return { mutationFn, ...mutationOptions };
+};
 
-const mutationKey = ['authJwtLoginApiAuthJwtLoginPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+export type AuthJwtLoginApiAuthJwtLoginPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>
+>;
+export type AuthJwtLoginApiAuthJwtLoginPostMutationBody = BodyAuthJwtLoginApiAuthJwtLoginPost;
+export type AuthJwtLoginApiAuthJwtLoginPostMutationError = ErrorModel | HTTPValidationError;
 
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>, {data: BodyAuthJwtLoginApiAuthJwtLoginPost}> = (props) => {
-          const {data} = props ?? {};
-
-          return  authJwtLoginApiAuthJwtLoginPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type AuthJwtLoginApiAuthJwtLoginPostMutationResult = NonNullable<Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>>
-    export type AuthJwtLoginApiAuthJwtLoginPostMutationBody = BodyAuthJwtLoginApiAuthJwtLoginPost
-    export type AuthJwtLoginApiAuthJwtLoginPostMutationError = ErrorModel | HTTPValidationError
-
-    /**
+/**
  * @summary Auth:Jwt.Login
  */
-export const createAuthJwtLoginApiAuthJwtLoginPost = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>, TError,{data: BodyAuthJwtLoginApiAuthJwtLoginPost}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>,
-        TError,
-        {data: BodyAuthJwtLoginApiAuthJwtLoginPost},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getAuthJwtLoginApiAuthJwtLoginPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createAuthJwtLoginApiAuthJwtLoginPost = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>,
+			TError,
+			{ data: BodyAuthJwtLoginApiAuthJwtLoginPost },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof authJwtLoginApiAuthJwtLoginPost>>,
+	TError,
+	{ data: BodyAuthJwtLoginApiAuthJwtLoginPost },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getAuthJwtLoginApiAuthJwtLoginPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type authJwtLogoutApiAuthJwtLogoutPostResponse200 = {
-  data: unknown
-  status: 200
-}
+	data: unknown;
+	status: 200;
+};
 
 export type authJwtLogoutApiAuthJwtLogoutPostResponse401 = {
-  data: void
-  status: 401
-}
-
-export type authJwtLogoutApiAuthJwtLogoutPostResponseSuccess = (authJwtLogoutApiAuthJwtLogoutPostResponse200) & {
-  headers: Headers;
-};
-export type authJwtLogoutApiAuthJwtLogoutPostResponseError = (authJwtLogoutApiAuthJwtLogoutPostResponse401) & {
-  headers: Headers;
+	data: void;
+	status: 401;
 };
 
-export type authJwtLogoutApiAuthJwtLogoutPostResponse = (authJwtLogoutApiAuthJwtLogoutPostResponseSuccess | authJwtLogoutApiAuthJwtLogoutPostResponseError)
+export type authJwtLogoutApiAuthJwtLogoutPostResponseSuccess =
+	authJwtLogoutApiAuthJwtLogoutPostResponse200 & {
+		headers: Headers;
+	};
+export type authJwtLogoutApiAuthJwtLogoutPostResponseError =
+	authJwtLogoutApiAuthJwtLogoutPostResponse401 & {
+		headers: Headers;
+	};
+
+export type authJwtLogoutApiAuthJwtLogoutPostResponse =
+	| authJwtLogoutApiAuthJwtLogoutPostResponseSuccess
+	| authJwtLogoutApiAuthJwtLogoutPostResponseError;
 
 export const getAuthJwtLogoutApiAuthJwtLogoutPostUrl = () => {
-
-
-
-
-  return `/api/auth/jwt/logout`
-}
+	return `/api/auth/jwt/logout`;
+};
 
 /**
  * @summary Auth:Jwt.Logout
  */
-export const authJwtLogoutApiAuthJwtLogoutPost = async ( options?: RequestInit): Promise<authJwtLogoutApiAuthJwtLogoutPostResponse> => {
+export const authJwtLogoutApiAuthJwtLogoutPost = async (
+	options?: RequestInit
+): Promise<authJwtLogoutApiAuthJwtLogoutPostResponse> => {
+	return customInstance<authJwtLogoutApiAuthJwtLogoutPostResponse>(
+		getAuthJwtLogoutApiAuthJwtLogoutPostUrl(),
+		{
+			...options,
+			method: 'POST'
+		}
+	);
+};
 
-  return customInstance<authJwtLogoutApiAuthJwtLogoutPostResponse>(getAuthJwtLogoutApiAuthJwtLogoutPostUrl(),
-  {
-    ...options,
-    method: 'POST'
+export const getAuthJwtLogoutApiAuthJwtLogoutPostMutationOptions = <
+	TError = void,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>,
+		TError,
+		void,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>,
+	TError,
+	void,
+	TContext
+> => {
+	const mutationKey = ['authJwtLogoutApiAuthJwtLogoutPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>,
+		void
+	> = () => {
+		return authJwtLogoutApiAuthJwtLogoutPost(requestOptions);
+	};
 
-  }
-);}
+	return { mutationFn, ...mutationOptions };
+};
 
+export type AuthJwtLogoutApiAuthJwtLogoutPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>
+>;
 
+export type AuthJwtLogoutApiAuthJwtLogoutPostMutationError = void;
 
-
-export const getAuthJwtLogoutApiAuthJwtLogoutPostMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>, TError,void, TContext> => {
-
-const mutationKey = ['authJwtLogoutApiAuthJwtLogoutPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>, void> = () => {
-
-
-          return  authJwtLogoutApiAuthJwtLogoutPost(requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type AuthJwtLogoutApiAuthJwtLogoutPostMutationResult = NonNullable<Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>>
-
-    export type AuthJwtLogoutApiAuthJwtLogoutPostMutationError = void
-
-    /**
+/**
  * @summary Auth:Jwt.Logout
  */
-export const createAuthJwtLogoutApiAuthJwtLogoutPost = <TError = void,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>,
-        TError,
-        void,
-        TContext
-      > => {
-      return createMutation(() => ({ ...getAuthJwtLogoutApiAuthJwtLogoutPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createAuthJwtLogoutApiAuthJwtLogoutPost = <TError = void, TContext = unknown>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>,
+			TError,
+			void,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof authJwtLogoutApiAuthJwtLogoutPost>>,
+	TError,
+	void,
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getAuthJwtLogoutApiAuthJwtLogoutPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type registerRegisterApiAuthRegisterPostResponse201 = {
-  data: UserRead
-  status: 201
-}
+	data: UserRead;
+	status: 201;
+};
 
 export type registerRegisterApiAuthRegisterPostResponse400 = {
-  data: ErrorModel
-  status: 400
-}
+	data: ErrorModel;
+	status: 400;
+};
 
 export type registerRegisterApiAuthRegisterPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type registerRegisterApiAuthRegisterPostResponseSuccess = (registerRegisterApiAuthRegisterPostResponse201) & {
-  headers: Headers;
-};
-export type registerRegisterApiAuthRegisterPostResponseError = (registerRegisterApiAuthRegisterPostResponse400 | registerRegisterApiAuthRegisterPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type registerRegisterApiAuthRegisterPostResponse = (registerRegisterApiAuthRegisterPostResponseSuccess | registerRegisterApiAuthRegisterPostResponseError)
+export type registerRegisterApiAuthRegisterPostResponseSuccess =
+	registerRegisterApiAuthRegisterPostResponse201 & {
+		headers: Headers;
+	};
+export type registerRegisterApiAuthRegisterPostResponseError = (
+	| registerRegisterApiAuthRegisterPostResponse400
+	| registerRegisterApiAuthRegisterPostResponse422
+) & {
+	headers: Headers;
+};
+
+export type registerRegisterApiAuthRegisterPostResponse =
+	| registerRegisterApiAuthRegisterPostResponseSuccess
+	| registerRegisterApiAuthRegisterPostResponseError;
 
 export const getRegisterRegisterApiAuthRegisterPostUrl = () => {
-
-
-
-
-  return `/api/auth/register`
-}
+	return `/api/auth/register`;
+};
 
 /**
  * @summary Register:Register
  */
-export const registerRegisterApiAuthRegisterPost = async (userCreate: UserCreate, options?: RequestInit): Promise<registerRegisterApiAuthRegisterPostResponse> => {
+export const registerRegisterApiAuthRegisterPost = async (
+	userCreate: UserCreate,
+	options?: RequestInit
+): Promise<registerRegisterApiAuthRegisterPostResponse> => {
+	return customInstance<registerRegisterApiAuthRegisterPostResponse>(
+		getRegisterRegisterApiAuthRegisterPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(userCreate)
+		}
+	);
+};
 
-  return customInstance<registerRegisterApiAuthRegisterPostResponse>(getRegisterRegisterApiAuthRegisterPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      userCreate,)
-  }
-);}
+export const getRegisterRegisterApiAuthRegisterPostMutationOptions = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>,
+		TError,
+		{ data: UserCreate },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>,
+	TError,
+	{ data: UserCreate },
+	TContext
+> => {
+	const mutationKey = ['registerRegisterApiAuthRegisterPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>,
+		{ data: UserCreate }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return registerRegisterApiAuthRegisterPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getRegisterRegisterApiAuthRegisterPostMutationOptions = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>, TError,{data: UserCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>, TError,{data: UserCreate}, TContext> => {
+export type RegisterRegisterApiAuthRegisterPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>
+>;
+export type RegisterRegisterApiAuthRegisterPostMutationBody = UserCreate;
+export type RegisterRegisterApiAuthRegisterPostMutationError = ErrorModel | HTTPValidationError;
 
-const mutationKey = ['registerRegisterApiAuthRegisterPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>, {data: UserCreate}> = (props) => {
-          const {data} = props ?? {};
-
-          return  registerRegisterApiAuthRegisterPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RegisterRegisterApiAuthRegisterPostMutationResult = NonNullable<Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>>
-    export type RegisterRegisterApiAuthRegisterPostMutationBody = UserCreate
-    export type RegisterRegisterApiAuthRegisterPostMutationError = ErrorModel | HTTPValidationError
-
-    /**
+/**
  * @summary Register:Register
  */
-export const createRegisterRegisterApiAuthRegisterPost = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>, TError,{data: UserCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>,
-        TError,
-        {data: UserCreate},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getRegisterRegisterApiAuthRegisterPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createRegisterRegisterApiAuthRegisterPost = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>,
+			TError,
+			{ data: UserCreate },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof registerRegisterApiAuthRegisterPost>>,
+	TError,
+	{ data: UserCreate },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getRegisterRegisterApiAuthRegisterPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type resetForgotPasswordApiAuthForgotPasswordPostResponse202 = {
-  data: unknown
-  status: 202
-}
+	data: unknown;
+	status: 202;
+};
 
 export type resetForgotPasswordApiAuthForgotPasswordPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type resetForgotPasswordApiAuthForgotPasswordPostResponseSuccess = (resetForgotPasswordApiAuthForgotPasswordPostResponse202) & {
-  headers: Headers;
-};
-export type resetForgotPasswordApiAuthForgotPasswordPostResponseError = (resetForgotPasswordApiAuthForgotPasswordPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type resetForgotPasswordApiAuthForgotPasswordPostResponse = (resetForgotPasswordApiAuthForgotPasswordPostResponseSuccess | resetForgotPasswordApiAuthForgotPasswordPostResponseError)
+export type resetForgotPasswordApiAuthForgotPasswordPostResponseSuccess =
+	resetForgotPasswordApiAuthForgotPasswordPostResponse202 & {
+		headers: Headers;
+	};
+export type resetForgotPasswordApiAuthForgotPasswordPostResponseError =
+	resetForgotPasswordApiAuthForgotPasswordPostResponse422 & {
+		headers: Headers;
+	};
+
+export type resetForgotPasswordApiAuthForgotPasswordPostResponse =
+	| resetForgotPasswordApiAuthForgotPasswordPostResponseSuccess
+	| resetForgotPasswordApiAuthForgotPasswordPostResponseError;
 
 export const getResetForgotPasswordApiAuthForgotPasswordPostUrl = () => {
-
-
-
-
-  return `/api/auth/forgot-password`
-}
+	return `/api/auth/forgot-password`;
+};
 
 /**
  * @summary Reset:Forgot Password
  */
-export const resetForgotPasswordApiAuthForgotPasswordPost = async (bodyResetForgotPasswordApiAuthForgotPasswordPost: BodyResetForgotPasswordApiAuthForgotPasswordPost, options?: RequestInit): Promise<resetForgotPasswordApiAuthForgotPasswordPostResponse> => {
+export const resetForgotPasswordApiAuthForgotPasswordPost = async (
+	bodyResetForgotPasswordApiAuthForgotPasswordPost: BodyResetForgotPasswordApiAuthForgotPasswordPost,
+	options?: RequestInit
+): Promise<resetForgotPasswordApiAuthForgotPasswordPostResponse> => {
+	return customInstance<resetForgotPasswordApiAuthForgotPasswordPostResponse>(
+		getResetForgotPasswordApiAuthForgotPasswordPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(bodyResetForgotPasswordApiAuthForgotPasswordPost)
+		}
+	);
+};
 
-  return customInstance<resetForgotPasswordApiAuthForgotPasswordPostResponse>(getResetForgotPasswordApiAuthForgotPasswordPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      bodyResetForgotPasswordApiAuthForgotPasswordPost,)
-  }
-);}
+export const getResetForgotPasswordApiAuthForgotPasswordPostMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>,
+		TError,
+		{ data: BodyResetForgotPasswordApiAuthForgotPasswordPost },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>,
+	TError,
+	{ data: BodyResetForgotPasswordApiAuthForgotPasswordPost },
+	TContext
+> => {
+	const mutationKey = ['resetForgotPasswordApiAuthForgotPasswordPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>,
+		{ data: BodyResetForgotPasswordApiAuthForgotPasswordPost }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return resetForgotPasswordApiAuthForgotPasswordPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getResetForgotPasswordApiAuthForgotPasswordPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>, TError,{data: BodyResetForgotPasswordApiAuthForgotPasswordPost}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>, TError,{data: BodyResetForgotPasswordApiAuthForgotPasswordPost}, TContext> => {
+export type ResetForgotPasswordApiAuthForgotPasswordPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>
+>;
+export type ResetForgotPasswordApiAuthForgotPasswordPostMutationBody =
+	BodyResetForgotPasswordApiAuthForgotPasswordPost;
+export type ResetForgotPasswordApiAuthForgotPasswordPostMutationError = HTTPValidationError;
 
-const mutationKey = ['resetForgotPasswordApiAuthForgotPasswordPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>, {data: BodyResetForgotPasswordApiAuthForgotPasswordPost}> = (props) => {
-          const {data} = props ?? {};
-
-          return  resetForgotPasswordApiAuthForgotPasswordPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ResetForgotPasswordApiAuthForgotPasswordPostMutationResult = NonNullable<Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>>
-    export type ResetForgotPasswordApiAuthForgotPasswordPostMutationBody = BodyResetForgotPasswordApiAuthForgotPasswordPost
-    export type ResetForgotPasswordApiAuthForgotPasswordPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Reset:Forgot Password
  */
-export const createResetForgotPasswordApiAuthForgotPasswordPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>, TError,{data: BodyResetForgotPasswordApiAuthForgotPasswordPost}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>,
-        TError,
-        {data: BodyResetForgotPasswordApiAuthForgotPasswordPost},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getResetForgotPasswordApiAuthForgotPasswordPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createResetForgotPasswordApiAuthForgotPasswordPost = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>,
+			TError,
+			{ data: BodyResetForgotPasswordApiAuthForgotPasswordPost },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof resetForgotPasswordApiAuthForgotPasswordPost>>,
+	TError,
+	{ data: BodyResetForgotPasswordApiAuthForgotPasswordPost },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getResetForgotPasswordApiAuthForgotPasswordPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type resetResetPasswordApiAuthResetPasswordPostResponse200 = {
-  data: unknown
-  status: 200
-}
+	data: unknown;
+	status: 200;
+};
 
 export type resetResetPasswordApiAuthResetPasswordPostResponse400 = {
-  data: ErrorModel
-  status: 400
-}
+	data: ErrorModel;
+	status: 400;
+};
 
 export type resetResetPasswordApiAuthResetPasswordPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type resetResetPasswordApiAuthResetPasswordPostResponseSuccess = (resetResetPasswordApiAuthResetPasswordPostResponse200) & {
-  headers: Headers;
-};
-export type resetResetPasswordApiAuthResetPasswordPostResponseError = (resetResetPasswordApiAuthResetPasswordPostResponse400 | resetResetPasswordApiAuthResetPasswordPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type resetResetPasswordApiAuthResetPasswordPostResponse = (resetResetPasswordApiAuthResetPasswordPostResponseSuccess | resetResetPasswordApiAuthResetPasswordPostResponseError)
+export type resetResetPasswordApiAuthResetPasswordPostResponseSuccess =
+	resetResetPasswordApiAuthResetPasswordPostResponse200 & {
+		headers: Headers;
+	};
+export type resetResetPasswordApiAuthResetPasswordPostResponseError = (
+	| resetResetPasswordApiAuthResetPasswordPostResponse400
+	| resetResetPasswordApiAuthResetPasswordPostResponse422
+) & {
+	headers: Headers;
+};
+
+export type resetResetPasswordApiAuthResetPasswordPostResponse =
+	| resetResetPasswordApiAuthResetPasswordPostResponseSuccess
+	| resetResetPasswordApiAuthResetPasswordPostResponseError;
 
 export const getResetResetPasswordApiAuthResetPasswordPostUrl = () => {
-
-
-
-
-  return `/api/auth/reset-password`
-}
+	return `/api/auth/reset-password`;
+};
 
 /**
  * @summary Reset:Reset Password
  */
-export const resetResetPasswordApiAuthResetPasswordPost = async (bodyResetResetPasswordApiAuthResetPasswordPost: BodyResetResetPasswordApiAuthResetPasswordPost, options?: RequestInit): Promise<resetResetPasswordApiAuthResetPasswordPostResponse> => {
+export const resetResetPasswordApiAuthResetPasswordPost = async (
+	bodyResetResetPasswordApiAuthResetPasswordPost: BodyResetResetPasswordApiAuthResetPasswordPost,
+	options?: RequestInit
+): Promise<resetResetPasswordApiAuthResetPasswordPostResponse> => {
+	return customInstance<resetResetPasswordApiAuthResetPasswordPostResponse>(
+		getResetResetPasswordApiAuthResetPasswordPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(bodyResetResetPasswordApiAuthResetPasswordPost)
+		}
+	);
+};
 
-  return customInstance<resetResetPasswordApiAuthResetPasswordPostResponse>(getResetResetPasswordApiAuthResetPasswordPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      bodyResetResetPasswordApiAuthResetPasswordPost,)
-  }
-);}
+export const getResetResetPasswordApiAuthResetPasswordPostMutationOptions = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>,
+		TError,
+		{ data: BodyResetResetPasswordApiAuthResetPasswordPost },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>,
+	TError,
+	{ data: BodyResetResetPasswordApiAuthResetPasswordPost },
+	TContext
+> => {
+	const mutationKey = ['resetResetPasswordApiAuthResetPasswordPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>,
+		{ data: BodyResetResetPasswordApiAuthResetPasswordPost }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return resetResetPasswordApiAuthResetPasswordPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getResetResetPasswordApiAuthResetPasswordPostMutationOptions = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>, TError,{data: BodyResetResetPasswordApiAuthResetPasswordPost}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>, TError,{data: BodyResetResetPasswordApiAuthResetPasswordPost}, TContext> => {
+export type ResetResetPasswordApiAuthResetPasswordPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>
+>;
+export type ResetResetPasswordApiAuthResetPasswordPostMutationBody =
+	BodyResetResetPasswordApiAuthResetPasswordPost;
+export type ResetResetPasswordApiAuthResetPasswordPostMutationError =
+	| ErrorModel
+	| HTTPValidationError;
 
-const mutationKey = ['resetResetPasswordApiAuthResetPasswordPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>, {data: BodyResetResetPasswordApiAuthResetPasswordPost}> = (props) => {
-          const {data} = props ?? {};
-
-          return  resetResetPasswordApiAuthResetPasswordPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ResetResetPasswordApiAuthResetPasswordPostMutationResult = NonNullable<Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>>
-    export type ResetResetPasswordApiAuthResetPasswordPostMutationBody = BodyResetResetPasswordApiAuthResetPasswordPost
-    export type ResetResetPasswordApiAuthResetPasswordPostMutationError = ErrorModel | HTTPValidationError
-
-    /**
+/**
  * @summary Reset:Reset Password
  */
-export const createResetResetPasswordApiAuthResetPasswordPost = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>, TError,{data: BodyResetResetPasswordApiAuthResetPasswordPost}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>,
-        TError,
-        {data: BodyResetResetPasswordApiAuthResetPasswordPost},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getResetResetPasswordApiAuthResetPasswordPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createResetResetPasswordApiAuthResetPasswordPost = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>,
+			TError,
+			{ data: BodyResetResetPasswordApiAuthResetPasswordPost },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof resetResetPasswordApiAuthResetPasswordPost>>,
+	TError,
+	{ data: BodyResetResetPasswordApiAuthResetPasswordPost },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getResetResetPasswordApiAuthResetPasswordPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponse202 = {
-  data: unknown
-  status: 202
-}
+	data: unknown;
+	status: 202;
+};
 
 export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponseSuccess = (verifyRequestTokenApiAuthRequestVerifyTokenPostResponse202) & {
-  headers: Headers;
-};
-export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponseError = (verifyRequestTokenApiAuthRequestVerifyTokenPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponse = (verifyRequestTokenApiAuthRequestVerifyTokenPostResponseSuccess | verifyRequestTokenApiAuthRequestVerifyTokenPostResponseError)
+export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponseSuccess =
+	verifyRequestTokenApiAuthRequestVerifyTokenPostResponse202 & {
+		headers: Headers;
+	};
+export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponseError =
+	verifyRequestTokenApiAuthRequestVerifyTokenPostResponse422 & {
+		headers: Headers;
+	};
+
+export type verifyRequestTokenApiAuthRequestVerifyTokenPostResponse =
+	| verifyRequestTokenApiAuthRequestVerifyTokenPostResponseSuccess
+	| verifyRequestTokenApiAuthRequestVerifyTokenPostResponseError;
 
 export const getVerifyRequestTokenApiAuthRequestVerifyTokenPostUrl = () => {
-
-
-
-
-  return `/api/auth/request-verify-token`
-}
+	return `/api/auth/request-verify-token`;
+};
 
 /**
  * @summary Verify:Request-Token
  */
-export const verifyRequestTokenApiAuthRequestVerifyTokenPost = async (bodyVerifyRequestTokenApiAuthRequestVerifyTokenPost: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost, options?: RequestInit): Promise<verifyRequestTokenApiAuthRequestVerifyTokenPostResponse> => {
+export const verifyRequestTokenApiAuthRequestVerifyTokenPost = async (
+	bodyVerifyRequestTokenApiAuthRequestVerifyTokenPost: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost,
+	options?: RequestInit
+): Promise<verifyRequestTokenApiAuthRequestVerifyTokenPostResponse> => {
+	return customInstance<verifyRequestTokenApiAuthRequestVerifyTokenPostResponse>(
+		getVerifyRequestTokenApiAuthRequestVerifyTokenPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(bodyVerifyRequestTokenApiAuthRequestVerifyTokenPost)
+		}
+	);
+};
 
-  return customInstance<verifyRequestTokenApiAuthRequestVerifyTokenPostResponse>(getVerifyRequestTokenApiAuthRequestVerifyTokenPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      bodyVerifyRequestTokenApiAuthRequestVerifyTokenPost,)
-  }
-);}
+export const getVerifyRequestTokenApiAuthRequestVerifyTokenPostMutationOptions = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>,
+		TError,
+		{ data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>,
+	TError,
+	{ data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost },
+	TContext
+> => {
+	const mutationKey = ['verifyRequestTokenApiAuthRequestVerifyTokenPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>,
+		{ data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return verifyRequestTokenApiAuthRequestVerifyTokenPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getVerifyRequestTokenApiAuthRequestVerifyTokenPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>, TError,{data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>, TError,{data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost}, TContext> => {
+export type VerifyRequestTokenApiAuthRequestVerifyTokenPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>
+>;
+export type VerifyRequestTokenApiAuthRequestVerifyTokenPostMutationBody =
+	BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost;
+export type VerifyRequestTokenApiAuthRequestVerifyTokenPostMutationError = HTTPValidationError;
 
-const mutationKey = ['verifyRequestTokenApiAuthRequestVerifyTokenPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>, {data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost}> = (props) => {
-          const {data} = props ?? {};
-
-          return  verifyRequestTokenApiAuthRequestVerifyTokenPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type VerifyRequestTokenApiAuthRequestVerifyTokenPostMutationResult = NonNullable<Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>>
-    export type VerifyRequestTokenApiAuthRequestVerifyTokenPostMutationBody = BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost
-    export type VerifyRequestTokenApiAuthRequestVerifyTokenPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Verify:Request-Token
  */
-export const createVerifyRequestTokenApiAuthRequestVerifyTokenPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>, TError,{data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>,
-        TError,
-        {data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getVerifyRequestTokenApiAuthRequestVerifyTokenPostMutationOptions(options?.()) }), queryClient);
-    }
+export const createVerifyRequestTokenApiAuthRequestVerifyTokenPost = <
+	TError = HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>,
+			TError,
+			{ data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof verifyRequestTokenApiAuthRequestVerifyTokenPost>>,
+	TError,
+	{ data: BodyVerifyRequestTokenApiAuthRequestVerifyTokenPost },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getVerifyRequestTokenApiAuthRequestVerifyTokenPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};
 
 export type verifyVerifyApiAuthVerifyPostResponse200 = {
-  data: UserRead
-  status: 200
-}
+	data: UserRead;
+	status: 200;
+};
 
 export type verifyVerifyApiAuthVerifyPostResponse400 = {
-  data: ErrorModel
-  status: 400
-}
+	data: ErrorModel;
+	status: 400;
+};
 
 export type verifyVerifyApiAuthVerifyPostResponse422 = {
-  data: HTTPValidationError
-  status: 422
-}
-
-export type verifyVerifyApiAuthVerifyPostResponseSuccess = (verifyVerifyApiAuthVerifyPostResponse200) & {
-  headers: Headers;
-};
-export type verifyVerifyApiAuthVerifyPostResponseError = (verifyVerifyApiAuthVerifyPostResponse400 | verifyVerifyApiAuthVerifyPostResponse422) & {
-  headers: Headers;
+	data: HTTPValidationError;
+	status: 422;
 };
 
-export type verifyVerifyApiAuthVerifyPostResponse = (verifyVerifyApiAuthVerifyPostResponseSuccess | verifyVerifyApiAuthVerifyPostResponseError)
+export type verifyVerifyApiAuthVerifyPostResponseSuccess =
+	verifyVerifyApiAuthVerifyPostResponse200 & {
+		headers: Headers;
+	};
+export type verifyVerifyApiAuthVerifyPostResponseError = (
+	| verifyVerifyApiAuthVerifyPostResponse400
+	| verifyVerifyApiAuthVerifyPostResponse422
+) & {
+	headers: Headers;
+};
+
+export type verifyVerifyApiAuthVerifyPostResponse =
+	| verifyVerifyApiAuthVerifyPostResponseSuccess
+	| verifyVerifyApiAuthVerifyPostResponseError;
 
 export const getVerifyVerifyApiAuthVerifyPostUrl = () => {
-
-
-
-
-  return `/api/auth/verify`
-}
+	return `/api/auth/verify`;
+};
 
 /**
  * @summary Verify:Verify
  */
-export const verifyVerifyApiAuthVerifyPost = async (bodyVerifyVerifyApiAuthVerifyPost: BodyVerifyVerifyApiAuthVerifyPost, options?: RequestInit): Promise<verifyVerifyApiAuthVerifyPostResponse> => {
+export const verifyVerifyApiAuthVerifyPost = async (
+	bodyVerifyVerifyApiAuthVerifyPost: BodyVerifyVerifyApiAuthVerifyPost,
+	options?: RequestInit
+): Promise<verifyVerifyApiAuthVerifyPostResponse> => {
+	return customInstance<verifyVerifyApiAuthVerifyPostResponse>(
+		getVerifyVerifyApiAuthVerifyPostUrl(),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(bodyVerifyVerifyApiAuthVerifyPost)
+		}
+	);
+};
 
-  return customInstance<verifyVerifyApiAuthVerifyPostResponse>(getVerifyVerifyApiAuthVerifyPostUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      bodyVerifyVerifyApiAuthVerifyPost,)
-  }
-);}
+export const getVerifyVerifyApiAuthVerifyPostMutationOptions = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(options?: {
+	mutation?: CreateMutationOptions<
+		Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>,
+		TError,
+		{ data: BodyVerifyVerifyApiAuthVerifyPost },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): CreateMutationOptions<
+	Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>,
+	TError,
+	{ data: BodyVerifyVerifyApiAuthVerifyPost },
+	TContext
+> => {
+	const mutationKey = ['verifyVerifyApiAuthVerifyPost'];
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
 
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>,
+		{ data: BodyVerifyVerifyApiAuthVerifyPost }
+	> = (props) => {
+		const { data } = props ?? {};
 
+		return verifyVerifyApiAuthVerifyPost(data, requestOptions);
+	};
 
+	return { mutationFn, ...mutationOptions };
+};
 
-export const getVerifyVerifyApiAuthVerifyPostMutationOptions = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>, TError,{data: BodyVerifyVerifyApiAuthVerifyPost}, TContext>, request?: SecondParameter<typeof customInstance>}
-): CreateMutationOptions<Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>, TError,{data: BodyVerifyVerifyApiAuthVerifyPost}, TContext> => {
+export type VerifyVerifyApiAuthVerifyPostMutationResult = NonNullable<
+	Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>
+>;
+export type VerifyVerifyApiAuthVerifyPostMutationBody = BodyVerifyVerifyApiAuthVerifyPost;
+export type VerifyVerifyApiAuthVerifyPostMutationError = ErrorModel | HTTPValidationError;
 
-const mutationKey = ['verifyVerifyApiAuthVerifyPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>, {data: BodyVerifyVerifyApiAuthVerifyPost}> = (props) => {
-          const {data} = props ?? {};
-
-          return  verifyVerifyApiAuthVerifyPost(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type VerifyVerifyApiAuthVerifyPostMutationResult = NonNullable<Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>>
-    export type VerifyVerifyApiAuthVerifyPostMutationBody = BodyVerifyVerifyApiAuthVerifyPost
-    export type VerifyVerifyApiAuthVerifyPostMutationError = ErrorModel | HTTPValidationError
-
-    /**
+/**
  * @summary Verify:Verify
  */
-export const createVerifyVerifyApiAuthVerifyPost = <TError = ErrorModel | HTTPValidationError,
-    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>, TError,{data: BodyVerifyVerifyApiAuthVerifyPost}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: () => QueryClient): CreateMutationResult<
-        Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>,
-        TError,
-        {data: BodyVerifyVerifyApiAuthVerifyPost},
-        TContext
-      > => {
-      return createMutation(() => ({ ...getVerifyVerifyApiAuthVerifyPostMutationOptions(options?.()) }), queryClient);
-    }
-
+export const createVerifyVerifyApiAuthVerifyPost = <
+	TError = ErrorModel | HTTPValidationError,
+	TContext = unknown
+>(
+	options?: () => {
+		mutation?: CreateMutationOptions<
+			Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>,
+			TError,
+			{ data: BodyVerifyVerifyApiAuthVerifyPost },
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: () => QueryClient
+): CreateMutationResult<
+	Awaited<ReturnType<typeof verifyVerifyApiAuthVerifyPost>>,
+	TError,
+	{ data: BodyVerifyVerifyApiAuthVerifyPost },
+	TContext
+> => {
+	return createMutation(
+		() => ({ ...getVerifyVerifyApiAuthVerifyPostMutationOptions(options?.()) }),
+		queryClient
+	);
+};

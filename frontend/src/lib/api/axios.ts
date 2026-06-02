@@ -1,9 +1,6 @@
 // Custom fetch-based instance for Orval-generated code.
 // Signature matches what Orval's svelte-query client expects: (url, options?) => Promise<T>
-export const customInstance = async <T>(
-	url: string,
-	options?: RequestInit
-): Promise<T> => {
+export const customInstance = async <T>(url: string, options?: RequestInit): Promise<T> => {
 	// Merge headers: start from provided headers (which may include Content-Type set by Orval)
 	const baseHeaders: Record<string, string> = {};
 

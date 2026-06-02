@@ -7,11 +7,11 @@
 import type { UserCreateRole } from './userCreateRole';
 
 export interface UserCreate {
-  email: string;
-  password: string;
-  is_active?: boolean | null;
-  is_superuser?: boolean | null;
-  is_verified?: boolean | null;
-  name: string;
-  role?: UserCreateRole;
+	email: string;
+	password: string;
+	is_active?: boolean | null;
+	is_superuser?: boolean | null;
+	is_verified?: boolean | null;
+	name: string;
+	role?: UserCreateRole;
 }

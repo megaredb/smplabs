@@ -6,6 +6,6 @@
  */
 
 export type GetMyTransactionsApiV1TransactionsMyGetParams = {
-offset?: number;
-limit?: number;
+	offset?: number;
+	limit?: number;
 };

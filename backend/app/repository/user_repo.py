@@ -67,7 +67,7 @@ class UserRepository(IUserRepository):
     async def remove_by_id(self, user_id: UserId) -> None:
         query = "DELETE FROM users WHERE id = ?"
         await self.connection.execute(query, (user_id,))
-    
+
     async def verify_user(self, user_id: int) -> None:
         query = "UPDATE users SET is_verified = 1 WHERE id = ?"
         await self.connection.execute(query, (user_id,))

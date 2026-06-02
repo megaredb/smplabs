@@ -5,13 +5,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type CampaignUpdateCategory = typeof CampaignUpdateCategory[keyof typeof CampaignUpdateCategory];
-
+export type CampaignUpdateCategory =
+	(typeof CampaignUpdateCategory)[keyof typeof CampaignUpdateCategory];
 
 export const CampaignUpdateCategory = {
-  'ЗСУ_/_Військові': 'ЗСУ / Військові',
-  Медицина: 'Медицина',
-  Відбудова: 'Відбудова',
-  Тварини: 'Тварини',
-  Інше: 'Інше',
+	'ЗСУ_/_Військові': 'ЗСУ / Військові',
+	Медицина: 'Медицина',
+	Відбудова: 'Відбудова',
+	Тварини: 'Тварини',
+	Інше: 'Інше'
 } as const;

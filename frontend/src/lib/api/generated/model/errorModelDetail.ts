@@ -5,4 +5,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ErrorModelDetail = string | {[key: string]: string};
+export type ErrorModelDetail = string | { [key: string]: string };
