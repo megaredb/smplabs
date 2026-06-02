@@ -12,7 +12,7 @@ from app.schemas.campaign import (
     CampaignUpdate,
 )
 
-from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse
+from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse, ComplaintCreate
 
 if TYPE_CHECKING:
     from app.schemas.user import UserDB
@@ -117,3 +117,12 @@ async def get_reports(
     campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
 ) -> list[CampaignReportResponse]:
     return await campaign_service.get_reports(campaign_id)
+
+@campaigns_router.post("/{campaign_id}/complaints", status_code=HTTPStatus.CREATED)
+async def create_complaint(
+    campaign_id: CampaignId,
+    complaint_data: ComplaintCreate,
+    _current_user: Annotated[UserDB, Depends(current_user)],
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> None:
+    await campaign_service.add_complaint(campaign_id, _current_user.id, complaint_data.reason)

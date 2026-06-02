@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS campaigns
     end_date       DATETIME,
     image_url      TEXT,
     category       TEXT NOT NULL DEFAULT 'Інше',
+    status         TEXT     DEFAULT 'active',
 
     FOREIGN KEY (organizer_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -66,4 +67,15 @@ CREATE TABLE IF NOT EXISTS campaign_reports
     image_url   TEXT,                  -- Посилання на фото чека або купленої речі
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS campaign_complaints
+(
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    campaign_id INTEGER NOT NULL,
+    user_id     INTEGER NOT NULL,
+    reason      TEXT NOT NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );

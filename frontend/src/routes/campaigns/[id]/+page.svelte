@@ -20,7 +20,7 @@
     import { Input } from '$lib/components/ui/input';
     import { Label } from '$lib/components/ui/label';
     import { Textarea } from '$lib/components/ui/textarea';
-    import { ArrowLeft, Clock, Target, Edit, Calendar, Plus, User } from '@lucide/svelte';
+    import { ArrowLeft, Clock, Target, Edit, Calendar, Plus, User, AlertTriangle, BadgeCheck } from '@lucide/svelte';
     import { resolve } from '$app/paths';
     import { onMount } from 'svelte';
     import { get } from 'svelte/store'; // Для використання в алертах
@@ -32,6 +32,12 @@
         createGetReportsApiV1CampaignsCampaignIdReportsGet, 
         createCreateReportApiV1CampaignsCampaignIdReportsPost 
     } from '$lib/api/generated/endpoints';
+
+    import { createCreateComplaintApiV1CampaignsCampaignIdComplaintsPost } from '$lib/api/generated/endpoints';
+
+    let isReportCampaignOpen = $state(false);
+    let reportReason = $state('');
+    const complaintMutation = createCreateComplaintApiV1CampaignsCampaignIdComplaintsPost();
 
     let campaignId = $derived(Number($page.params.id));
     let currentUserId = $state<number | null>(null);
@@ -220,6 +226,20 @@
             }
         );
     }
+
+    function handleComplaint(event: Event) {
+        event.preventDefault();
+        complaintMutation.mutate({
+            campaignId,
+            data: { reason: reportReason } as any
+        }, {
+            onSuccess: () => {
+                isReportCampaignOpen = false;
+                reportReason = '';
+                alert("Скаргу успішно відправлено модераторам!");
+            }
+        });
+    }
 </script>
 
 <svelte:head>
@@ -280,23 +300,46 @@
                             </div>
                         {/if}
                         <CardHeader>
-                            <div class="mb-2 flex items-center gap-2">
-                                <Badge class="bg-green-100 text-green-800 hover:bg-green-100">{$_('campaignDetails.statusActive')}</Badge>
-                                <Badge variant="outline" class="text-slate-600">{translateCategory((campaign as any).category)}</Badge>
+                            <div class="mb-2 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    {#if (campaign as any).status === 'active'}
+                                        <Badge class="bg-green-100 text-green-800 hover:bg-green-100">{$_('campaignDetails.statusActive')}</Badge>
+                                    {:else if (campaign as any).status === 'pending'}
+                                        <Badge class="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">{$_('campaignDetails.statusPending')}</Badge>
+                                    {:else}
+                                        <Badge class="bg-slate-100 text-slate-800">{(campaign as any).status}</Badge>
+                                    {/if}
+                                    <Badge variant="outline" class="text-slate-600">{translateCategory((campaign as any).category)}</Badge>
+                                </div>
+                                
+                                {#if currentUserId && currentUserId !== campaign.organizer_id}
+                                    <button onclick={() => isReportCampaignOpen = true} class="text-sm flex items-center gap-1 text-slate-400 hover:text-red-500 transition-colors">
+                                        <AlertTriangle class="h-4 w-4" />
+                                        {$_('campaignDetails.reportBtn')}
+                                    </button>
+                                {/if}
                             </div>
                             <CardTitle class="text-3xl leading-tight font-bold text-slate-900">
                                 {campaign.title}
                             </CardTitle>
                             
                             <div class="mt-4 flex items-center gap-2 text-slate-600 border-t border-slate-100 pt-4">
-                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 relative">
                                     <User class="h-4 w-4 text-slate-500" />
+                                    {#if (campaign as any).is_verified}
+                                        <div class="absolute -bottom-1 -right-1 rounded-full bg-white">
+                                            <BadgeCheck class="h-4 w-4 text-blue-500" />
+                                        </div>
+                                    {/if}
                                 </div>
-                                <span class="text-sm">
+                                <span class="text-sm flex items-center gap-2">
                                     {$_('campaignDetails.organizerLabel')}: 
                                     <strong class="font-medium text-slate-900">
                                         {(campaign as any).organizer_name || $_('campaignDetails.defaultOrganizer')}
                                     </strong>
+                                    {#if (campaign as any).is_verified}
+                                        <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{$_('campaignDetails.verified')}</span>
+                                    {/if}
                                 </span>
                             </div>
                         </CardHeader>
@@ -603,4 +646,32 @@
             </div>
         </div>
     {/if}
+    <Dialog.Root bind:open={isReportCampaignOpen}>
+        <Dialog.Content class="bg-white sm:max-w-[425px]">
+            <Dialog.Header>
+                <Dialog.Title class="text-red-600 flex items-center gap-2">
+                    <AlertTriangle class="h-5 w-5" />
+                    {$_('campaignDetails.reportDialogTitle')}
+                </Dialog.Title>
+            </Dialog.Header>
+            <form onsubmit={handleComplaint} class="space-y-4 py-4">
+                <div class="space-y-2">
+                    <Label for="complaint-reason">{$_('campaignDetails.reportReasonLabel')}</Label>
+                    <textarea 
+                        id="complaint-reason" 
+                        bind:value={reportReason} 
+                        required 
+                        rows="4" 
+                        class="w-full resize-y rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                    ></textarea>
+                </div>
+                <Dialog.Footer>
+                    <Button type="button" variant="outline" onclick={() => isReportCampaignOpen = false}>{$_('campaignDetails.cancelBtn')}</Button>
+                    <Button type="submit" class="bg-red-600 hover:bg-red-700" disabled={complaintMutation.isPending}>
+                        {$_('campaignDetails.reportSubmitBtn')}
+                    </Button>
+                </Dialog.Footer>
+            </form>
+        </Dialog.Content>
+    </Dialog.Root>
 </div>

@@ -20,4 +20,6 @@ export interface CampaignResponse {
   id: CampaignId;
   current_amount: number;
   created_at: string;
+  status?: string;
+  is_verified?: boolean;
 }

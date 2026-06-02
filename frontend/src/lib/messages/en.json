@@ -132,7 +132,21 @@
     "reportImageLabel": "Image URL of receipt or purchase",
     "reportSubmitBtn": "Publish Update",
     "organizerLabel": "Organizer",
-    "defaultOrganizer": "Volunteer"
+    "defaultOrganizer": "Volunteer",
+    "verified": "Verified",
+    "reportBtn": "Report",
+    "reportDialogTitle": "Report Campaign",
+    "reportReasonLabel": "Describe the reason for your report (fraud, fake information, etc.)",
+    "reportSendBtn": "Send Report",
+    "statusPending": "Under Review",
+    "statusCompleted": "Completed",
+    "statusBanned": "Banned",
+    "accountStatusTitle": "Account Status",
+    "accountStatusDesc": "Complete verification to receive a trust badge on your campaigns.",
+    "accountVerified": "Account Verified",
+    "verifyDiiaBtn": "Verify via Diia",
+    "processing": "Processing...",
+    "verifySuccessAlert": "Your account has been successfully verified via Дія!"
   },
   "adminUsers": {
     "pageTitle": "Admin Panel - Users",

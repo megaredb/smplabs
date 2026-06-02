@@ -132,7 +132,15 @@
     "reportImageLabel": "Посилання на фото чека або покупки",
     "reportSubmitBtn": "Опублікувати звіт",
     "organizerLabel": "Організатор",
-    "defaultOrganizer": "Волонтер"
+    "defaultOrganizer": "Волонтер",
+    "verified": "Верифіковано",
+    "reportBtn": "Поскаржитись",
+    "reportDialogTitle": "Поскаржитись на збір",
+    "reportReasonLabel": "Опишіть причину скарги (шахрайство, фейкові дані тощо)",
+    "reportSendBtn": "Відправити скаргу",
+    "statusPending": "На модерації",
+    "statusCompleted": "Завершено",
+    "statusBanned": "Заблоковано"
   },
   "adminUsers": {
     "pageTitle": "Панель адміністратора - Користувачі",
@@ -189,7 +197,13 @@
     "thCampaign": "Збір",
     "thAmount": "Сума",
     "thComment": "Коментар",
-    "campaignLink": "Збір #"
+    "campaignLink": "Збір #",
+    "accountStatusTitle": "Статус акаунту",
+    "accountStatusDesc": "Пройдіть верифікацію, щоб отримати позначку довіри на ваших зборах.",
+    "accountVerified": "Акаунт верифіковано",
+    "verifyDiiaBtn": "Верифікація через Дію",
+    "processing": "Обробка...",
+    "verifySuccessAlert": "Ваш акаунт успішно верифіковано через Дію!"
   },
   "visitStat": {
     "pageTitle": "RazomFund - Аналітика відвідувань",

@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse
+from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse, ComplaintCreate
 
 
 if TYPE_CHECKING:
@@ -59,3 +59,7 @@ class CampaignService:
 
     async def get_reports(self, campaign_id: int) -> list[CampaignReportResponse]:
         return await self.uow.campaigns.get_reports(campaign_id)
+
+    async def add_complaint(self, campaign_id: int, user_id: int, reason: str) -> None:
+        await self.uow.campaigns.add_complaint(campaign_id, user_id, reason)
+        await self.uow.commit()

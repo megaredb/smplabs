@@ -1,7 +1,9 @@
 <script lang="ts">
     import {
         createGetMyCampaignsApiV1CampaignsMyGet,
-        createGetMyTransactionsApiV1TransactionsMyGet
+        createGetMyTransactionsApiV1TransactionsMyGet,
+        createVerifyAccountApiV1UsersVerifyPost,
+        createGetMeApiV1UsersMeGet
     } from '$lib/api/generated/endpoints';
     import type { CampaignResponse } from '$lib/api/generated/model/campaignResponse';
     import type { TransactionResponse } from '$lib/api/generated/model/transactionResponse';
@@ -17,7 +19,7 @@
     } from '$lib/components/ui/card';
     import { Progress } from '$lib/components/ui/progress';
     import * as Table from '$lib/components/ui/table';
-    import { Search, Activity, ArrowRight } from '@lucide/svelte';
+    import { Search, Activity, ArrowRight, BadgeCheck, Smartphone } from '@lucide/svelte';
     import { resolve } from '$app/paths';
     
     // ДОДАНО: імпорт перекладу
@@ -25,6 +27,11 @@
 
     let campaignSearch = $state('');
     let transactionSearch = $state('');
+
+    const verifyMutation = createVerifyAccountApiV1UsersVerifyPost();
+    const meQuery = createGetMeApiV1UsersMeGet();
+    let isUserVerified = $derived((meQuery.data as any)?.is_verified ?? false);
+
     let campaignsQuery = createGetMyCampaignsApiV1CampaignsMyGet();
     let transactionsQuery = createGetMyTransactionsApiV1TransactionsMyGet();
 
@@ -48,6 +55,15 @@
             return wrapped.data as TransactionResponse[];
         }
         return [];
+    }
+
+    function handleVerify() {
+    verifyMutation.mutate({}, {
+        onSuccess: () => {
+            alert($_('userStats.verifySuccessAlert')); // Використовуємо переклад
+            window.location.reload(); 
+        }
+    });
     }
 
     let campaigns = $derived(getCampaigns());
@@ -105,6 +121,30 @@
 </svelte:head>
 
 <div class="mx-auto max-w-7xl space-y-6">
+    <div class="flex flex-col sm:flex-row items-center justify-between rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+        <div>
+            <h2 class="text-xl font-bold text-slate-900">{$_('userStats.accountStatusTitle')}</h2>
+            <p class="text-sm text-slate-500">{$_('userStats.accountStatusDesc')}</p>
+        </div>
+        
+        <div class="mt-4 sm:mt-0">
+            {#if isUserVerified}
+                <div class="flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-blue-700">
+                    <BadgeCheck class="h-5 w-5" />
+                    <span class="font-medium">{$_('userStats.accountVerified')}</span>
+                </div>
+            {:else}
+                <Button 
+                    onclick={handleVerify} 
+                    disabled={verifyMutation.isPending}
+                    class="bg-black text-white hover:bg-slate-800 flex items-center gap-2 px-6 rounded-full"
+                >
+                    <Smartphone class="h-4 w-4" />
+                    {verifyMutation.isPending ? $_('userStats.processing') : $_('userStats.verifyDiiaBtn')}
+                </Button>
+            {/if}
+        </div>
+    </div>
     <section class="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="space-y-2">

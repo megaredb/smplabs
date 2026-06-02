@@ -26,11 +26,10 @@ class CampaignRepository(ICampaignRepository):
             (data.organizer_id, data.title, data.description, data.target_amount, data.end_date, data.image_url, data.category),
         )
 
-    async def get_by_id(self, campaign_id: CampaignId) -> CampaignSchema | None:
-        # Ми робимо LEFT JOIN, щоб підтягнути ім'я (u.name) з таблиці users
+    async def get_by_id(self, campaign_id: int) -> CampaignSchema | None:
         query = """
             SELECT c.id, c.organizer_id, c.title, c.description, c.target_amount, c.current_amount,
-                   c.created_at, c.end_date, c.image_url, c.category, u.name
+                   c.created_at, c.end_date, c.image_url, c.category, u.name, c.status, u.is_verified
             FROM campaigns c
             LEFT JOIN users u ON c.organizer_id = u.id
             WHERE c.id = ?
@@ -50,7 +49,9 @@ class CampaignRepository(ICampaignRepository):
                 end_date=row[7],
                 image_url=row[8],
                 category=row[9],
-                organizer_name=row[10] # ДОДАНО ІМ'Я
+                organizer_name=row[10],
+                status=row[11],
+                is_verified=bool(row[12]) # Тепер галочка передається на фронтенд!
             )
 
     async def remove_by_id(self, campaign_id: CampaignId) -> None:
@@ -123,7 +124,7 @@ class CampaignRepository(ICampaignRepository):
         # НОВЕ: Змінили SELECT та додали LEFT JOIN, щоб тягнути ім'я
         query = """
             SELECT c.id, c.organizer_id, c.title, c.description, c.target_amount, c.current_amount,
-                   c.created_at, c.end_date, c.image_url, c.category, u.name
+                c.created_at, c.end_date, c.image_url, c.category, u.name, c.status, u.is_verified
             FROM campaigns c
             LEFT JOIN users u ON c.organizer_id = u.id
         """
@@ -159,7 +160,9 @@ class CampaignRepository(ICampaignRepository):
                     end_date=row[7],
                     image_url=row[8],
                     category=row[9],
-                    organizer_name=row[10] # ТЕПЕР ІМ'Я Є ТУТ!
+                    organizer_name=row[10],
+                    status=row[11],
+                    is_verified=bool(row[12])
                 )
                 for row in rows
             ]
@@ -190,3 +193,7 @@ class CampaignRepository(ICampaignRepository):
                     created_at=row[5]
                 ) for row in rows
             ]
+
+    async def add_complaint(self, campaign_id: int, user_id: int, reason: str) -> None:
+        query = "INSERT INTO campaign_complaints (campaign_id, user_id, reason) VALUES (?, ?, ?)"
+        await self.connection.execute(query, (campaign_id, user_id, reason))

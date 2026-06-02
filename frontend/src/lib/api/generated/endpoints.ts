@@ -32,6 +32,7 @@ import type {
   CampaignReportResponse,
   CampaignResponse,
   CampaignUpdate,
+  ComplaintCreate,
   ErrorModel,
   GetMyCampaignsApiV1CampaignsMyGetParams,
   GetMyTransactionsApiV1TransactionsMyGetParams,
@@ -43,6 +44,7 @@ import type {
   TransactionResponse,
   UserCreate,
   UserRead,
+  VerifyAccountApiV1UsersVerifyPost200,
   VisitCreate,
   VisitStatsResponse
 } from './model';
@@ -519,6 +521,88 @@ export function createGetUsersApiV1UsersGet<TData = Awaited<ReturnType<typeof ge
 
 
 
+
+export type verifyAccountApiV1UsersVerifyPostResponse200 = {
+  data: VerifyAccountApiV1UsersVerifyPost200
+  status: 200
+}
+
+export type verifyAccountApiV1UsersVerifyPostResponseSuccess = (verifyAccountApiV1UsersVerifyPostResponse200) & {
+  headers: Headers;
+};
+;
+
+export type verifyAccountApiV1UsersVerifyPostResponse = (verifyAccountApiV1UsersVerifyPostResponseSuccess)
+
+export const getVerifyAccountApiV1UsersVerifyPostUrl = () => {
+
+
+
+
+  return `/api/v1/users/verify`
+}
+
+/**
+ * @summary Verify Account
+ */
+export const verifyAccountApiV1UsersVerifyPost = async ( options?: RequestInit): Promise<verifyAccountApiV1UsersVerifyPostResponse> => {
+
+  return customInstance<verifyAccountApiV1UsersVerifyPostResponse>(getVerifyAccountApiV1UsersVerifyPostUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getVerifyAccountApiV1UsersVerifyPostMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): CreateMutationOptions<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, TError,void, TContext> => {
+
+const mutationKey = ['verifyAccountApiV1UsersVerifyPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, void> = () => {
+
+
+          return  verifyAccountApiV1UsersVerifyPost(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type VerifyAccountApiV1UsersVerifyPostMutationResult = NonNullable<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>>
+
+    export type VerifyAccountApiV1UsersVerifyPostMutationError = unknown
+
+    /**
+ * @summary Verify Account
+ */
+export const createVerifyAccountApiV1UsersVerifyPost = <TError = unknown,
+    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient): CreateMutationResult<
+        Awaited<ReturnType<typeof verifyAccountApiV1UsersVerifyPost>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return createMutation(() => ({ ...getVerifyAccountApiV1UsersVerifyPostMutationOptions(options?.()) }), queryClient);
+    }
 
 export type createCampaignApiV1CampaignsPostResponse201 = {
   data: unknown
@@ -1278,6 +1362,97 @@ export function createGetReportsApiV1CampaignsCampaignIdReportsGet<TData = Await
 
 
 
+
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse201 = {
+  data: unknown
+  status: 201
+}
+
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseSuccess = (createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse201) & {
+  headers: Headers;
+};
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseError = (createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse422) & {
+  headers: Headers;
+};
+
+export type createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse = (createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseSuccess | createComplaintApiV1CampaignsCampaignIdComplaintsPostResponseError)
+
+export const getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostUrl = (campaignId: number,) => {
+
+
+
+
+  return `/api/v1/campaigns/${campaignId}/complaints`
+}
+
+/**
+ * @summary Create Complaint
+ */
+export const createComplaintApiV1CampaignsCampaignIdComplaintsPost = async (campaignId: number,
+    complaintCreate: ComplaintCreate, options?: RequestInit): Promise<createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse> => {
+
+  return customInstance<createComplaintApiV1CampaignsCampaignIdComplaintsPostResponse>(getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostUrl(campaignId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      complaintCreate,)
+  }
+);}
+
+
+
+
+export const getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, TError,{campaignId: number;data: ComplaintCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
+): CreateMutationOptions<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, TError,{campaignId: number;data: ComplaintCreate}, TContext> => {
+
+const mutationKey = ['createComplaintApiV1CampaignsCampaignIdComplaintsPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, {campaignId: number;data: ComplaintCreate}> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  createComplaintApiV1CampaignsCampaignIdComplaintsPost(campaignId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>>
+    export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationBody = ComplaintCreate
+    export type CreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationError = HTTPValidationError
+
+    /**
+ * @summary Create Complaint
+ */
+export const createCreateComplaintApiV1CampaignsCampaignIdComplaintsPost = <TError = HTTPValidationError,
+    TContext = unknown>(options?: () => { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>, TError,{campaignId: number;data: ComplaintCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: () => QueryClient): CreateMutationResult<
+        Awaited<ReturnType<typeof createComplaintApiV1CampaignsCampaignIdComplaintsPost>>,
+        TError,
+        {campaignId: number;data: ComplaintCreate},
+        TContext
+      > => {
+      return createMutation(() => ({ ...getCreateComplaintApiV1CampaignsCampaignIdComplaintsPostMutationOptions(options?.()) }), queryClient);
+    }
 
 export type createTransactionApiV1TransactionsPostResponse201 = {
   data: unknown

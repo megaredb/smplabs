@@ -58,3 +58,11 @@ async def remove_user(
     _current_superuser: Annotated[UserDB, Depends(current_superuser)],
 ) -> None:
     await user_service.remove_user(user_id)
+
+@users_router.post("/verify", status_code=HTTPStatus.OK)
+async def verify_account(
+    _current_user: Annotated[UserDB, Depends(current_user)],
+    user_service: Annotated[UserService, Depends(get_user_service)]
+) -> dict:
+    await user_service.verify_user(_current_user.id)
+    return {"message": "Успішно верифіковано"}

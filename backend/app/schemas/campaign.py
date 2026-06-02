@@ -56,8 +56,12 @@ class Campaign(CampaignBase):
 
 class CampaignResponse(CampaignBase):
     id: CampaignId
+    organizer_id: int
     current_amount: float
     created_at: datetime
+    status: str = "active"
+    is_verified: bool = False
+    organizer_name: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -73,3 +77,6 @@ class CampaignReportResponse(CampaignReportBase):
     id: int
     campaign_id: int
     created_at: datetime
+
+class ComplaintCreate(BaseModel):
+    reason: str

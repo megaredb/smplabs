@@ -55,3 +55,7 @@ class ICampaignRepository(ABC):
     @abstractmethod
     async def get_reports(self, campaign_id: int) -> list["CampaignReportResponse"]:
         pass
+
+    @abstractmethod
+    async def add_complaint(self, campaign_id: int, user_id: int, reason: str) -> None:
+        pass
