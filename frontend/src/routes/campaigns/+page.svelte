@@ -8,17 +8,38 @@
   import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card';
   import { Progress } from '$lib/components/ui/progress';
   import { Input } from '$lib/components/ui/input';
-  import { Plus, Search, Trash2, Clock, Calendar, Filter } from '@lucide/svelte';
+  import { Plus, Search, Trash2, Clock, Calendar, Filter, ArrowUpDown } from '@lucide/svelte';
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
   
   // ДОДАНО: імпорт перекладу
   import { _ } from 'svelte-i18n';
 
+  let selectedCategory = $state<string | undefined>(undefined);
+  let sortBy = $state('current_amount'); // НОВЕ: сортування
   let searchQuery = $state('');
   let currentUserId = $state<number | null>(null);
 
-  const campaignsQuery = createGetTopCampaignsApiV1CampaignsTopGet(() => ({ limit: 50 }));
+  const categoryOptions = [
+        { id: "ЗСУ / Військові", key: 'categories.military' },
+        { id: "Медицина", key: 'categories.medical' },
+        { id: "Відбудова", key: 'categories.rebuild' },
+        { id: "Тварини", key: 'categories.animals' },
+        { id: "Інше", key: 'categories.other' }
+    ];
+
+    function translateCategory(cat: string) {
+        const match = categoryOptions.find(c => c.id === cat);
+        return match ? $_(match.key) : (cat || $_('categories.other'));
+    }
+
+  const campaignsQuery = $derived(
+      createGetTopCampaignsApiV1CampaignsTopGet(() => ({
+          limit: 50,
+          category: selectedCategory === "all" ? undefined : selectedCategory,
+          sort_by: sortBy
+      } as any)) // as any потрібен, поки типи orval не оновлено
+  );
   const deleteMutation = createDeleteCampaignApiV1CampaignsCampaignIdDelete();
 
   onMount(() => {
@@ -65,6 +86,7 @@
       }
     );
   }
+
 </script>
 
 <svelte:head>
@@ -76,14 +98,27 @@
     <h1 class="text-3xl font-bold tracking-tight text-slate-900">{$_('campaigns.heading')}</h1>
     <div class="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row">
       <div class="relative w-full sm:w-48">
-        <Filter class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
-        <select
-          bind:value={filterLimit}
-          class="flex h-10 w-full cursor-pointer appearance-none items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 pl-9 text-sm ring-offset-white transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        >
-          <option value={50}>{$_('campaigns.filterAll')}</option>
-          <option value={10}>{$_('campaigns.filterTop10')}</option>
-        </select>
+          <Filter class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <select
+                bind:value={selectedCategory}
+                class="flex h-10 w-full cursor-pointer appearance-none items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 pl-9 text-sm ring-offset-white transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+                <option value="all">{$_('categories.all')}</option>
+                {#each categoryOptions as cat}
+                    <option value={cat.id}>{$_(cat.key)}</option>
+                {/each}
+            </select>
+      </div>
+      <div class="relative w-full sm:w-48">
+          <ArrowUpDown class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <select
+              bind:value={sortBy}
+              class="flex h-10 w-full cursor-pointer appearance-none items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 pl-9 text-sm ring-offset-white transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
+              <option value="current_amount">За зібраною сумою</option>
+              <option value="target">За ціллю</option>
+              <option value="date">Спочатку нові</option>
+          </select>
       </div>
       <div class="relative w-full sm:w-72">
         <Search class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -142,6 +177,11 @@
                         {/if}
                         
                         <CardHeader class="flex-none">
+                            <div class="mb-2">
+                                <span class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                                    {translateCategory((campaign as any).category)}
+                                </span>
+                            </div>
                             <CardTitle class="line-clamp-2 leading-tight transition-colors group-hover:text-blue-600">{campaign.title}</CardTitle>
                         </CardHeader>
                         <CardContent class="flex grow flex-col">

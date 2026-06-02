@@ -35,5 +35,11 @@ class CampaignService:
     ) -> list[Campaign]:
         return await self.uow.campaigns.get_by_organizer_id(organizer_id, offset, limit)
 
-    async def get_top_campaigns(self, limit: int = 10) -> list[Campaign]:
-        return await self.uow.campaigns.get_top_campaigns(limit)
+    async def get_top_campaigns(
+        self, 
+        limit: int = 10, 
+        category: str | None = None, 
+        sort_by: str = "current_amount"
+    ) -> list[Campaign]:
+        # Передаємо всі параметри далі в репозиторій (базу даних)
+        return await self.uow.campaigns.get_top_campaigns(limit, category, sort_by)

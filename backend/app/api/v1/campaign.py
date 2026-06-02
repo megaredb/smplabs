@@ -33,8 +33,11 @@ async def create_campaign(
 async def get_top_campaigns(
     campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
     limit: int = 10,
+    category: str | None = None, # НОВИЙ ПАРАМЕТР
+    sort_by: str = "current_amount" # НОВИЙ ПАРАМЕТР
 ) -> list[CampaignResponse]:
-    campaigns = await campaign_service.get_top_campaigns(limit)
+    # Передай ці параметри в campaign_service.get_top_campaigns
+    campaigns = await campaign_service.get_top_campaigns(limit, category, sort_by)
     return [CampaignResponse.model_validate(c) for c in campaigns]
 
 

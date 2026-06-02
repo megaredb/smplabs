@@ -16,18 +16,18 @@ class CampaignRepository(ICampaignRepository):
 
     async def add_one(self, data: CampaignCreate) -> None:
         query = """
-            INSERT INTO campaigns (organizer_id, title, description, target_amount, end_date, image_url)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO campaigns (organizer_id, title, description, target_amount, end_date, image_url, category)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         await self.connection.execute(
             query,
-            (data.organizer_id, data.title, data.description, data.target_amount, data.end_date, data.image_url),
+            (data.organizer_id, data.title, data.description, data.target_amount, data.end_date, data.image_url, data.category),
         )
 
     async def get_by_id(self, campaign_id: CampaignId) -> CampaignSchema | None:
         query = """
         SELECT id, organizer_id, title, description, target_amount, current_amount,
-       created_at, end_date, image_url
+       created_at, end_date, image_url, category
         FROM campaigns
         WHERE id = ?
         """
@@ -47,6 +47,7 @@ class CampaignRepository(ICampaignRepository):
                 created_at=row[6],
                 end_date=row[7],
                 image_url=row[8],
+                category=row[9],
             )
 
     async def remove_by_id(self, campaign_id: CampaignId) -> None:
@@ -97,7 +98,7 @@ class CampaignRepository(ICampaignRepository):
     ) -> list[Campaign]:
         query = """
                 SELECT id, organizer_id, title, description, target_amount, current_amount,
-                       created_at, end_date, image_url
+                       created_at, end_date, image_url, category
                 FROM campaigns
                 WHERE organizer_id = ?
                 ORDER BY current_amount DESC
@@ -110,28 +111,50 @@ class CampaignRepository(ICampaignRepository):
 
         return [CampaignSchema(**row) for row in rows]
 
-    async def get_top_campaigns(self, limit: int = 10) -> list[CampaignSchema]:
+    async def get_top_campaigns(
+        self, 
+        limit: int = 50, 
+        category: str | None = None, 
+        sort_by: str = "current_amount"
+    ) -> list[CampaignSchema]:
         query = """
-            SELECT id, organizer_id, title, description, target_amount, current_amount, 
-            created_at, end_date, image_url
-            FROM Campaigns
-            ORDER BY current_amount DESC
-            LIMIT ?
+            SELECT id, organizer_id, title, description, target_amount, current_amount,
+                   created_at, end_date, image_url, category
+            FROM campaigns
         """
-        async with self.connection.execute(query, (limit,)) as cursor:
-            rows = await cursor.fetchall()
+        params = []
+        
+        # Фільтрація по категорії
+        if category:
+            query += " WHERE category = ?"
+            params.append(category)
 
-        return [
-            CampaignSchema(
-                id=row[0],
-                organizer_id=row[1],
-                title=row[2],
-                description=row[3],
-                target_amount=row[4],
-                current_amount=row[5],
-                created_at=row[6],
-                end_date=row[7],
-                image_url=row[8],
-            )
-            for row in rows
-        ]
+        # Сортування
+        if sort_by == "date":
+            query += " ORDER BY created_at DESC"
+        elif sort_by == "target":
+            query += " ORDER BY target_amount DESC"
+        else:
+            query += " ORDER BY current_amount DESC"
+
+        # Ліміт
+        query += " LIMIT ?"
+        params.append(limit)
+
+        async with self.connection.execute(query, tuple(params)) as cursor:
+            rows = await cursor.fetchall()
+            return [
+                CampaignSchema(
+                    id=row[0],
+                    organizer_id=row[1],
+                    title=row[2],
+                    description=row[3],
+                    target_amount=row[4],
+                    current_amount=row[5],
+                    created_at=row[6],
+                    end_date=row[7],
+                    image_url=row[8],
+                    category=row[9],
+                )
+                for row in rows
+            ]

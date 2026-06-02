@@ -191,5 +191,14 @@
     "pageLabel": "сторінка",
     "userVisitsTitle": "Ваші перегляди",
     "authTrafficLabel": "авторизований трафік"
+  },
+  "categories": {
+    "label": "Категорія",
+    "all": "Усі категорії",
+    "military": "ЗСУ / Військові",
+    "medical": "Медицина",
+    "rebuild": "Відбудова",
+    "animals": "Тварини",
+    "other": "Інше"
   }
 }

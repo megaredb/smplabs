@@ -119,7 +119,9 @@
     "sendBtn": "Send",
     "enterRecipientAlert": "Enter recipient ID!",
     "endDateLabel": "End Date",
-    "imageUrlLabel": "Image URL"
+    "imageUrlLabel": "Image URL",
+    "statusClosed": "Campaign closed",
+    "statusFullyFunded": "Target reached"
   },
   "adminUsers": {
     "pageTitle": "Admin Panel - Users",
@@ -189,5 +191,14 @@
     "pageLabel": "page",
     "userVisitsTitle": "Your Views",
     "authTrafficLabel": "authorized traffic"
+  },
+  "categories": {
+    "label": "Category",
+    "all": "All Categories",
+    "military": "Military / Armed Forces",
+    "medical": "Medical",
+    "rebuild": "Rebuilding",
+    "animals": "Animals",
+    "other": "Other"
   }
 }

@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS campaigns
     created_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
     end_date       DATETIME,
     image_url      TEXT,
+    category       TEXT NOT NULL DEFAULT 'Інше',
 
     FOREIGN KEY (organizer_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS transactions
     FOREIGN KEY (donor_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS page_visits
+CREATE TABLE IF NOT EXISTS visits
 (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     page_url    TEXT     NOT NULL,
@@ -53,5 +54,5 @@ CREATE TABLE IF NOT EXISTS page_visits
 );
 
 -- Корисно додати індекси для швидкодії, оскільки запити до лічильників будуть частими:
-CREATE INDEX idx_page_url ON page_visits(page_url);
-CREATE INDEX idx_user_id ON page_visits(user_id);
+CREATE INDEX idx_page_url ON visits(page_url);
+CREATE INDEX idx_user_id ON visits(user_id);

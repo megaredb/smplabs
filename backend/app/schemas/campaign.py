@@ -1,8 +1,10 @@
 from datetime import datetime
 from typing import Annotated
+from typing import Literal
 
 from pydantic import AfterValidator, BaseModel, ConfigDict
 
+CategoryType = Literal["ЗСУ / Військові", "Медицина", "Відбудова", "Тварини", "Інше"]
 
 def validate_campaign_id(v: int) -> int:
     if v <= 0:
@@ -29,6 +31,7 @@ class CampaignBase(BaseModel):
     target_amount: TargetAmount
     end_date: datetime | None = None
     image_url: str | None = None
+    category: CategoryType
 
 class CampaignCreate(CampaignBase):
     pass
@@ -39,6 +42,7 @@ class CampaignUpdate(BaseModel):
     target_amount: TargetAmount | None = None
     end_date: datetime | None = None
     image_url: str | None = None
+    category: CategoryType
 
 
 class Campaign(CampaignBase):

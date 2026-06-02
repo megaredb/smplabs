@@ -88,6 +88,21 @@
     let editTargetAmount = $state('');
 	let editEndDate = $state(''); // НОВЕ
     let editImageUrl = $state(''); // НОВЕ
+    let editCategory = $state(''); // НОВЕ
+
+    const categories = ["ЗСУ / Військові", "Медицина", "Відбудова", "Тварини", "Інше"];
+    const categoryOptions = [
+        { id: "ЗСУ / Військові", key: 'categories.military' },
+        { id: "Медицина", key: 'categories.medical' },
+        { id: "Відбудова", key: 'categories.rebuild' },
+        { id: "Тварини", key: 'categories.animals' },
+        { id: "Інше", key: 'categories.other' }
+    ];
+
+    function translateCategory(cat: string) {
+        const match = categoryOptions.find(c => c.id === cat);
+        return match ? $_(match.key) : (cat || $_('categories.other'));
+    }
 
     function openEditDialog() {
         const campaign = getCampaign();
@@ -98,6 +113,7 @@
             // Витягуємо дату формату YYYY-MM-DD для інпуту
             editEndDate = (campaign as any).end_date ? new Date((campaign as any).end_date).toISOString().split('T')[0] : '';
             editImageUrl = (campaign as any).image_url || '';
+            editCategory = (campaign as any).category || 'Інше';
             isEditDialogOpen = true;
         }
     }
@@ -112,7 +128,8 @@
                     description: editDescription,
                     target_amount: Number(editTargetAmount),
                     end_date: editEndDate ? new Date(editEndDate).toISOString() : null, // НОВЕ
-                    image_url: editImageUrl || null // НОВЕ
+                    image_url: editImageUrl || null, // НОВЕ
+                    category: editCategory // НОВЕ
                 } as any
             },
             {
@@ -219,8 +236,9 @@
                             </div>
                         {/if}
                         <CardHeader>
-                            <div class="mb-2">
+                            <div class="mb-2 flex items-center gap-2">
                                 <Badge class="bg-green-100 text-green-800 hover:bg-green-100">{$_('campaignDetails.statusActive')}</Badge>
+                                <Badge variant="outline" class="text-slate-600">{translateCategory((campaign as any).category)}</Badge>
                             </div>
                             <CardTitle class="text-3xl leading-tight font-bold text-slate-900"
                                 >{campaign.title}</CardTitle
@@ -330,6 +348,14 @@
                                 <Label for="edit-end-date">{$_('campaignDetails.endDateLabel')}</Label>
                                 <Input id="edit-end-date" type="date" bind:value={editEndDate} />
                             </div>
+                        </div>
+                        <div class="space-y-2">
+                            <Label for="edit-category">{$_('categories.label')}</Label>
+                            <select id="edit-category" bind:value={editCategory} class="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                {#each categoryOptions as cat}
+                                    <option value={cat.id}>{$_(cat.key)}</option>
+                                {/each}
+                            </select>
                         </div>
                         <div class="space-y-2">
                             <Label for="edit-image">{$_('campaignDetails.imageUrlLabel')}</Label>
