@@ -34,11 +34,28 @@ class ICampaignRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_top_campaigns(self, limit: int = 10) -> list[Campaign]:
-        raise NotImplementedError
+    async def get_top_campaigns(
+        self,
+        limit: int = 50,
+        category: str | None = None,
+        sort_by: str = "current_amount",
+    ) -> list[CampaignSchema]:
+        pass
 
     @abstractmethod
     async def get_by_organizer_id(
         self, organizer_id: int, offset: int = 0, limit: int = 50
     ) -> list[Campaign]:
         raise NotImplementedError
+
+    @abstractmethod
+    async def add_report(self, campaign_id: int, data: "CampaignReportCreate") -> None:
+        pass
+
+    @abstractmethod
+    async def get_reports(self, campaign_id: int) -> list["CampaignReportResponse"]:
+        pass
+
+    @abstractmethod
+    async def add_complaint(self, campaign_id: int, user_id: int, reason: str) -> None:
+        pass

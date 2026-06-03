@@ -5,6 +5,7 @@ Welcome to the frontend part of our project! This beginner-friendly guide will h
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - **Node.js** (version 18 or higher is recommended)
 - **pnpm** (a fast package manager, installable via `npm install -g pnpm` if you have Node.js)
 - **Git** (for cloning repositories)

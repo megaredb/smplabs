@@ -12,6 +12,12 @@ from app.schemas.campaign import (
     CampaignUpdate,
 )
 
+from app.schemas.campaign import (
+    CampaignReportCreate,
+    CampaignReportResponse,
+    ComplaintCreate,
+)
+
 if TYPE_CHECKING:
     from app.schemas.user import UserDB
     from app.services.campaign_service import CampaignService
@@ -33,8 +39,11 @@ async def create_campaign(
 async def get_top_campaigns(
     campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
     limit: int = 10,
+    category: str | None = None,  # НОВИЙ ПАРАМЕТР
+    sort_by: str = "current_amount",  # НОВИЙ ПАРАМЕТР
 ) -> list[CampaignResponse]:
-    campaigns = await campaign_service.get_top_campaigns(limit)
+    # Передай ці параметри в campaign_service.get_top_campaigns
+    campaigns = await campaign_service.get_top_campaigns(limit, category, sort_by)
     return [CampaignResponse.model_validate(c) for c in campaigns]
 
 
@@ -93,3 +102,36 @@ async def get_campaign(
         )
 
     return CampaignResponse.model_validate(campaign)
+
+
+@campaigns_router.post("/{campaign_id}/reports", status_code=HTTPStatus.CREATED)
+async def create_report(
+    campaign_id: CampaignId,
+    report_data: CampaignReportCreate,
+    _current_user: Annotated[UserDB, Depends(current_user)],
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> None:
+    try:
+        await campaign_service.add_report(campaign_id, _current_user.id, report_data)
+    except ValueError as e:
+        raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail=str(e))
+
+
+@campaigns_router.get("/{campaign_id}/reports")
+async def get_reports(
+    campaign_id: CampaignId,
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> list[CampaignReportResponse]:
+    return await campaign_service.get_reports(campaign_id)
+
+
+@campaigns_router.post("/{campaign_id}/complaints", status_code=HTTPStatus.CREATED)
+async def create_complaint(
+    campaign_id: CampaignId,
+    complaint_data: ComplaintCreate,
+    _current_user: Annotated[UserDB, Depends(current_user)],
+    campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
+) -> None:
+    await campaign_service.add_complaint(
+        campaign_id, _current_user.id, complaint_data.reason
+    )

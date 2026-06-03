@@ -21,3 +21,7 @@ class UserService:
 
     async def remove_user(self, user_id: UserId) -> None:
         await self.uow.users.remove_by_id(user_id)
+
+    async def verify_user(self, user_id: int) -> None:
+        await self.uow.users.verify_user(user_id)
+        await self.uow.commit()

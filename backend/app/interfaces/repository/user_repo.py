@@ -27,3 +27,7 @@ class IUserRepository(ABC):
     @abstractmethod
     async def remove_by_id(self, user_id: UserId) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    async def verify_user(self, user_id: int) -> None:
+        raise NotImplementedError

@@ -4,6 +4,8 @@ from app.interfaces.repository.campaign_repo import ICampaignRepository
 from app.schemas.campaign import Campaign as CampaignSchema, Campaign
 from app.schemas.campaign import CampaignId
 
+from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse
+
 if TYPE_CHECKING:
     import aiosqlite
 
@@ -16,27 +18,34 @@ class CampaignRepository(ICampaignRepository):
 
     async def add_one(self, data: CampaignCreate) -> None:
         query = """
-            INSERT INTO campaigns (organizer_id, title, description, target_amount, end_date, image_url)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO campaigns (organizer_id, title, description, target_amount, end_date, image_url, category)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         await self.connection.execute(
             query,
-            (data.organizer_id, data.title, data.description, data.target_amount, data.end_date, data.image_url),
+            (
+                data.organizer_id,
+                data.title,
+                data.description,
+                data.target_amount,
+                data.end_date,
+                data.image_url,
+                data.category,
+            ),
         )
 
-    async def get_by_id(self, campaign_id: CampaignId) -> CampaignSchema | None:
+    async def get_by_id(self, campaign_id: int) -> CampaignSchema | None:
         query = """
-        SELECT id, organizer_id, title, description, target_amount, current_amount,
-       created_at, end_date, image_url
-        FROM campaigns
-        WHERE id = ?
+            SELECT c.id, c.organizer_id, c.title, c.description, c.target_amount, c.current_amount,
+                   c.created_at, c.end_date, c.image_url, c.category, u.name, c.status, u.is_verified
+            FROM campaigns c
+            LEFT JOIN users u ON c.organizer_id = u.id
+            WHERE c.id = ?
         """
         async with self.connection.execute(query, (campaign_id,)) as cursor:
             row = await cursor.fetchone()
-
             if not row:
                 return None
-
             return CampaignSchema(
                 id=row[0],
                 organizer_id=row[1],
@@ -47,6 +56,10 @@ class CampaignRepository(ICampaignRepository):
                 created_at=row[6],
                 end_date=row[7],
                 image_url=row[8],
+                category=row[9],
+                organizer_name=row[10],
+                status=row[11],
+                is_verified=bool(row[12]),  # Тепер галочка передається на фронтенд!
             )
 
     async def remove_by_id(self, campaign_id: CampaignId) -> None:
@@ -97,7 +110,7 @@ class CampaignRepository(ICampaignRepository):
     ) -> list[Campaign]:
         query = """
                 SELECT id, organizer_id, title, description, target_amount, current_amount,
-                       created_at, end_date, image_url
+                       created_at, end_date, image_url, category
                 FROM campaigns
                 WHERE organizer_id = ?
                 ORDER BY current_amount DESC
@@ -110,28 +123,87 @@ class CampaignRepository(ICampaignRepository):
 
         return [CampaignSchema(**row) for row in rows]
 
-    async def get_top_campaigns(self, limit: int = 10) -> list[CampaignSchema]:
+    async def get_top_campaigns(
+        self,
+        limit: int = 50,
+        category: str | None = None,
+        sort_by: str = "current_amount",
+    ) -> list[CampaignSchema]:
         query = """
-            SELECT id, organizer_id, title, description, target_amount, current_amount, 
-            created_at, end_date, image_url
-            FROM Campaigns
-            ORDER BY current_amount DESC
-            LIMIT ?
+            SELECT c.id, c.organizer_id, c.title, c.description, c.target_amount, c.current_amount,
+                c.created_at, c.end_date, c.image_url, c.category, u.name, c.status, u.is_verified
+            FROM campaigns c
+            LEFT JOIN users u ON c.organizer_id = u.id
         """
-        async with self.connection.execute(query, (limit,)) as cursor:
-            rows = await cursor.fetchall()
+        params = []
 
-        return [
-            CampaignSchema(
-                id=row[0],
-                organizer_id=row[1],
-                title=row[2],
-                description=row[3],
-                target_amount=row[4],
-                current_amount=row[5],
-                created_at=row[6],
-                end_date=row[7],
-                image_url=row[8],
-            )
-            for row in rows
-        ]
+        # Фільтрація по категорії
+        if category:
+            query += " WHERE c.category = ?"
+            params.append(category)
+
+        # Сортування
+        if sort_by == "date":
+            query += " ORDER BY c.created_at DESC"
+        elif sort_by == "target":
+            query += " ORDER BY c.target_amount DESC"
+        else:
+            query += " ORDER BY c.current_amount DESC"
+
+        query += " LIMIT ?"
+        params.append(limit)
+
+        async with self.connection.execute(query, tuple(params)) as cursor:
+            rows = await cursor.fetchall()
+            return [
+                CampaignSchema(
+                    id=row[0],
+                    organizer_id=row[1],
+                    title=row[2],
+                    description=row[3],
+                    target_amount=row[4],
+                    current_amount=row[5],
+                    created_at=row[6],
+                    end_date=row[7],
+                    image_url=row[8],
+                    category=row[9],
+                    organizer_name=row[10],
+                    status=row[11],
+                    is_verified=bool(row[12]),
+                )
+                for row in rows
+            ]
+
+    async def add_report(self, campaign_id: int, data: CampaignReportCreate) -> None:
+        query = """
+            INSERT INTO campaign_reports (campaign_id, title, description, image_url)
+            VALUES (?, ?, ?, ?)
+        """
+        await self.connection.execute(
+            query, (campaign_id, data.title, data.description, data.image_url)
+        )
+
+    async def get_reports(self, campaign_id: int) -> list[CampaignReportResponse]:
+        query = """
+            SELECT id, campaign_id, title, description, image_url, created_at
+            FROM campaign_reports
+            WHERE campaign_id = ?
+            ORDER BY created_at DESC
+        """
+        async with self.connection.execute(query, (campaign_id,)) as cursor:
+            rows = await cursor.fetchall()
+            return [
+                CampaignReportResponse(
+                    id=row[0],
+                    campaign_id=row[1],
+                    title=row[2],
+                    description=row[3],
+                    image_url=row[4],
+                    created_at=row[5],
+                )
+                for row in rows
+            ]
+
+    async def add_complaint(self, campaign_id: int, user_id: int, reason: str) -> None:
+        query = "INSERT INTO campaign_complaints (campaign_id, user_id, reason) VALUES (?, ?, ?)"
+        await self.connection.execute(query, (campaign_id, user_id, reason))

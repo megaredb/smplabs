@@ -1,4 +1,9 @@
 from typing import TYPE_CHECKING
+from app.schemas.campaign import (
+    CampaignReportCreate,
+    CampaignReportResponse,
+    ComplaintCreate,
+)
 
 
 if TYPE_CHECKING:
@@ -35,5 +40,32 @@ class CampaignService:
     ) -> list[Campaign]:
         return await self.uow.campaigns.get_by_organizer_id(organizer_id, offset, limit)
 
-    async def get_top_campaigns(self, limit: int = 10) -> list[Campaign]:
-        return await self.uow.campaigns.get_top_campaigns(limit)
+    async def get_top_campaigns(
+        self,
+        limit: int = 10,
+        category: str | None = None,
+        sort_by: str = "current_amount",
+    ) -> list[Campaign]:
+        # Передаємо всі параметри далі в репозиторій (базу даних)
+        return await self.uow.campaigns.get_top_campaigns(limit, category, sort_by)
+
+    async def add_report(
+        self, campaign_id: int, user_id: int, data: CampaignReportCreate
+    ) -> None:
+        campaign = await self.get_campaign(campaign_id)
+        if not campaign:
+            raise ValueError("Збір не знайдено")
+        if campaign.organizer_id != user_id:
+            raise ValueError("Тільки організатор може додавати звіти")
+
+        await self.uow.campaigns.add_report(campaign_id, data)
+        await self.uow.commit()
+
+        await self.uow.campaigns.add_report(campaign_id, data)
+
+    async def get_reports(self, campaign_id: int) -> list[CampaignReportResponse]:
+        return await self.uow.campaigns.get_reports(campaign_id)
+
+    async def add_complaint(self, campaign_id: int, user_id: int, reason: str) -> None:
+        await self.uow.campaigns.add_complaint(campaign_id, user_id, reason)
+        await self.uow.commit()
