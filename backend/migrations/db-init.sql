@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS campaigns
     target_amount  REAL    NOT NULL CHECK (target_amount > 0),
     current_amount REAL     DEFAULT 0,
     created_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
+    end_date       DATETIME,
+    image_url      TEXT,
 
     FOREIGN KEY (organizer_id) REFERENCES users (id) ON DELETE CASCADE
 );

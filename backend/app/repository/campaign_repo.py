@@ -16,18 +16,18 @@ class CampaignRepository(ICampaignRepository):
 
     async def add_one(self, data: CampaignCreate) -> None:
         query = """
-        INSERT INTO campaigns (organizer_id, title, description, target_amount)
-        VALUES (?, ?, ?, ?)
+            INSERT INTO campaigns (organizer_id, title, description, target_amount, end_date, image_url)
+            VALUES (?, ?, ?, ?, ?, ?)
         """
         await self.connection.execute(
             query,
-            (data.organizer_id, data.title, data.description, data.target_amount),
+            (data.organizer_id, data.title, data.description, data.target_amount, data.end_date, data.image_url),
         )
 
     async def get_by_id(self, campaign_id: CampaignId) -> CampaignSchema | None:
         query = """
         SELECT id, organizer_id, title, description, target_amount, current_amount,
-               created_at
+       created_at, end_date, image_url
         FROM campaigns
         WHERE id = ?
         """
@@ -45,6 +45,8 @@ class CampaignRepository(ICampaignRepository):
                 target_amount=row[4],
                 current_amount=row[5],
                 created_at=row[6],
+                end_date=row[7],
+                image_url=row[8],
             )
 
     async def remove_by_id(self, campaign_id: CampaignId) -> None:
@@ -66,6 +68,12 @@ class CampaignRepository(ICampaignRepository):
         if data.target_amount is not None:
             fields.append("target_amount = ?")
             values.append(data.target_amount)
+        if data.end_date is not None:
+            fields.append("end_date = ?")
+            values.append(data.end_date)
+        if data.image_url is not None:
+            fields.append("image_url = ?")
+            values.append(data.image_url)
 
         if not fields:
             return
@@ -89,7 +97,7 @@ class CampaignRepository(ICampaignRepository):
     ) -> list[Campaign]:
         query = """
                 SELECT id, organizer_id, title, description, target_amount, current_amount,
-                       created_at
+                       created_at, end_date, image_url
                 FROM campaigns
                 WHERE organizer_id = ?
                 ORDER BY current_amount DESC
@@ -105,7 +113,7 @@ class CampaignRepository(ICampaignRepository):
     async def get_top_campaigns(self, limit: int = 10) -> list[CampaignSchema]:
         query = """
             SELECT id, organizer_id, title, description, target_amount, current_amount, 
-            created_at
+            created_at, end_date, image_url
             FROM Campaigns
             ORDER BY current_amount DESC
             LIMIT ?
@@ -122,6 +130,8 @@ class CampaignRepository(ICampaignRepository):
                 target_amount=row[4],
                 current_amount=row[5],
                 created_at=row[6],
+                end_date=row[7],
+                image_url=row[8],
             )
             for row in rows
         ]
