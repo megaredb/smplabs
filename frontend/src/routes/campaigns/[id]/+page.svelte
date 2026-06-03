@@ -725,53 +725,6 @@
 				</Dialog.Content>
 			</Dialog.Root>
 		{/if}
-
-		<!-- UI Чату (Лабораторна) -->
-		<div class="mt-12 max-w-md rounded-lg border bg-white p-4 shadow-sm">
-			<h3 class="mb-2 border-b pb-2 text-lg font-semibold text-gray-800">
-				{$_('campaignDetails.chatTitle')}
-			</h3>
-			<p class="mb-4 text-xs text-gray-500">
-				{$_('campaignDetails.yourId')} <strong>{myUid}</strong>
-			</p>
-			<div
-				class="mb-4 flex h-64 flex-col gap-2 overflow-y-auto rounded border bg-gray-50 p-3 text-sm"
-			>
-				{#each messages as msg}
-					<div class="rounded border bg-white p-2 break-words text-gray-700 shadow-sm">
-						{msg}
-					</div>
-				{/each}
-				{#if messages.length === 0}
-					<div class="mt-10 text-center text-gray-400 italic">
-						{$_('campaignDetails.noMessages')}
-					</div>
-				{/if}
-			</div>
-			<div class="mb-2">
-				<input
-					type="text"
-					bind:value={targetUser}
-					placeholder={$_('campaignDetails.toPlaceholder')}
-					class="w-full rounded border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-				/>
-			</div>
-			<div class="flex gap-2">
-				<input
-					type="text"
-					bind:value={newMessage}
-					onkeydown={(e) => e.key === 'Enter' && sendMessage()}
-					placeholder={$_('campaignDetails.msgPlaceholder')}
-					class="flex-1 rounded border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-				/>
-				<button
-					onclick={sendMessage}
-					class="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-				>
-					{$_('campaignDetails.sendBtn')}
-				</button>
-			</div>
-		</div>
 	{/if}
 	<Dialog.Root bind:open={isReportCampaignOpen}>
 		<Dialog.Content class="bg-white sm:max-w-[425px]">

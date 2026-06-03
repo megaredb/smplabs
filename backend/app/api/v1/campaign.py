@@ -28,6 +28,11 @@ async def create_campaign(
     campaign_data: CampaignCreate,
     campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
 ) -> None:
+    if not _current_user.is_verified:
+        raise HTTPException(
+            status_code=HTTPStatus.FORBIDDEN,
+            detail="Only verified users can create campaigns",
+        )
     campaign_data.organizer_id = _current_user.id
     await campaign_service.add_campaign(campaign_data)
 

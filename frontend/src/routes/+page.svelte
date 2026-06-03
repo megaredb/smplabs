@@ -2,9 +2,22 @@
 	import { Button } from '$lib/components/ui/button';
 	import { ArrowRight, Heart, ShieldCheck, Zap } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
+	import { onMount } from 'svelte';
 
 	// ДОДАНО: імпорт функції перекладу
 	import { _ } from 'svelte-i18n';
+
+	let currentUserId = $state<number | null>(null);
+
+	onMount(() => {
+		const token = localStorage.getItem('access_token');
+		if (token) {
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				currentUserId = parseInt(payload.sub);
+			} catch {}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -15,7 +28,7 @@
 	<div class="max-w-3xl space-y-6">
 		<h1 class="text-5xl leading-tight font-extrabold tracking-tight text-slate-900 sm:text-6xl">
 			{$_('home.heroTitle1')} <br />
-			<span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+			<span class="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
 				{$_('home.heroTitle2')}
 			</span>
 		</h1>
@@ -32,14 +45,16 @@
 				{$_('home.viewCampaigns')}
 				<ArrowRight class="h-5 w-5" />
 			</Button>
-			<Button
-				size="lg"
-				variant="outline"
-				href={resolve('/campaigns/create')}
-				class="w-full rounded-full border-slate-300 px-8 py-6 text-lg sm:w-auto"
-			>
-				{$_('home.createCampaign')}
-			</Button>
+			{#if currentUserId}
+				<Button
+					size="lg"
+					variant="outline"
+					href={resolve('/campaigns/create')}
+					class="w-full rounded-full border-slate-300 px-8 py-6 text-lg sm:w-auto"
+				>
+					{$_('home.createCampaign')}
+				</Button>
+			{/if}
 		</div>
 	</div>
 

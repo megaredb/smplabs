@@ -3,6 +3,7 @@
 		createGetTopCampaignsApiV1CampaignsTopGet,
 		createDeleteCampaignApiV1CampaignsCampaignIdDelete
 	} from '$lib/api/generated/endpoints';
+	import { createGetMeApiV1UsersMeGet } from '$lib/api/generated/endpoints';
 	import type { CampaignResponse } from '$lib/api/generated/model';
 	import { Button } from '$lib/components/ui/button';
 	import {
@@ -38,6 +39,9 @@
 		const match = categoryOptions.find((c) => c.id === cat);
 		return match ? $_(match.key) : cat || $_('categories.other');
 	}
+
+	const meQuery = createGetMeApiV1UsersMeGet();
+	let isVerified = $derived((meQuery.data as any)?.is_verified ?? false);
 
 	const campaignsQuery = $derived(
 		createGetTopCampaignsApiV1CampaignsTopGet(
@@ -148,13 +152,15 @@
 					class="bg-white pl-9"
 				/>
 			</div>
-			<Button
-				href={resolve('/campaigns/create')}
-				class="w-full gap-2 bg-blue-600 hover:bg-blue-700 sm:w-auto"
-			>
-				<Plus class="h-4 w-4" />
-				{$_('campaigns.createBtn')}
-			</Button>
+			{#if isVerified}
+				<Button
+					href={resolve('/campaigns/create')}
+					class="w-full gap-2 bg-blue-600 hover:bg-blue-700 sm:w-auto"
+				>
+					<Plus class="h-4 w-4" />
+					{$_('campaigns.createBtn')}
+				</Button>
+			{/if}
 		</div>
 	</div>
 
