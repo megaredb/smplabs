@@ -14,7 +14,7 @@ class IUnitOfWork(ABC):
     users: IUserRepository
     campaigns: ICampaignRepository
     transactions: ITransactionRepository
-    visits: "IVisitsRepository"
+    visits: IVisitsRepository
 
     @abstractmethod
     async def __aenter__(self) -> Self:

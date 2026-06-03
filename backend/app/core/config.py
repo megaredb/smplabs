@@ -44,5 +44,8 @@ class Settings(BaseSettings):
     def database_uri(self) -> str:
         return self.AIOSQLITE_DATABASE_URI
 
+    STRIPE_SECRET_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
+
 
 settings = Settings()  # ty:ignore[missing-argument]

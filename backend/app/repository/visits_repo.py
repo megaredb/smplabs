@@ -1,9 +1,14 @@
-import aiosqlite
+
+from typing import TYPE_CHECKING
+
 from app.interfaces.repository.visits_repo import IVisitsRepository
+
+if TYPE_CHECKING:
+    import aiosqlite
 
 
 class VisitsRepository(IVisitsRepository):
-    def __init__(self, db: aiosqlite.Connection):
+    def __init__(self, db: aiosqlite.Connection) -> None:
         self.db = db
 
     async def add_visit(

@@ -3,10 +3,9 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from app.schemas.user import UserId
-
 if TYPE_CHECKING:
     from app.schemas.transaction import Transaction, TransactionCreate, TransactionId
+    from app.schemas.user import UserId
 
 
 class ITransactionRepository(ABC):

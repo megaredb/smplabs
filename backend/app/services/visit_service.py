@@ -1,8 +1,11 @@
-from app.interfaces.unit_of_work import IUnitOfWork
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.interfaces.unit_of_work import IUnitOfWork
 
 
 class VisitService:
-    def __init__(self, uow: IUnitOfWork):
+    def __init__(self, uow: IUnitOfWork) -> None:
         self.uow = uow
 
     async def record_visit(

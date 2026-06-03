@@ -1,41 +1,40 @@
+import contextlib
 import datetime
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from typing import List, Dict
 
 ws_router = APIRouter()
 
 
 class ConnectionManager:
-    def __init__(self):
+    def __init__(self) -> None:
         # Зберігаємо підключення для нотифікацій
-        self.notification_connections: List[WebSocket] = []
+        self.notification_connections: list[WebSocket] = []
         # Зберігаємо підключення для чатів (імітація кімнат за campaign_id)
-        self.chat_connections: Dict[str, Dict[str, WebSocket]] = {}
+        self.chat_connections: dict[str, dict[str, WebSocket]] = {}
 
     # --- Нотифікації ---
-    async def connect_notification(self, websocket: WebSocket):
+    async def connect_notification(self, websocket: WebSocket) -> None:
         await websocket.accept()
         self.notification_connections.append(websocket)
 
-    def disconnect_notification(self, websocket: WebSocket):
+    def disconnect_notification(self, websocket: WebSocket) -> None:
         if websocket in self.notification_connections:
             self.notification_connections.remove(websocket)
 
-    async def broadcast_new_campaign(self, message: str):
+    async def broadcast_new_campaign(self, message: str) -> None:
         for connection in self.notification_connections:
-            try:
+            with contextlib.suppress(Exception):
                 await connection.send_text(message)
-            except Exception:
-                pass
 
     # --- Чат ---
-    async def connect_chat(self, websocket: WebSocket, campaign_id: str, user_id: str):
+    async def connect_chat(self, websocket: WebSocket, campaign_id: str, user_id: str) -> None:
         await websocket.accept()
         if campaign_id not in self.chat_connections:
             self.chat_connections[campaign_id] = {}
         self.chat_connections[campaign_id][user_id] = websocket
 
-    def disconnect_chat(self, campaign_id: str, user_id: str):
+    def disconnect_chat(self, campaign_id: str, user_id: str) -> None:
         if (
             campaign_id in self.chat_connections
             and user_id in self.chat_connections[campaign_id]
@@ -47,7 +46,7 @@ manager = ConnectionManager()
 
 
 @ws_router.websocket("/ws/notifications")
-async def websocket_notifications(websocket: WebSocket):
+async def websocket_notifications(websocket: WebSocket) -> None:
     await manager.connect_notification(websocket)
     try:
         while True:
@@ -59,7 +58,7 @@ async def websocket_notifications(websocket: WebSocket):
 
 
 @ws_router.websocket("/ws/chat/{campaign_id}/{user_id}")
-async def websocket_chat(websocket: WebSocket, campaign_id: str, user_id: str):
+async def websocket_chat(websocket: WebSocket, campaign_id: str, user_id: str) -> None:
     await manager.connect_chat(websocket, campaign_id, user_id)
     try:
         while True:
@@ -78,10 +77,8 @@ async def websocket_chat(websocket: WebSocket, campaign_id: str, user_id: str):
                     and target_id in manager.chat_connections[campaign_id]
                 ):
                     target_ws = manager.chat_connections[campaign_id][target_id]
-                    try:
+                    with contextlib.suppress(Exception):
                         await target_ws.send_text(f"[{timestamp}] {user_id}: {msg}")
-                    except Exception:
-                        pass
                     # Відправляємо копію собі, щоб бачити історію
                     await websocket.send_text(
                         f"[{timestamp}] Ви (до {target_id}): {msg}"

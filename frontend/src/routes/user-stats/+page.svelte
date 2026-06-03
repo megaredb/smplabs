@@ -58,15 +58,12 @@
 	}
 
 	function handleVerify() {
-		verifyMutation.mutate(
-			{},
-			{
-				onSuccess: () => {
-					alert($_('userStats.verifySuccessAlert')); // Використовуємо переклад
-					window.location.reload();
-				}
+		verifyMutation.mutate(undefined as any, {
+			onSuccess: () => {
+				alert($_('userStats.verifySuccessAlert')); // Використовуємо переклад
+				window.location.reload();
 			}
-		);
+		});
 	}
 
 	let campaigns = $derived(getCampaigns());
@@ -372,6 +369,7 @@
 									<Table.Head>{$_('userStats.thCampaign')}</Table.Head>
 									<Table.Head>{$_('userStats.thAmount')}</Table.Head>
 									<Table.Head>{$_('userStats.thComment')}</Table.Head>
+									<Table.Head></Table.Head>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
@@ -391,6 +389,34 @@
 										</Table.Cell>
 										<Table.Cell class="text-slate-600">
 											{transaction.comment ?? '—'}
+										</Table.Cell>
+										<Table.Cell>
+											<Button
+												variant="ghost"
+												size="sm"
+												onclick={async () => {
+													try {
+														const token = localStorage.getItem('access_token');
+														const response = await fetch(
+															`/api/v1/transactions/${transaction.id}/invoice`,
+															{
+																headers: { Authorization: `Bearer ${token}` }
+															}
+														);
+														if (response.ok) {
+															const blob = await response.blob();
+															const url = window.URL.createObjectURL(blob);
+															window.open(url, '_blank');
+														} else {
+															alert('Could not download invoice');
+														}
+													} catch (e) {
+														console.error(e);
+													}
+												}}
+											>
+												Invoice
+											</Button>
 										</Table.Cell>
 									</Table.Row>
 								{/each}

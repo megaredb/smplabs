@@ -7,6 +7,8 @@ if TYPE_CHECKING:
         CampaignCreate,
         CampaignId,
         CampaignUpdate,
+        CampaignReportCreate,
+        CampaignReportResponse,
     )
 
 
@@ -39,7 +41,7 @@ class ICampaignRepository(ABC):
         limit: int = 50,
         category: str | None = None,
         sort_by: str = "current_amount",
-    ) -> list[CampaignSchema]:
+    ) -> list[Campaign]:
         pass
 
     @abstractmethod
@@ -49,11 +51,11 @@ class ICampaignRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def add_report(self, campaign_id: int, data: "CampaignReportCreate") -> None:
+    async def add_report(self, campaign_id: int, data: CampaignReportCreate) -> None:
         pass
 
     @abstractmethod
-    async def get_reports(self, campaign_id: int) -> list["CampaignReportResponse"]:
+    async def get_reports(self, campaign_id: int) -> list[CampaignReportResponse]:
         pass
 
     @abstractmethod

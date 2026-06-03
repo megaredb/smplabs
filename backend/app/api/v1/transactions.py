@@ -94,3 +94,28 @@ async def get_transaction(
         )
 
     return TransactionResponse.model_validate(transaction)
+
+
+from fastapi.responses import HTMLResponse
+
+from app.services.invoice_service import InvoiceService
+
+
+@transactions_router.get("/{transaction_id}/invoice", response_class=HTMLResponse)
+async def get_invoice(
+    transaction_id: TransactionId,
+    _current_user: Annotated[UserDB, Depends(current_user)],
+    transaction_service: Annotated[
+        TransactionService, Depends(get_transaction_service)
+    ],
+):
+    """Get the HTML invoice for a specific transaction."""
+    transaction = await transaction_service.get_transaction(transaction_id)
+    if not transaction:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Transaction not found")
+
+    if transaction.donor_id != _current_user.id and not _current_user.is_superuser:
+        raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Not authorized to view this invoice")
+
+    invoice_service = InvoiceService()
+    return invoice_service.generate_html_invoice(TransactionResponse.model_validate(transaction), donor_name=_current_user.name)

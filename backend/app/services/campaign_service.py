@@ -1,10 +1,4 @@
 from typing import TYPE_CHECKING
-from app.schemas.campaign import (
-    CampaignReportCreate,
-    CampaignReportResponse,
-    ComplaintCreate,
-)
-
 
 if TYPE_CHECKING:
     from app.interfaces.unit_of_work import IUnitOfWork
@@ -12,6 +6,8 @@ if TYPE_CHECKING:
         Campaign,
         CampaignCreate,
         CampaignId,
+        CampaignReportCreate,
+        CampaignReportResponse,
         CampaignUpdate,
     )
     from app.schemas.user import UserId
@@ -54,9 +50,11 @@ class CampaignService:
     ) -> None:
         campaign = await self.get_campaign(campaign_id)
         if not campaign:
-            raise ValueError("Збір не знайдено")
+            msg = "Збір не знайдено"
+            raise ValueError(msg)
         if campaign.organizer_id != user_id:
-            raise ValueError("Тільки організатор може додавати звіти")
+            msg = "Тільки організатор може додавати звіти"
+            raise ValueError(msg)
 
         await self.uow.campaigns.add_report(campaign_id, data)
         await self.uow.commit()

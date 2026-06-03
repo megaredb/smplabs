@@ -1,10 +1,13 @@
 from typing import TYPE_CHECKING, Any
 
 from app.interfaces.repository.campaign_repo import ICampaignRepository
-from app.schemas.campaign import Campaign as CampaignSchema, Campaign
-from app.schemas.campaign import CampaignId
-
-from app.schemas.campaign import CampaignReportCreate, CampaignReportResponse
+from app.schemas.campaign import (
+    Campaign,
+    CampaignId,
+    CampaignReportCreate,
+    CampaignReportResponse,
+)
+from app.schemas.campaign import Campaign as CampaignSchema
 
 if TYPE_CHECKING:
     import aiosqlite
@@ -99,8 +102,8 @@ class CampaignRepository(ICampaignRepository):
         self, campaign_id: CampaignId, amount_to_add: float
     ) -> None:
         query = """
-        UPDATE campaigns 
-        SET current_amount = current_amount + ? 
+        UPDATE campaigns
+        SET current_amount = current_amount + ?
         WHERE id = ?
         """
         await self.connection.execute(query, (amount_to_add, campaign_id))

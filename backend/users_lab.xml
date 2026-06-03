@@ -3,6 +3,10 @@
     <user id="1001">
         <name>Ігор Мельник</name>
         <role>admin</role>
+        <test>
+            <tag>test1</tag>
+            <tag>test2</tag>
+        </test>
     </user>
     <user id="2002">
         <name>Олена Шевченко</name>

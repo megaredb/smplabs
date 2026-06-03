@@ -1,5 +1,5 @@
+
 from pydantic import BaseModel
-from typing import Optional
 
 
 class VisitCreate(BaseModel):
@@ -9,4 +9,4 @@ class VisitCreate(BaseModel):
 class VisitStatsResponse(BaseModel):
     page_url: str
     total_visits: int
-    user_visits: Optional[int] = 0
+    user_visits: int | None = 0

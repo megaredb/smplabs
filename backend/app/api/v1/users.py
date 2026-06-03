@@ -3,15 +3,12 @@ from typing import TYPE_CHECKING, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.api.deps.transaction import get_transaction_service
 from app.api.deps.user import get_user_service
 from app.core.users import current_superuser, current_user
-from app.schemas.transaction import TransactionResponse
 from app.schemas.user import UserDB, UserId, UserRead
-from app.services.transaction_service import TransactionService
 
 if TYPE_CHECKING:
-    from app.services.user_service import UserService  # noqa: TC004
+    from app.services.user_service import UserService
 
 users_router = APIRouter()
 

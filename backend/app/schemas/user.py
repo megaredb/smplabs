@@ -2,7 +2,7 @@ from datetime import datetime  # noqa: TC003
 from typing import Literal
 
 from fastapi_users import schemas
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict
 
 UserId = int
 UserRole = Literal["donor", "organizer", "admin"]

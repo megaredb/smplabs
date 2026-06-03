@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
 from app.api.v1.campaign import campaigns_router
+from app.api.v1.labs import lab_router
+from app.api.v1.payments import payments_router
 from app.api.v1.transactions import transactions_router
 from app.api.v1.users import users_router
 from app.api.v1.visits import visits_router
@@ -12,3 +14,5 @@ api_router.include_router(
     transactions_router, prefix="/transactions", tags=["transactions"]
 )
 api_router.include_router(visits_router)
+api_router.include_router(lab_router, prefix="/lab", tags=["lab"])
+api_router.include_router(payments_router)

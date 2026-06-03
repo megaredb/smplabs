@@ -8,13 +8,10 @@ from app.core.users import current_user
 from app.schemas.campaign import (
     CampaignCreate,
     CampaignId,
-    CampaignResponse,
-    CampaignUpdate,
-)
-
-from app.schemas.campaign import (
     CampaignReportCreate,
     CampaignReportResponse,
+    CampaignResponse,
+    CampaignUpdate,
     ComplaintCreate,
 )
 
@@ -35,7 +32,11 @@ async def create_campaign(
     await campaign_service.add_campaign(campaign_data)
 
 
-@campaigns_router.get("/top")
+from aiocache import Cache, cached
+
+
+@campaigns_router.get("/top", response_model=list[CampaignResponse])
+@cached(ttl=60, cache=Cache.MEMORY)
 async def get_top_campaigns(
     campaign_service: Annotated[CampaignService, Depends(get_campaign_service)],
     limit: int = 10,

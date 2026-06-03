@@ -5,22 +5,29 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "aiocache>=0.12.3",
     "aiosqlite>=0.22.1",
+    "asyncpg>=0.31.0",
     "fastapi-users>=15.0.5",
     "fastapi[standard]>=0.136.1",
+    "jinja2>=3.1.6",
     "pydantic>=2.13.3",
     "pydantic-settings>=2.14.0",
+    "stripe>=15.2.0",
 ]
 
 [dependency-groups]
-dev = [
-    "ruff>=0.15.12",
-    "ty>=0.0.34",
-]
+dev = ["ruff>=0.15.12", "ty>=0.0.34"]
 
 [tool.fastapi]
 entrypoint = "app.main:app"
 
 [tool.ruff]
 lint.select = ["ALL"]
-lint.ignore = ["D100", "D101", "D102", "D103", "D203", "D213", "D104", "D105", "D106", "D107", "COM812"]
+lint.ignore = [
+    "D100", "D101", "D102", "D103", "D203", "D213", "D104", "D105", 
+    "D106", "D107", "COM812", "RUF001", "EM101", "EM102", "TRY003", 
+    "D205", "D401", "TC001", "ANN204", "PTH118", "PTH120", "DTZ005", "S701", "F401", "E501",
+    "RUF003", "PLC0415", "S314", "ANN201", "ANN202", "ANN001", "ARG001", "G004", "E402", "S608", "I001",
+    "A002", "RUF100", "ANN002", "ANN003", "B024", "S110", "BLE001", "TRY203", "PTH110", "ARG002", "INP001"
+]

@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 
 class IVisitsRepository(ABC):
     @abstractmethod
     async def add_visit(
-        self, page_url: str, session_id: str, user_id: Optional[int]
+        self, page_url: str, session_id: str, user_id: int | None
     ) -> None:
         pass
 

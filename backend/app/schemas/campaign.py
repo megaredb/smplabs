@@ -1,8 +1,8 @@
-from datetime import datetime
-from typing import Annotated
-from typing import Literal
+from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import AfterValidator, BaseModel, ConfigDict
+
+from datetime import datetime
 
 CategoryType = Literal["ЗСУ / Військові", "Медицина", "Відбудова", "Тварини", "Інше"]
 

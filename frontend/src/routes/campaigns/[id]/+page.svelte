@@ -3,7 +3,8 @@
 	import {
 		createGetCampaignApiV1CampaignsCampaignIdGet,
 		createUpdateCampaignApiV1CampaignsCampaignIdPatch,
-		createCreateTransactionApiV1TransactionsPost
+		createCreateTransactionApiV1TransactionsPost,
+		createCreateCheckoutSessionApiV1PaymentsCreateCheckoutSessionPost
 	} from '$lib/api/generated/endpoints';
 	import type { CampaignResponse } from '$lib/api/generated/model';
 	import { Button } from '$lib/components/ui/button';
@@ -96,6 +97,7 @@
 	const campaignQuery = $derived(createGetCampaignApiV1CampaignsCampaignIdGet(() => campaignId));
 	const updateMutation = createUpdateCampaignApiV1CampaignsCampaignIdPatch();
 	const donateMutation = createCreateTransactionApiV1TransactionsPost();
+	const stripeMutation = createCreateCheckoutSessionApiV1PaymentsCreateCheckoutSessionPost();
 
 	function getCampaign(): CampaignResponse | null {
 		const d = campaignQuery.data;
@@ -194,6 +196,34 @@
 					donateAmount = '';
 					donateComment = '';
 					campaignQuery.refetch();
+				}
+			}
+		);
+	}
+
+	function handleStripeDonate(event: Event) {
+		event.preventDefault();
+		const campaign = getCampaign();
+		if (campaign) {
+			const maxAllowed = Number(campaign.target_amount) - Number(campaign.current_amount);
+			if (Number(donateAmount) > maxAllowed) {
+				alert(`Максимальна сума донату: ${maxAllowed} ₴`);
+				return;
+			}
+		}
+
+		stripeMutation.mutate(
+			{
+				data: {
+					campaign_id: campaignId,
+					amount: Number(donateAmount)
+				}
+			},
+			{
+				onSuccess: (data: any) => {
+					if (data.url) {
+						window.location.href = data.url;
+					}
 				}
 			}
 		);
@@ -430,9 +460,9 @@
 										{/if}
 									</div>
 
-									{#if reportsQuery.data && reportsQuery.data.length > 0}
+									{#if reportsQuery.data && (reportsQuery.data as any).length > 0}
 										<div class="mt-4 space-y-6">
-											{#each reportsQuery.data as report}
+											{#each reportsQuery.data as any as report}
 												<Card class="overflow-hidden border border-slate-200 shadow-sm">
 													{#if report.image_url}
 														<img
@@ -636,15 +666,20 @@
 								rows={3}
 							/>
 						</div>
-						<Dialog.Footer>
+						<Dialog.Footer class="flex flex-col gap-2 sm:flex-row sm:justify-between">
 							<Button type="button" variant="outline" onclick={() => (isDonateDialogOpen = false)}
 								>{$_('campaignDetails.cancelBtn')}</Button
 							>
-							<Button
-								type="submit"
-								class="bg-blue-600 hover:bg-blue-700"
-								disabled={donateMutation.isPending}>{$_('campaignDetails.donateBtn')}</Button
-							>
+							<div class="flex gap-2">
+								<Button
+									type="button"
+									onclick={handleStripeDonate}
+									class="bg-[#635BFF] text-white hover:bg-[#5249eb]"
+									disabled={donateMutation.isPending || stripeMutation.isPending}
+								>
+									{$_('campaignDetails.donateBtn')}
+								</Button>
+							</div>
 						</Dialog.Footer>
 					</form>
 				</Dialog.Content>

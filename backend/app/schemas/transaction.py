@@ -1,7 +1,8 @@
-from datetime import datetime
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
+
+from datetime import datetime
 
 
 def validate_id(v: int) -> int:
